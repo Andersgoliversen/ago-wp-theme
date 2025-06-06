@@ -13,6 +13,7 @@ function ag_theme_setup() {
     add_theme_support( 'title-tag' );
     add_theme_support( 'post-thumbnails' );
     add_theme_support( 'responsive-embeds' );
+    add_theme_support( 'custom-logo' );
 }
 add_action( 'after_setup_theme', 'ag_theme_setup' );
 
@@ -122,7 +123,6 @@ function ag_cleanup_wp() {
     wp_deregister_script( 'wp-embed' );
 }
 add_action( 'init', 'ag_cleanup_wp' );
-add_action( 'wp_footer', 'ag_cleanup_wp' );
 
 /**
  * Defer theme script loading.
