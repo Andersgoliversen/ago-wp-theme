@@ -1,0 +1,13 @@
+{
+  "name": "andersg-theme",
+  "private": true,
+  "devDependencies": {
+    "tailwindcss": "^3.4.4",
+    "autoprefixer": "^10.4.15",
+    "postcss": "^8.4.24",
+    "@wordpress/scripts": "^26.0.0"
+  },
+  "scripts": {
+    "build": "tailwindcss -c tailwind.config.js -i ./src/css/theme.src.css -o ./assets/css/theme.css --minify"
+  }
+}
