@@ -1,44 +1,66 @@
-<!doctype html>
-<html <?php language_attributes(); ?>>
+<?php
+/**
+ * Theme header
+ * Adds hover / scale to all menu links and site title.
+ */
+?><!DOCTYPE html>
+<html <?php language_attributes(); ?> class="scroll-smooth">
 <head>
-    <meta charset="<?php bloginfo( 'charset' ); ?>">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <?php wp_head(); ?>
+	<meta charset="<?php bloginfo( 'charset' ); ?>">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<?php wp_head(); ?>
 </head>
-<body <?php body_class( 'bg-pagebg' ); ?>>
+
+<?php
+	// Extra classes on <body> can be adjusted if needed
+?>
+<body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
-<a class="sr-only focus:not-sr-only" href="#content">Skip to content</a>
-<header class="max-w-7xl mx-auto flex items-center py-6 px-4">
-    <img src="<?php echo esc_url( get_template_directory_uri() . '/logo.png' ); ?>" alt="" class="mr-2">
-    <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="text-xl font-semibold mr-8">
-        <?php bloginfo( 'name' ); ?>
-    </a>
-    <nav class="flex items-center space-x-6">
-        <?php
-        $links = [
-          [ 'slug' => '/blog/',     'label' => 'Blog',     'check' => is_home() || is_category() ],
-          [ 'slug' => '/gallery/',  'label' => 'Gallery',  'check' => is_page( 'gallery' ) ],
-          [ 'slug' => '/projects/', 'label' => 'Projects', 'check' => is_page( 'projects' ) ],
-          [ 'slug' => '/shop/',     'label' => 'Shop',     'check' => is_page( 'shop' ) ],
-          [ 'slug' => '/about/',    'label' => 'About',    'check' => is_page( 'about' ) ],
-        ];
-        foreach ( $links as $l ) {
-            $classes = 'transition-transform duration-150 hover:scale-105 hover:text-neutral-600';
-            if ( $l['check'] ) {
-                $classes .= ' font-semibold';
-            }
-            printf(
-                '<a href="%s" class="%s">%s</a>',
-                esc_url( home_url( $l['slug'] ) ),
-                esc_attr( $classes ),
-                esc_html( $l['label'] )
-            );
-        }
-        ?>
-    </nav>
-    <a href="https://www.youtube.com/channel/UCovgolET91fDl9s_K8eSvLw" class="ml-auto" aria-label="YouTube">
-        <svg viewBox="0 0 24 24" class="h-8 w-8 fill-red-600" aria-hidden="true">
-            <path d="M23 12c0-1.7-.2-3.4-.3-5.1-.2-1.6-1.5-2.8-3.1-3C16.9 3.5 12 3.5 12 3.5s-4.9 0-7.6.4c-1.6.2-2.9 1.4-3.1 3C.2 8.6 0 10.3 0 12s.2 3.4.3 5.1c.2 1.6 1.5 2.8 3.1 3C7.1 20.5 12 20.5 12 20.5s4.9 0 7.6-.4c1.6-.2 2.9-1.4 3.1-3 .2-1.7.3-3.4.3-5.1zM9.7 15.5v-7l6.3 3.5-6.3 3.5z"/>
-        </svg>
-    </a>
+
+<header id="masthead"
+		class="bg-pagebg/60 backdrop-blur supports-[backdrop-filter]:bg-pagebg/30 shadow-sm">
+	<div class="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
+
+		<?php
+		/* ----------  Site title ------------------------------------------------ */
+		$title_classes  = 'transition-transform duration-150 hover:scale-105 hover:text-neutral-600';
+		$title_classes .= is_front_page() ? ' text-xl font-semibold' : ' font-medium';
+
+		?>
+		<a href="<?php echo esc_url( home_url( '/' ) ); ?>"
+		   class="<?php echo esc_attr( $title_classes ); ?>">
+			<?php bloginfo( 'name' ); ?>
+		</a>
+
+		<?php
+		/* ----------  Primary menu -------------------------------------------- */
+		wp_nav_menu( array(
+			'theme_location' => 'primary',
+			'container'      => false,
+			'menu_class'     => 'flex items-center space-x-6',
+
+			// Add hover classes to each <a> in the menu.
+			'link_before'    => '',
+			'link_after'     => '',
+			'fallback_cb'    => false,
+			'walker'         => new class extends Walker_Nav_Menu {
+				public function start_el( &$output, $item, $depth = 0, $args = null, $id = 0 ) {
+					$classes = 'transition-transform duration-150 hover:scale-105 hover:text-neutral-600';
+					$item->classes[] = $classes;
+					parent::start_el( $output, $item, $depth, $args, $id );
+				}
+			},
+		) );
+		?>
+
+		<!-- ----------  YouTube icon link ------------------------------------- -->
+		<a href="https://www.youtube.com/@andersgoliversen" target="_blank" rel="noopener"
+		   class="transition-transform duration-150 hover:scale-105 hover:text-neutral-600"
+		   aria-label="YouTube channel">
+			<svg viewBox="0 0 24 24" class="w-6 h-6 fill-current">
+				<path d="M23.5 6.2a2.99 2.99 0 0 0-2.1-2.1C19.4 3.5 12 3.5 12 3.5s-7.4 0-9.4.6a2.99 2.99 0 0 0-2.1 2.1A31.2 31.2 0 0 0 0 12a31.2 31.2 0 0 0 .5 5.8 2.99 2.99 0 0 0 2.1 2.1c2 .6 9.4.6 9.4.6s7.4 0 9.4-.6a2.99 2.99 0 0 0 2.1-2.1 31.2 31.2 0 0 0 .5-5.8 31.2 31.2 0 0 0-.5-5.8zM9.6 15.5v-7l6.4 3.5-6.4 3.5z"/>
+			</svg>
+		</a>
+
+	</div>
 </header>
