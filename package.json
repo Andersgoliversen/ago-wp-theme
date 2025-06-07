@@ -3,11 +3,14 @@
   "private": true,
   "devDependencies": {
     "@wordpress/scripts": "^26.0.0",
+    "archiver": "^7.0.1",
     "autoprefixer": "^10.4.21",
+    "globby": "^14.1.0",
     "postcss": "^8.5.4",
     "tailwindcss": "^3.4.17"
   },
   "scripts": {
-    "build": "tailwindcss -c tailwind.config.js -i ./src/css/theme.src.css -o ./assets/css/theme.css --minify"
+    "build": "tailwindcss -c tailwind.config.js -i ./src/css/theme.src.css -o ./assets/css/theme.css --minify",
+    "zip": "npm run build && node tools/package.js"
   }
 }
