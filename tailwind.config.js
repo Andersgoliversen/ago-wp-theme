@@ -3,7 +3,7 @@ module.exports = {
   content: [
     './*.php',                    // root templates
     './**/*.php',                 // template-parts, blocks, etc.
-    './assets/src/js/**/*.js',    // scripts that hold class strings
+    './assets/js/**/*.js',        // scripts that hold class strings
     '!./node_modules/**/*',       // explicit exclusions
     '!./vendor/**/*'
   ],
