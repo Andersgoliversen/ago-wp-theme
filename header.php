@@ -29,27 +29,28 @@
 			<?php bloginfo( 'name' ); ?>
 		</a>
 
-		<?php
-		/* ----------  Primary menu -------------------------------------------- */
-		wp_nav_menu( array(
-			'theme_location' => 'primary',
-			'container'      => false,
-			'menu_class'     => 'flex items-center space-x-6',
-
-			// Add hover classes to each <a> in the menu.
-			'link_before'    => '',
-			'link_after'     => '',
-			'fallback_cb'    => false,
-			'walker'         => new class extends Walker_Nav_Menu {
-				public function start_el( &$output, $item, $depth = 0, $args = null, $id = 0 ) {
-					$classes = 'transition-transform duration-150 hover:scale-105 hover:text-neutral-600';
-					$item->classes[] = $classes;
-					parent::start_el( $output, $item, $depth, $args, $id );
-				}
-			},
-		) );
-		?>
-
+                <?php
+                /* ----------  Primary menu --------------------------------------- */
+                $links = [
+                        [ 'slug' => '/blog/',     'label' => 'Blog',     'check' => is_home() || is_category() ],
+                        [ 'slug' => '/gallery/',  'label' => 'Gallery',  'check' => is_page( 'gallery' ) ],
+                        [ 'slug' => '/projects/', 'label' => 'Projects', 'check' => is_page( 'projects' ) ],
+                        [ 'slug' => '/shop/',     'label' => 'Shop',     'check' => is_page( 'shop' ) ],
+                        [ 'slug' => '/about/',    'label' => 'About',    'check' => is_page( 'about' ) ],
+                ];
+                foreach ( $links as $l ) {
+                        $classes = 'transition-transform duration-150 hover:scale-105 hover:text-neutral-600';
+                        if ( $l['check'] ) {
+                                $classes .= ' font-semibold';
+                        }
+                        printf(
+                                '<a href="%s" class="%s">%s</a>',
+                                esc_url( home_url( $l['slug'] ) ),
+                                esc_attr( $classes ),
+                                esc_html( $l['label'] )
+                        );
+                }
+                ?>
 		<!-- ----------  YouTube icon link ------------------------------------- -->
 		<a href="https://www.youtube.com/@andersgoliversen" target="_blank" rel="noopener"
 		   class="transition-transform duration-150 hover:scale-105 hover:text-neutral-600"
