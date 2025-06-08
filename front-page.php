@@ -15,13 +15,13 @@ get_header(); ?>
     class="absolute inset-0 -z-10 will-change-transform">
 
     <img id="hero-img-1"
-      src="<?php echo wp_get_attachment_image_url(3512, 'full'); ?>"
+      src="<?php echo esc_url( wp_get_attachment_image_url(3512, 'full') ); ?>"
       alt="Satellite view of the Norwegian coastline"
       class="absolute inset-0 h-full w-full object-cover"
       loading="eager" />
 
     <img id="hero-img-2"
-      src="<?php echo wp_get_attachment_image_url(3513, 'full'); ?>"
+      src="<?php echo esc_url( wp_get_attachment_image_url(3513, 'full') ); ?>"
       alt="Infra-red rendering of the same coastline"
       class="absolute inset-0 h-full w-full object-cover"
       loading="lazy" />

@@ -49,9 +49,16 @@ add_action( 'wp_head', 'ag_output_root_vars', 0 );
  * Basic navigation fallback when no menu is assigned.
  */
 function ag_fallback_nav() {
-    echo '<ul class="space-x-6 text-base font-medium">';
-    wp_list_pages( array( 'title_li' => '', 'depth' => 1 ) );
-    echo '</ul>';
+    // Using wp_kses to allow specific HTML tags and attributes for the navigation structure.
+    // Define allowed HTML for the wrapper.
+    $allowed_html_ul = array(
+        'ul' => array(
+            'class' => true,
+        ),
+    );
+    echo wp_kses( '<ul class="space-x-6 text-base font-medium">', $allowed_html_ul );
+    wp_list_pages( array( 'title_li' => '', 'depth' => 1 ) ); // wp_list_pages escapes its output.
+    echo wp_kses( '</ul>', $allowed_html_ul );
 }
 
 /**
@@ -77,38 +84,60 @@ add_filter( 'wp_get_attachment_image_attributes', 'ag_lazy_loading' );
  * @return array
  */
 function ag_modern_image_formats( $sources, $size_array, $image_src, $image_meta, $attachment_id ) {
+    // Get the WordPress upload directory information.
     $upload_dir = wp_get_upload_dir();
 
+    // Create a copy of the sources array to iterate over, to avoid modifying it directly.
+    $sources_copy = $sources;
+
+    // Loop through modern image formats (AVIF and WebP) to check for their availability.
     foreach ( array( 'avif', 'webp' ) as $ext ) {
         $available = true;
-        foreach ( $sources as $size => $source ) {
-            $relative  = str_replace( $upload_dir['baseurl'], '', $source['url'] );
-            $candidate = $upload_dir['basedir'] . preg_replace( '/\.(jpg|jpeg|png)$/i', '.' . $ext, $relative );
-            if ( ! file_exists( $candidate ) ) {
+        // Check if all sources have a corresponding modern image format version.
+        foreach ( $sources_copy as $size => $source ) {
+            // Get the relative path of the image.
+            $relative_path = str_replace( $upload_dir['baseurl'], '', $source['url'] );
+            // Construct the candidate path for the modern image format.
+            // This regex replaces the existing file extension with the new one ($ext).
+            $candidate_path = $upload_dir['basedir'] . preg_replace( '/\.[^.]+$/i', '.' . $ext, $relative_path );
+            // If a candidate file does not exist, this format is not available for all sources.
+            if ( ! file_exists( $candidate_path ) ) {
                 $available = false;
-                break;
+                break; // Exit the inner loop.
             }
         }
+
+        // If the modern image format is available for all sources, update the original $sources array.
         if ( $available ) {
             foreach ( $sources as $size => $source ) {
-                $sources[ $size ]['url'] = preg_replace( '/\.(jpg|jpeg|png)$/i', '.' . $ext, $source['url'] );
+                // Replace the original image URL extension with the modern image format extension.
+                $sources[ $size ]['url'] = preg_replace( '/\.[^.]+$/i', '.' . $ext, $source['url'] );
             }
-            break;
+            // Once a modern format is successfully applied, no need to check for others.
+            break; // Exit the outer loop.
         }
     }
 
+    // Return the modified sources array (or original if no modern formats were found).
     return $sources;
 }
 add_filter( 'wp_calculate_image_srcset', 'ag_modern_image_formats', 10, 5 );
 
 /**
  * Enqueue lightbox on gallery pages only.
+ * Only enqueues the script if the page is singular, has content, and contains a gallery shortcode or block.
  */
 function ag_maybe_enqueue_lightbox() {
+    // Check if it's a singular page (post, page, or custom post type).
     if ( is_singular() ) {
         $post = get_post();
-        if ( has_shortcode( $post->post_content, "gallery" ) || has_block( "core/gallery", $post ) ) {
-            wp_enqueue_script( "ag-lightbox", get_template_directory_uri() . "/assets/js/lightbox.js", array(), "1.0", true );
+        // Ensure the post object is valid and has content.
+        if ( $post && ! empty( $post->post_content ) ) {
+            // Check if the post content contains a gallery shortcode or a core gallery block.
+            if ( has_shortcode( $post->post_content, "gallery" ) || has_block( "core/gallery", $post ) ) {
+                // Enqueue the lightbox script.
+                wp_enqueue_script( "ag-lightbox", get_template_directory_uri() . "/assets/js/lightbox.js", array(), "1.0", true );
+            }
         }
     }
 }

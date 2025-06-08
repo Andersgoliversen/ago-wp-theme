@@ -1,7 +1,7 @@
 <?php get_header(); ?>
 <main id="content" class="max-w-3xl mx-auto px-4 py-12 space-y-12">
     <h1 class="text-3xl font-semibold mb-4">
-        <?php printf( esc_html__( 'Search Results for: %s', 'andersgoliversen' ), get_search_query() ); ?>
+        <?php printf( esc_html__( 'Search Results for: %s', 'andersgoliversen' ), esc_html( get_search_query() ) ); ?>
     </h1>
     <?php
     if ( have_posts() ) :
@@ -12,7 +12,7 @@
         endwhile;
         the_posts_pagination();
     else :
-        echo '<p>No results found.</p>';
+        echo '<p>' . esc_html__( 'No results found.', 'andersgoliversen' ) . '</p>';
     endif;
     ?>
 </main>
