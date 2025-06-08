@@ -23,13 +23,15 @@
    (two independent timelines so first image is never grey)
    ----------------------------------------------------------- */
 @keyframes heroFade1 {          /* satellite image – ID 3512 */
-  0%,45%   { opacity: 1; }
-  55%,100% { opacity: 0; }
+  0%,45%  { opacity: 1; }
+  55%,90% { opacity: 0; }
+  100%    { opacity: 1; }
 }
 @keyframes heroFade2 {          /* infrared image – ID 3513 */
-  0%,45%   { opacity: 0; }
-  55%,100% { opacity: 1; }
+  0%,45%  { opacity: 0; }
+  55%,90% { opacity: 1; }
+  100%    { opacity: 0; }
 }
 
-#hero-img-1 { animation: heroFade1 16s ease-in-out infinite; }
-#hero-img-2 { animation: heroFade2 16s ease-in-out infinite; }
+#hero-img-1 { animation: heroFade1 32s ease-in-out infinite; }
+#hero-img-2 { animation: heroFade2 32s ease-in-out infinite; }
