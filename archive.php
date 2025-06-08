@@ -12,7 +12,7 @@
         endwhile;
         the_posts_pagination();
     else :
-        echo '<p>No posts found.</p>';
+        echo '<p>' . esc_html__( 'No posts found.', 'andersgoliversen' ) . '</p>';
     endif;
     ?>
 </main>

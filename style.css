@@ -1,9 +1,14 @@
 /*
 Theme Name:   ago-wp-theme
-Theme URI:    https://andersgoliversen.com
+Theme URI:    https://andersgoliversen.com/ago-wp-theme/
 Author:       Anders Gjesdal Oliversen
-Version:      1.0
+Author URI:   https://andersgoliversen.com/
+Description:  A custom WordPress theme for Anders Gjesdal Oliversen, designed for performance and modern web standards.
+Version:      1.0.0
 Requires at least: 6.5
+Requires PHP: 7.4
 License:      GPL-2.0-or-later
+License URI:  https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  andersgoliversen
+Tags:         custom-background, custom-logo, post-formats, responsive-layout, accessibility-ready, blog, portfolio, light, dark, two-columns, left-sidebar, right-sidebar, fixed-layout, fluid-layout, custom-header, custom-menu, editor-style, featured-images, full-width-template, theme-options, translation-ready, block-styles, wide-blocks
 */

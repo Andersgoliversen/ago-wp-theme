@@ -9,7 +9,7 @@ if ( have_posts() ) :
 		the_content();
 	endwhile;
 else :
-	echo '<p>No posts found.</p>';
+	echo '<p>' . esc_html__( 'No posts found.', 'andersgoliversen' ) . '</p>';
 endif;
 ?>
 </main>

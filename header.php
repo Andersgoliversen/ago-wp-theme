@@ -11,9 +11,6 @@
 	<?php wp_head(); ?>
 </head>
 
-<?php
-	// Extra classes on <body> can be adjusted if needed
-?>
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
 
