@@ -50,7 +50,7 @@ get_header(); ?>
   <div class="max-w-7xl mx-auto grid gap-12 md:grid-cols-3 justify-center px-4">
     <!-- Gallery card -->
     <article class="w-[320px] flex flex-col items-center text-center">
-      <img src="<?php echo esc_url( wp_get_attachment_image_url( 8535, 'medium' ) ); ?>"
+      <img src="<?php echo esc_url( wp_get_attachment_image_url( 8538, 'medium' ) ); ?>"
            alt="Artwork of human alien hybrid"
            class="w-full h-48 object-cover rounded shadow" />
       <h2 class="mt-4 text-xl font-semibold">Art</h2>
@@ -90,4 +90,3 @@ get_header(); ?>
 </section>
 
 <?php get_footer(); ?>
-
