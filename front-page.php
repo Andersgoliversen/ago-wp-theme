@@ -89,4 +89,41 @@ get_header(); ?>
   </div>
 </section>
 
+<!-- Latest Posts Section -->
+<section id="recent-posts" aria-label="Latest from the Blog" class="py-16 bg-neutral-100">
+  <div class="max-w-5xl mx-auto px-4 text-center">
+    <h2 class="text-2xl font-semibold mb-8">Latest from the Blog</h2>
+    <div class="grid gap-8 md:grid-cols-3">
+      <?php
+      $recent = new WP_Query( array(
+        'posts_per_page' => 3,
+      ) );
+      if ( $recent->have_posts() ) :
+        while ( $recent->have_posts() ) :
+          $recent->the_post();
+      ?>
+          <article class="flex flex-col items-center text-center">
+            <a href="<?php the_permalink(); ?>" class="block">
+              <?php if ( has_post_thumbnail() ) : ?>
+                <?php the_post_thumbnail( 'thumbnail', array( 'class' => 'w-full h-32 object-cover rounded shadow' ) ); ?>
+              <?php endif; ?>
+              <h3 class="mt-4 text-lg font-semibold"><?php the_title(); ?></h3>
+              <time datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>" class="text-sm text-neutral-500">
+                <?php echo esc_html( get_the_date() ); ?>
+              </time>
+            </a>
+          </article>
+      <?php
+        endwhile;
+        wp_reset_postdata();
+      endif;
+      ?>
+    </div>
+    <a href="<?php echo esc_url( get_permalink( get_option( 'page_for_posts' ) ) ); ?>"
+       class="inline-block mt-8 bg-neutral-800 text-white py-2 px-6 rounded transition-colors hover:bg-neutral-700">
+      View All Posts
+    </a>
+  </div>
+</section>
+
 <?php get_footer(); ?>
