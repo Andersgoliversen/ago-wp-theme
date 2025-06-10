@@ -15,8 +15,8 @@
 <?php wp_body_open(); ?>
 
 <header id="masthead"
-		class="bg-pagebg/60 backdrop-blur supports-[backdrop-filter]:bg-pagebg/30 shadow-sm">
-	<div class="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
+                class="bg-pagebg/60 backdrop-blur supports-[backdrop-filter]:bg-pagebg/30">
+        <div class="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
 
 		<?php
 		/* ----------  Site title ------------------------------------------------ */
@@ -29,6 +29,7 @@
 			<?php bloginfo( 'name' ); ?>
 		</a>
 
+                <nav class="flex flex-1 justify-center gap-4">
                 <?php
                 /* ----------  Primary menu --------------------------------------- */
                 $links = [
@@ -51,6 +52,7 @@
                         );
                 }
                 ?>
+                </nav>
 		<!-- ----------  YouTube icon link ------------------------------------- -->
                 <a href="https://www.youtube.com/@andersgoliversen" target="_blank" rel="noopener"
                    class="no-underline text-inherit decoration-transparent transition-transform duration-150 hover:scale-105 hover:text-neutral-600"
