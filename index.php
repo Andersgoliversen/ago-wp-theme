@@ -8,12 +8,12 @@ if ( have_posts() ) :
                 ?>
                 <article class="space-y-4">
                     <?php
+                    the_title( '<h2 class="text-2xl font-semibold mb-4"><a href="' . esc_url( get_permalink() ) . '">', '</a></h2>' );
                     if ( has_post_thumbnail() ) {
                         echo '<a href="' . esc_url( get_permalink() ) . '">';
-                        the_post_thumbnail( 'large', array( 'class' => 'w-full h-auto' ) );
+                        the_post_thumbnail( 'large', array( 'class' => 'w-full max-h-[48rem] object-cover object-center' ) );
                         echo '</a>';
                     }
-                    the_title( '<h2 class="text-2xl font-semibold mb-4"><a href="' . esc_url( get_permalink() ) . '">', '</a></h2>' );
                     ?>
                 </article>
                 <?php
