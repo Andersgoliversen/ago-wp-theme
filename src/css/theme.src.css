@@ -42,3 +42,9 @@
     @apply underline decoration-neutral-400 text-neutral-800 transition-transform duration-150 hover:scale-105 hover:text-neutral-600 hover:decoration-neutral-600;
   }
 }
+
+@layer base {
+  figcaption, .wp-caption-text {
+    @apply text-sm text-neutral-500;
+  }
+}
