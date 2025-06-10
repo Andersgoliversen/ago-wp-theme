@@ -35,3 +35,10 @@
 
 #hero-img-1 { animation: heroFade1 32s ease-in-out infinite; }
 #hero-img-2 { animation: heroFade2 32s ease-in-out infinite; }
+
+/* Global link style */
+@layer base {
+  a {
+    @apply underline decoration-neutral-400 text-neutral-800 transition-transform duration-150 hover:scale-105 hover:text-neutral-600 hover:decoration-neutral-600;
+  }
+}

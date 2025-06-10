@@ -20,7 +20,7 @@
 
 		<?php
 		/* ----------  Site title ------------------------------------------------ */
-		$title_classes  = 'transition-transform duration-150 hover:scale-105 hover:text-neutral-600';
+                $title_classes  = 'no-underline text-inherit decoration-transparent transition-transform duration-150 hover:scale-105 hover:text-neutral-600';
 		$title_classes .= is_front_page() ? ' text-xl font-semibold' : ' font-medium';
 
 		?>
@@ -39,7 +39,7 @@
                         [ 'slug' => '/about/',    'label' => 'About',    'check' => is_page( 'about' ) ],
                 ];
                 foreach ( $links as $l ) {
-                        $classes = 'transition-transform duration-150 hover:scale-105 hover:text-neutral-600';
+                        $classes = 'no-underline text-inherit decoration-transparent transition-transform duration-150 hover:scale-105 hover:text-neutral-600';
                         if ( $l['check'] ) {
                                 $classes .= ' font-semibold';
                         }
@@ -52,9 +52,9 @@
                 }
                 ?>
 		<!-- ----------  YouTube icon link ------------------------------------- -->
-		<a href="https://www.youtube.com/@andersgoliversen" target="_blank" rel="noopener"
-		   class="transition-transform duration-150 hover:scale-105 hover:text-neutral-600"
-		   aria-label="YouTube channel">
+                <a href="https://www.youtube.com/@andersgoliversen" target="_blank" rel="noopener"
+                   class="no-underline text-inherit decoration-transparent transition-transform duration-150 hover:scale-105 hover:text-neutral-600"
+                   aria-label="YouTube channel">
 			<svg viewBox="0 0 24 24" class="w-6 h-6 fill-current">
 				<path d="M23.5 6.2a2.99 2.99 0 0 0-2.1-2.1C19.4 3.5 12 3.5 12 3.5s-7.4 0-9.4.6a2.99 2.99 0 0 0-2.1 2.1A31.2 31.2 0 0 0 0 12a31.2 31.2 0 0 0 .5 5.8 2.99 2.99 0 0 0 2.1 2.1c2 .6 9.4.6 9.4.6s7.4 0 9.4-.6a2.99 2.99 0 0 0 2.1-2.1 31.2 31.2 0 0 0 .5-5.8 31.2 31.2 0 0 0-.5-5.8zM9.6 15.5v-7l6.4 3.5-6.4 3.5z"/>
 			</svg>
