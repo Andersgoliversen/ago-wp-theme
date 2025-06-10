@@ -48,3 +48,18 @@
     @apply text-sm text-neutral-500;
   }
 }
+
+/* -----------------------------------------------------------
+   Related posts styling
+   ----------------------------------------------------------- */
+@layer components {
+  /* Smaller thumbnails with cropping for Jetpack related posts */
+  .jp-relatedposts-post img {
+    @apply w-20 h-20 object-cover object-center mx-auto;
+  }
+
+  /* Slightly larger titles */
+  .jp-relatedposts-post-title {
+    @apply text-lg;
+  }
+}
