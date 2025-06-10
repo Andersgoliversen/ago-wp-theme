@@ -60,5 +60,9 @@
 			</svg>
 		</a>
 
-	</div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-6 pb-4 text-center">
+                <?php get_search_form(); ?>
+        </div>
 </header>
