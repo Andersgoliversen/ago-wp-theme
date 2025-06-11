@@ -1,40 +1,57 @@
-// IIFE (Immediately Invoked Function Expression) to encapsulate the lightbox logic and avoid polluting the global scope.
 (function(){
-    // Select all anchor tags within elements having the class 'gallery'.
-    const links = document.querySelectorAll('.gallery a');
-    // If no gallery links are found, exit the script.
-    if(!links.length) return;
+  const links = Array.from(document.querySelectorAll('.gallery a'));
+  if(!links.length) return;
 
-    // Create the lightbox overlay div.
-    const overlay = document.createElement('div');
-    // Style the overlay for a full-screen, semi-transparent background with centered content.
-    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;z-index:9999;';
-    // Set the inner HTML of the overlay to include an image tag, styled to fit within the overlay.
-    overlay.innerHTML = '<img style="max-height:100%;max-width:100%" />';
-    // Initially hide the overlay.
-    overlay.hidden = true;
-    // Append the overlay to the document body.
-    document.body.appendChild(overlay);
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.9);display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:9999;';
+  overlay.hidden = true;
+  overlay.innerHTML = `
+    <button class="lb-prev" style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);font-size:2rem;color:white;background:none;border:none;cursor:pointer">\u276E</button>
+    <img style="max-height:80vh;max-width:90vw;margin-bottom:.5rem" />
+    <div class="lb-caption" style="color:white;text-align:center"></div>
+    <button class="lb-next" style="position:absolute;right:1rem;top:50%;transform:translateY(-50%);font-size:2rem;color:white;background:none;border:none;cursor:pointer">\u276F</button>
+  `;
+  document.body.appendChild(overlay);
 
-    // Get the image element within the overlay.
-    const img = overlay.querySelector('img');
+  const img = overlay.querySelector('img');
+  const caption = overlay.querySelector('.lb-caption');
+  const prevBtn = overlay.querySelector('.lb-prev');
+  const nextBtn = overlay.querySelector('.lb-next');
 
-    // Iterate over each gallery link.
-    links.forEach(function(link){
-        // Add a click event listener to each link.
-        link.addEventListener('click', function(event){
-            // Prevent the default anchor tag behavior (navigation).
-            event.preventDefault();
-            // Set the source of the overlay image to the href of the clicked link.
-            img.src = link.href;
-            // Show the overlay.
-            overlay.hidden = false;
-        });
+  let index = 0;
+
+  function getCaption(link){
+    const fig = link.closest('figure');
+    const figcap = fig ? fig.querySelector('figcaption') : null;
+    return figcap ? figcap.textContent : (link.title || link.querySelector('img')?.alt || '');
+  }
+
+  function show(i){
+    index = (i + links.length) % links.length;
+    const link = links[index];
+    img.src = link.href;
+    caption.textContent = getCaption(link);
+    overlay.hidden = false;
+  }
+
+  links.forEach((link, i) => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      show(i);
     });
+  });
 
-    // Add a click event listener to the overlay itself.
-    overlay.addEventListener('click', function(){
-        // Hide the overlay when it's clicked (this allows closing the lightbox by clicking outside the image).
-        overlay.hidden = true;
-    });
+  function next(){ show(index + 1); }
+  function prev(){ show(index - 1); }
+  function close(){ overlay.hidden = true; }
+
+  nextBtn.addEventListener('click', next);
+  prevBtn.addEventListener('click', prev);
+  overlay.addEventListener('click', e => { if(e.target === overlay) close(); });
+  document.addEventListener('keydown', e => {
+    if(overlay.hidden) return;
+    if(e.key === 'ArrowRight') next();
+    else if(e.key === 'ArrowLeft') prev();
+    else if(e.key === 'Escape') close();
+  });
 })();
