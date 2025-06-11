@@ -136,7 +136,7 @@ function ag_maybe_enqueue_lightbox() {
             // Check if the post content contains a gallery shortcode or a core gallery block.
             if ( has_shortcode( $post->post_content, "gallery" ) || has_block( "core/gallery", $post ) ) {
                 // Enqueue the lightbox script.
-                wp_enqueue_script( "ag-lightbox", get_template_directory_uri() . "/assets/js/lightbox.js", array(), "1.0", true );
+                wp_enqueue_script( "ag-lightbox", get_template_directory_uri() . "/assets/js/lightbox.js", array(), "1.1", true );
             }
         }
     }
