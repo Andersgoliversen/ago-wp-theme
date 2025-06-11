@@ -9,10 +9,15 @@
  * Register navigation and theme supports.
  */
 function ag_theme_setup() {
+    // Register a primary navigation menu.
     register_nav_menus( array( 'primary' => __( 'Primary', 'andersgoliversen' ) ) );
+    // Let WordPress manage the document title.
     add_theme_support( 'title-tag' );
+    // Enable support for Post Thumbnails on posts and pages.
     add_theme_support( 'post-thumbnails' );
+    // Enable support for responsive embedded content (e.g., YouTube videos).
     add_theme_support( 'responsive-embeds' );
+    // Enable support for a custom logo.
     add_theme_support( 'custom-logo' );
 }
 add_action( 'after_setup_theme', 'ag_theme_setup' );
@@ -28,10 +33,14 @@ function ag_enqueue_assets() {
     $js  = '/assets/js/theme.js';
 
     if ( file_exists( $theme_path . $css ) ) {
+        // Enqueue the main stylesheet. filemtime() is used for cache-busting by appending
+        // the file's last modification time as a version string.
         wp_enqueue_style( 'ag-theme', $theme_uri . $css, array(), filemtime( $theme_path . $css ) );
     }
 
     if ( file_exists( $theme_path . $js ) ) {
+        // Enqueue the main JavaScript file. filemtime() is used for cache-busting.
+        // The last parameter `true` enqueues the script in the footer.
         wp_enqueue_script( 'ag-theme', $theme_uri . $js, array(), filemtime( $theme_path . $js ), true );
     }
 }
@@ -41,12 +50,18 @@ add_action( 'wp_enqueue_scripts', 'ag_enqueue_assets' );
  * Output custom root variables.
  */
 function ag_output_root_vars() {
+    // The CSS variable --pagebg is static and therefore safe from XSS.
+    // If this variable were to become dynamic (e.g., user-configurable),
+    // it would need proper sanitization/escaping, like esc_html() or esc_attr()
+    // depending on the context.
     echo '<style>:root{--pagebg:oklch(97% 0.001 106.424);}</style>' . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 add_action( 'wp_head', 'ag_output_root_vars', 0 );
 
 /**
  * Basic navigation fallback when no menu is assigned.
+ * Provides a simple list of pages if no custom menu is set in Appearance > Menus.
+ * This improves user experience on fresh installs or if a menu is accidentally unassigned.
  */
 function ag_fallback_nav() {
     // Using wp_kses to allow specific HTML tags and attributes for the navigation structure.
@@ -68,6 +83,9 @@ function ag_fallback_nav() {
  * @return array
  */
 function ag_lazy_loading( $attr ) {
+    // Adds loading="lazy" to image attributes.
+    // This improves initial page load performance by deferring the loading of off-screen images
+    // until they are about to enter the viewport.
     $attr['loading'] = 'lazy';
     return $attr;
 }
@@ -84,41 +102,64 @@ add_filter( 'wp_get_attachment_image_attributes', 'ag_lazy_loading' );
  * @return array
  */
 function ag_modern_image_formats( $sources, $size_array, $image_src, $image_meta, $attachment_id ) {
-    // Get the WordPress upload directory information.
+    // Get the WordPress upload directory information. This is trusted WordPress data.
+    // $upload_dir['baseurl'] is the base URL for uploads (e.g., https://example.com/wp-content/uploads).
+    // $upload_dir['basedir'] is the base server path for uploads (e.g., /var/www/html/wp-content/uploads).
     $upload_dir = wp_get_upload_dir();
 
-    // Create a copy of the sources array to iterate over, to avoid modifying it directly.
+    // Create a copy of the $sources array to iterate over.
+    // This is done to avoid potential issues with modifying an array while looping over it.
     $sources_copy = $sources;
 
-    // Loop through modern image formats (AVIF and WebP) to check for their availability.
+    // Loop through an array of modern image format extensions ('avif', then 'webp').
+    // The goal is to find the first format for which all image source sizes exist.
     foreach ( array( 'avif', 'webp' ) as $ext ) {
-        $available = true;
-        // Check if all sources have a corresponding modern image format version.
+        // Flag to track if all image sizes exist for the current format ($ext).
+        // Reset to true for each new format being checked.
+        $all_sources_for_current_format_exist = true;
+
+        // Inner loop: Iterate through each image source size (e.g., 'thumbnail', 'medium', 'large') provided in $sources_copy.
         foreach ( $sources_copy as $size => $source ) {
-            // Get the relative path of the image.
+            // Construct the relative path of the original image.
+            // This removes the base URL of uploads from the full image URL.
+            // e.g., "wp-content/uploads/2023/10/my-image.jpg"
             $relative_path = str_replace( $upload_dir['baseurl'], '', $source['url'] );
-            // Construct the candidate path for the modern image format.
-            // This regex replaces the existing file extension with the new one ($ext).
+
+            // Construct the absolute server path for the candidate modern image.
+            // preg_replace changes the file extension in $relative_path to the current $ext (e.g., '.avif' or '.webp').
+            // e.g., "/var/www/html/wp-content/uploads/2023/10/my-image.avif"
+            // This path manipulation is considered safe as it's based on trusted WordPress data ($upload_dir, $source['url']).
             $candidate_path = $upload_dir['basedir'] . preg_replace( '/\.[^.]+$/i', '.' . $ext, $relative_path );
-            // If a candidate file does not exist, this format is not available for all sources.
+
+            // Check if the candidate modern image file exists on the server.
             if ( ! file_exists( $candidate_path ) ) {
-                $available = false;
-                break; // Exit the inner loop.
+                // If a specific size for the current format (e.g., my-image-thumbnail.avif) doesn't exist,
+                // then this format ($ext) is not fully available.
+                $all_sources_for_current_format_exist = false;
+                // Break from this inner loop (checking sources for the current $ext).
+                // No need to check other sizes for this format if one is missing.
+                break;
             }
         }
 
-        // If the modern image format is available for all sources, update the original $sources array.
-        if ( $available ) {
-            foreach ( $sources as $size => $source ) {
-                // Replace the original image URL extension with the modern image format extension.
-                $sources[ $size ]['url'] = preg_replace( '/\.[^.]+$/i', '.' . $ext, $source['url'] );
+        // After checking all sizes for the current format ($ext):
+        // If all sources for the current format exist (e.g., .avif versions for all sizes are present),
+        if ( $all_sources_for_current_format_exist ) {
+            // Update the original $sources array to use the new image URLs with the modern format extension.
+            foreach ( $sources as $size => $source_item ) { // Iterate over original $sources to modify.
+                // preg_replace changes the file extension in the source URL to the current $ext.
+                // This is considered safe as it's modifying URLs derived from trusted WordPress data.
+                $sources[ $size ]['url'] = preg_replace( '/\.[^.]+$/i', '.' . $ext, $source_item['url'] );
             }
-            // Once a modern format is successfully applied, no need to check for others.
-            break; // Exit the outer loop.
+            // Once a modern format (e.g., AVIF) is successfully applied for all sizes,
+            // break from the outer loop (which checks for 'avif', 'webp').
+            // We prefer AVIF over WebP if available, so no need to check for WebP if AVIF worked.
+            break;
         }
     }
 
-    // Return the modified sources array (or original if no modern formats were found).
+    // Return the modified $sources array (if a modern format was applied)
+    // or the original $sources array if no complete set of modern image formats was found.
     return $sources;
 }
 add_filter( 'wp_calculate_image_srcset', 'ag_modern_image_formats', 10, 5 );
@@ -128,14 +169,17 @@ add_filter( 'wp_calculate_image_srcset', 'ag_modern_image_formats', 10, 5 );
  * Only enqueues the script if the page is singular, has content, and contains a gallery shortcode or block.
  */
 function ag_maybe_enqueue_lightbox() {
-    // Check if it's a singular page (post, page, or custom post type).
+    // Only proceed if the current view is a singular page (e.g., a post or a page, not an archive).
     if ( is_singular() ) {
-        $post = get_post();
-        // Ensure the post object is valid and has content.
+        $post = get_post(); // Get the current post object.
+        // Ensure the post object is valid and has content to check.
         if ( $post && ! empty( $post->post_content ) ) {
-            // Check if the post content contains a gallery shortcode or a core gallery block.
+            // Check if the post content contains either a [gallery] shortcode or a core/gallery block.
+            // These are common ways WordPress galleries are inserted.
             if ( has_shortcode( $post->post_content, "gallery" ) || has_block( "core/gallery", $post ) ) {
-                // Enqueue the lightbox script.
+                // If a gallery is found, enqueue the lightbox JavaScript file.
+                // Assumes lightbox.js is located in assets/js/ and its version is "1.1".
+                // The last parameter `true` enqueues the script in the footer.
                 wp_enqueue_script( "ag-lightbox", get_template_directory_uri() . "/assets/js/lightbox.js", array(), "1.1", true );
             }
         }
@@ -144,11 +188,15 @@ function ag_maybe_enqueue_lightbox() {
 add_action( 'wp_enqueue_scripts', 'ag_maybe_enqueue_lightbox' );
 
 /**
- * Remove unused WordPress assets.
+ * Remove unused WordPress assets to improve performance and reduce clutter.
  */
 function ag_cleanup_wp() {
+    // Remove WordPress emoji detection script and styles.
+    // Useful if emojis are not extensively used or are handled differently, reducing HTTP requests.
     remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
     remove_action( 'wp_print_styles', 'print_emoji_styles' );
+    // Deregister the wp-embed script if oEmbed functionality for embedding other WordPress posts
+    // (or this site's posts on other WordPress sites) is not needed. Reduces a script load.
     wp_deregister_script( 'wp-embed' );
 }
 add_action( 'init', 'ag_cleanup_wp' );
@@ -161,9 +209,16 @@ add_action( 'init', 'ag_cleanup_wp' );
  * @return string
  */
 function ag_defer_scripts( $tag, $handle ) {
+    // Check if the current script handle is 'ag-theme' or 'ag-lightbox'.
     if ( 'ag-theme' === $handle || 'ag-lightbox' === $handle ) {
+        // Add the 'defer' attribute to the script tag.
+        // The defer attribute tells the browser to download the script in parallel with parsing the HTML,
+        // and then execute it after the HTML parsing is complete, but before the DOMContentLoaded event.
+        // This improves perceived page load time as script loading/execution doesn't block HTML rendering.
+        // Deferred scripts are executed in the order they appear in the document.
         return str_replace( ' src', ' defer src', $tag );
     }
+    // Return the original tag if the handle doesn't match.
     return $tag;
 }
 add_filter( 'script_loader_tag', 'ag_defer_scripts', 10, 2 );
