@@ -10,7 +10,7 @@
             the_title( '<h2 class="text-2xl font-semibold mb-4">', '</h2>' );
             the_excerpt();
         endwhile;
-        the_posts_pagination();
+        ag_custom_posts_pagination();
     else :
         echo '<p>' . esc_html__( 'No posts found.', 'andersgoliversen' ) . '</p>';
     endif;
