@@ -8,26 +8,26 @@ get_header(); ?>
 
 <section id="hero"
   aria-label="Hero"
-  class="relative isolate overflow-hidden min-h-[90vh] w-full">
+  class="relative isolate overflow-hidden w-full aspect-[1914/548]">
 
   <!-- Parallax wrapper for background images -->
   <div id="hero-bg-wrap"
     class="absolute inset-0 -z-10 will-change-transform">
 
     <img id="hero-img-1"
-      src="<?php echo esc_url( wp_get_attachment_image_url(3512, 'full') ); ?>"
-      alt="Satellite view of the Norwegian coastline"
+      src="<?php echo esc_url( wp_get_attachment_image_url(8697, 'full') ); ?>"
+      alt="Satellite view of forest fire in Siberia"
       class="absolute inset-0 h-full w-full object-cover"
       loading="eager" />
 
     <img id="hero-img-2"
-      src="<?php echo esc_url( wp_get_attachment_image_url(3513, 'full') ); ?>"
-      alt="Infra-red rendering of the same coastline"
+      src="<?php echo esc_url( wp_get_attachment_image_url(8698, 'full') ); ?>"
+      alt="Infra-red rendering of the same fire"
       class="absolute inset-0 h-full w-full object-cover"
       loading="lazy" />
 
     <!-- Dark overlay to boost legibility -->
-    <div class="absolute inset-0 bg-black/60 md:bg-black/70 mix-blend-multiply"></div>
+    <div class="absolute inset-0 bg-black/30 md:bg-black/30 mix-blend-multiply"></div>
   </div>
 
   <!-- Centred heading + subtitle -->
