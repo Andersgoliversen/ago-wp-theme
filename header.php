@@ -58,12 +58,21 @@
                         </nav>
                         <!-- ----------  YouTube icon link ------------------------------------- -->
                         <a href="https://www.youtube.com/@andersgoliversen" target="_blank" rel="noopener"
-                                class="no-underline text-inherit decoration-transparent transition-transform duration-150 hover:scale-105 hover:text-neutral-600"
+                                class="no-underline decoration-transparent transition-transform duration-150 hover:scale-105 group"
                                 aria-label="YouTube channel">
-                                <svg viewBox="0 0 24 24" class="w-6 h-6 fill-current">
-                                        <path d="M23.5 6.2a2.99 2.99 0 0 0-2.1-2.1C19.4 3.5 12 3.5 12 3.5s-7.4 0-9.4.6a2.99 2.99 0 0 0-2.1 2.1A31.2 31.2 0 0 0 0 12a31.2 31.2 0 0 0 .5 5.8 2.99 2.99 0 0 0 2.1 2.1c2 .6 9.4.6 9.4.6s7.4 0 9.4-.6a2.99 2.99 0 0 0 2.1-2.1 31.2 31.2 0 0 0 .5-5.8 31.2 31.2 0 0 0-.5-5.8zM9.6 15.5v-7l6.4 3.5-6.4 3.5z" />
+                                <svg viewBox="0 0 48 48" class="w-9 h-7" aria-hidden="true">
+                                        <rect x="4" y="10" width="40" height="28" rx="8" fill="#FF1A1A" class="youtube-bg transition-colors duration-150 group-hover:fill-[#FF5252]" />
+                                        <polygon points="20,30 20,18 31,24" fill="#fff"/>
                                 </svg>
                         </a>
+                        <style>
+                        a[aria-label="YouTube channel"] .youtube-bg {
+                                transition: fill 0.15s;
+                        }
+                        a[aria-label="YouTube channel"]:hover .youtube-bg {
+                                fill: #FF5252;
+                        }
+                        </style>
 
                 </div>
 
