@@ -90,7 +90,7 @@ get_header(); ?>
 </section>
 
 <!-- Latest Posts Section -->
-<section id="recent-posts" aria-label="Latest from the Blog" class="py-16 bg-neutral-100">
+<section id="recent-posts" aria-label="Latest from the Blog" class="py-16">
   <div class="max-w-5xl mx-auto px-4 text-center">
     <h2 class="text-2xl font-semibold mb-8">Latest from the Blog</h2>
     <div class="grid gap-8 md:grid-cols-3">

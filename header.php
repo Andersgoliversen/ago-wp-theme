@@ -23,12 +23,15 @@
 
                         <?php
                         /* ----------  Site title ------------------------------------------------ */
-                        $title_classes  = 'no-underline text-inherit decoration-transparent transition-transform duration-150 hover:scale-105 hover:text-neutral-600';
+                        $title_classes  = 'no-underline text-inherit decoration-transparent transition-transform duration-150 hover:scale-105 hover:text-neutral-600 hover:opacity-80 inline-flex items-center gap-4';
                         $title_classes .= is_front_page() ? ' text-xl font-semibold' : ' font-medium';
 
                         ?>
                         <a href="<?php echo esc_url(home_url('/')); ?>"
                                 class="<?php echo esc_attr($title_classes); ?>">
+                                <img src="<?php echo esc_url( wp_get_attachment_image_url( 8713, 'full' ) ); ?>"
+                                     alt="Logo"
+                                     class="h-[1em] w-auto" />
                                 <?php bloginfo('name'); ?>
                         </a>
 
