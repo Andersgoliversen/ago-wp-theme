@@ -222,3 +222,52 @@ function ag_defer_scripts( $tag, $handle ) {
     return $tag;
 }
 add_filter( 'script_loader_tag', 'ag_defer_scripts', 10, 2 );
+
+/**
+ * Custom posts pagination layout.
+ * Outputs Previous/Next links at the edges with page numbers aligned
+ * depending on current position.
+ */
+function ag_custom_posts_pagination() {
+    global $wp_query;
+    $paged = max( 1, get_query_var( 'paged' ) );
+    $max   = intval( $wp_query->max_num_pages );
+
+    if ( $max <= 1 ) {
+        return;
+    }
+
+    $links = paginate_links( [
+        'current'   => $paged,
+        'total'     => $max,
+        'mid_size'  => 2,
+        'end_size'  => 1,
+        'type'      => 'array',
+        'prev_next' => false,
+    ] );
+
+    $prev = get_previous_posts_link( __( '&larr; Previous Page', 'andersgoliversen' ) );
+    $next = get_next_posts_link( __( 'Next Page &rarr;', 'andersgoliversen' ), $max );
+
+    $justify = 'justify-center';
+    if ( 1 === $paged ) {
+        $justify = 'justify-start';
+    } elseif ( $paged === $max ) {
+        $justify = 'justify-end';
+    }
+
+    echo '<nav class="my-12" role="navigation">';
+    echo '<div class="flex items-center justify-between gap-4">';
+    echo '<div class="flex-none">' . ( $prev ? $prev : '' ) . '</div>';
+    echo '<div class="flex-1 flex flex-wrap gap-2 ' . esc_attr( $justify ) . '">';
+    if ( $links ) {
+        foreach ( $links as $link ) {
+            echo $link;
+        }
+    }
+    echo '</div>';
+    echo '<div class="flex-none text-right">' . ( $next ? $next : '' ) . '</div>';
+    echo '</div>';
+    echo '</nav>';
+}
+

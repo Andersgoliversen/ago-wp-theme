@@ -22,15 +22,7 @@ if ( have_posts() ) :
                 </article>
                 <?php
         endwhile;
-        the_posts_pagination(
-            array(
-                'mid_size'           => 2,
-                'end_size'           => 1,
-                'prev_text'          => __( '&larr; Previous Page', 'andersgoliversen' ),
-                'next_text'          => __( 'Next Page &rarr;', 'andersgoliversen' ),
-                'screen_reader_text' => '',
-            )
-        );
+        ag_custom_posts_pagination();
 else :
         echo '<p>' . esc_html__( 'No posts found.', 'andersgoliversen' ) . '</p>';
 endif;
