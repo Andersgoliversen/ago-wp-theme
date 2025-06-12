@@ -22,16 +22,23 @@
                 <div class="max-w-7xl mx-auto flex items-center justify-center gap-4 px-6 py-4">
 
                         <?php
-                        /* ----------  Site title ------------------------------------------------ */
-                        $title_classes  = 'no-underline text-inherit decoration-transparent transition-transform duration-150 hover:scale-105 hover:text-neutral-600 hover:opacity-80 inline-flex items-center gap-4';
-                        $title_classes .= is_front_page() ? ' text-xl font-semibold' : ' font-medium';
-
+                        /* ----------  Site logo and title ------------------- */
+                        $logo_classes  = 'no-underline text-inherit decoration-transparent transition-transform duration-150 hover:scale-105 hover:opacity-80 inline-flex items-center';
+                        // Add larger text size if on front page
+                        if (is_front_page()) {
+                            $name_classes = 'no-underline text-inherit decoration-transparent transition-transform duration-150 hover:scale-105 hover:text-neutral-600 hover:opacity-80 text-xl md:text-2xl font-semibold';
+                        } else {
+                            $name_classes = 'no-underline text-inherit decoration-transparent transition-transform duration-150 hover:scale-105 hover:text-neutral-600 hover:opacity-80 text-xl font-semibold';
+                        }
                         ?>
                         <a href="<?php echo esc_url(home_url('/')); ?>"
-                                class="<?php echo esc_attr($title_classes); ?>">
+                                class="<?php echo esc_attr($logo_classes); ?>">
                                 <img src="<?php echo esc_url( wp_get_attachment_image_url( 8713, 'full' ) ); ?>"
                                      alt="Logo"
-                                     class="h-[1em] w-auto" />
+                                     class="h-[3em] w-auto" />
+                        </a>
+                        <a href="<?php echo esc_url(home_url('/')); ?>"
+                                class="<?php echo esc_attr($name_classes); ?>">
                                 <?php bloginfo('name'); ?>
                         </a>
 
