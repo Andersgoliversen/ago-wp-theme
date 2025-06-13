@@ -16,6 +16,15 @@
   .animate-fadeUp {
     animation: fadeUp 0.8s ease-out forwards;
   }
+
+  /* ── Quick spin animation for icons ────────────────────── */
+  @keyframes ag-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .ag-spin {
+    animation: ag-spin 0.4s linear infinite;
+  }
 }
 
 /* -----------------------------------------------------------
