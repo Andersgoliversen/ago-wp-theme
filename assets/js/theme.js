@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', () => {
   const input = document.getElementById('search-field');
   const button = document.getElementById('search-submit');
-  const icon = button ? button.querySelector('svg') : null;
+  const warning = document.getElementById('search-warning');
 
   if (input) {
     const text = input.getAttribute('placeholder') || '';
@@ -120,10 +120,59 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(animatePlaceholder, 30000);
   }
 
-  if (button && icon) {
-    const stop = () => icon.classList.remove('ag-spin');
-    button.addEventListener('mousedown', () => icon.classList.add('ag-spin'));
-    button.addEventListener('mouseup', stop);
-    button.addEventListener('mouseleave', stop);
+  if (button) {
+    button.addEventListener('click', (e) => {
+      if (input && input.value.trim() === '') {
+        e.preventDefault();
+        if (warning) warning.classList.remove('hidden');
+      }
+    });
   }
+
+  const hideWarning = () => warning && warning.classList.add('hidden');
+  document.addEventListener('click', hideWarning);
+  document.addEventListener('scroll', hideWarning, { passive: true });
+
+  document.querySelectorAll('.ag-interactive').forEach(el => {
+    const icon = el.querySelector('.ag-icon');
+    if (!icon) return;
+
+    let hold = false;
+    let timer;
+    let duration = 1.5;
+
+    const stop = () => {
+      hold = false;
+      clearTimeout(timer);
+      icon.classList.remove('ag-spin', 'ag-spin-once');
+      icon.style.removeProperty('--ag-spin-duration');
+    };
+
+    const startSpin = () => {
+      if (!hold) return;
+      icon.classList.remove('ag-spin-once');
+      icon.classList.add('ag-spin');
+      icon.style.setProperty('--ag-spin-duration', duration + 's');
+      const accelerate = () => {
+        if (!hold) return;
+        duration = Math.max(0.2, duration - 0.3);
+        icon.style.setProperty('--ag-spin-duration', duration + 's');
+        if (duration > 0.2) timer = setTimeout(accelerate, 200);
+      };
+      accelerate();
+    };
+
+    const handlePress = () => {
+      hold = true;
+      duration = 1.5;
+      icon.classList.add('ag-spin-once');
+      timer = setTimeout(startSpin, 1400); // 0.4s spin + 1s pause
+    };
+
+    el.addEventListener('mousedown', handlePress);
+    el.addEventListener('touchstart', handlePress, { passive: true });
+    el.addEventListener('mouseup', stop);
+    el.addEventListener('mouseleave', stop);
+    el.addEventListener('touchend', stop);
+  });
 });

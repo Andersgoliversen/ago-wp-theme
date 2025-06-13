@@ -17,13 +17,31 @@
     animation: fadeUp 0.8s ease-out forwards;
   }
 
-  /* ── Quick spin animation for icons ────────────────────── */
+  /* ── Icon animations ───────────────────────────────────── */
   @keyframes ag-spin {
     to { transform: rotate(360deg); }
   }
 
   .ag-spin {
-    animation: ag-spin 0.4s linear infinite;
+    animation: ag-spin var(--ag-spin-duration,0.4s) linear infinite;
+  }
+
+  @keyframes ag-spin-once {
+    to { transform: rotate(360deg); }
+  }
+
+  .ag-spin-once {
+    animation: ag-spin-once 0.4s ease-in-out forwards;
+  }
+
+  @keyframes ag-wiggle {
+    0%,100% { transform: rotate(0deg); }
+    25%     { transform: rotate(-12deg); }
+    75%     { transform: rotate(12deg); }
+  }
+
+  .ag-interactive:hover .ag-icon {
+    animation: ag-wiggle 0.6s ease-in-out infinite;
   }
 }
 
