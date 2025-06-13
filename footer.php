@@ -29,8 +29,8 @@
         <a href="https://www.youtube.com/@andersgoliversen" target="_blank" rel="noopener"
            class="no-underline text-inherit decoration-transparent transition-transform duration-150 hover:scale-105 hover:text-neutral-600"
            aria-label="YouTube channel">
-            <svg viewBox="0 0 48 48" class="w-5 h-5" aria-hidden="true">
-                <circle cx="24" cy="24" r="20" fill="#FF1A1A" class="youtube-bg" />
+            <svg viewBox="0 0 48 48" class="w-5 h-5 fill-current" aria-hidden="true">
+                <circle cx="24" cy="24" r="24" fill="currentColor" class="youtube-bg" />
                 <polygon points="20,32 20,16 32,24" fill="#fff"/>
             </svg>
         </a>

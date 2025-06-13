@@ -76,18 +76,18 @@
                         </a>
                         <!-- ----------  YouTube icon link ------------------------------------- -->
                         <a href="https://www.youtube.com/@andersgoliversen" target="_blank" rel="noopener"
-                                class="no-underline decoration-transparent transition-transform duration-150 hover:scale-105 group"
+                                class="no-underline decoration-transparent transition-transform duration-150 hover:scale-105 group header-youtube-link"
                                 aria-label="YouTube channel">
                         <svg viewBox="0 0 48 48" class="w-6 h-6" aria-hidden="true">
-                                <circle cx="24" cy="24" r="20" fill="#FF1A1A" class="youtube-bg transition-colors duration-150 group-hover:fill-[#FF5252]" />
-                                <polygon points="20,32 20,16 32,24" fill="#fff"/>
+                                <circle cx="24" cy="24" r="24" fill="#FF1A1A" class="youtube-bg transition-colors duration-150" />
+                                <polygon points="20,32 20,16 34,24" fill="#fff"/>
                         </svg>
                         </a>
                         <style>
-                        a[aria-label="YouTube channel"] .youtube-bg {
+                        .header-youtube-link .youtube-bg {
                                 transition: fill 0.15s;
                         }
-                        a[aria-label="YouTube channel"]:hover .youtube-bg {
+                        .header-youtube-link:hover .youtube-bg {
                                 fill: #FF5252;
                         }
                         </style>
