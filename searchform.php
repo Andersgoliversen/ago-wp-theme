@@ -3,8 +3,7 @@
  * Custom search form.
  */
 ?>
-<form role="search" method="get" class="w-full max-w-md mx-auto flex flex-col items-start" action="<?php echo esc_url( home_url( '/' ) ); ?>">
-    <label for="search-field" class="sr-only"><?php esc_html_e( 'Search for:', 'andersgoliversen' ); ?></label>
+<form role="search" method="get" class="w-full max-w-md mx-auto flex flex-row items-stretch" action="<?php echo esc_url( home_url( '/' ) ); ?>">
     <input type="search" id="search-field" name="s" class="flex-grow border border-neutral-300 rounded-l px-3 py-2" placeholder="<?php esc_attr_e( 'Search …', 'andersgoliversen' ); ?>" value="<?php echo get_search_query(); ?>" />
     <button type="submit" id="search-submit" class="bg-neutral-600 text-white rounded-r px-4 py-2 transition-colors transition-transform duration-150 hover:bg-neutral-400 hover:scale-105 ag-interactive flex items-center justify-center">
         <!-- Magnifying glass icon starts here -->
@@ -17,5 +16,6 @@
         <!-- Magnifying glass icon ends here -->
         <span class="sr-only"><?php esc_html_e( 'Search', 'andersgoliversen' ); ?></span>
     </button>
+    <label for="search-field" class="sr-only"><?php esc_html_e( 'Search for:', 'andersgoliversen' ); ?></label>
     <p id="search-warning" class="hidden mt-2 text-neutral-800 bg-white px-2 py-1 rounded shadow">Please fill out this field.</p>
 </form>
