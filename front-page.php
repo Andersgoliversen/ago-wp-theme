@@ -56,7 +56,7 @@ get_header(); ?>
       <h2 class="mt-4 text-xl font-semibold">Art</h2>
       <p class="mt-2 text-sm">My illustrations and drawings</p>
       <a href="https://andersgoliversen.com/gallery/"
-         class="mt-4 inline-block font-bold text-white py-2 px-4 rounded transition-colors transition-transform duration-150 bg-neutral-600 hover:bg-neutral-400 hover:scale-105 no-underline">
+         class="mt-4 inline-block font-bold text-white py-2 px-4 rounded transition-colors transition-transform duration-150 bg-neutral-600 hover:bg-neutral-400 hover:scale-105 active:bg-neutral-700 active:scale-95 no-underline"><!-- Darken and shrink on click -->
         View Gallery
       </a>
     </article>
@@ -69,7 +69,7 @@ get_header(); ?>
       <h2 class="mt-4 text-xl font-semibold">Rock Art Research</h2>
       <p class="mt-2 text-sm">Research on Norwegian rock art and petroglyphs</p>
       <a href="https://andersgoliversen.com/projects/prehistoric-norway/"
-         class="mt-4 inline-block font-bold text-white py-2 px-4 rounded transition-colors transition-transform duration-150 bg-neutral-600 hover:bg-neutral-400 hover:scale-105 no-underline">
+         class="mt-4 inline-block font-bold text-white py-2 px-4 rounded transition-colors transition-transform duration-150 bg-neutral-600 hover:bg-neutral-400 hover:scale-105 active:bg-neutral-700 active:scale-95 no-underline"><!-- Darken and shrink on click -->
         Explore Research
       </a>
     </article>
@@ -82,7 +82,7 @@ get_header(); ?>
       <h2 class="mt-4 text-xl font-semibold">Diurnalis</h2>
       <p class="mt-2 text-sm">Development art and animation for Diurnalis</p>
       <a href="https://andersgoliversen.com/projects/diurnalis/"
-         class="mt-4 inline-block font-bold text-white py-2 px-4 rounded transition-colors transition-transform duration-150 bg-neutral-600 hover:bg-neutral-400 hover:scale-105 no-underline">
+         class="mt-4 inline-block font-bold text-white py-2 px-4 rounded transition-colors transition-transform duration-150 bg-neutral-600 hover:bg-neutral-400 hover:scale-105 active:bg-neutral-700 active:scale-95 no-underline"><!-- Darken and shrink on click -->
         View Diurnalis
       </a>
     </article>
@@ -94,7 +94,7 @@ get_header(); ?>
   <div class="max-w-5xl mx-auto px-4 text-center">
     <h2 class="text-2xl font-semibold mb-8">Latest from the Blog</h2>
     <div class="relative">
-      <button id="recent-posts-prev" class="absolute -left-6 sm:-left-8 top-1/2 -translate-y-1/2 z-10 px-2 text-2xl no-underline text-inherit decoration-transparent transition-transform duration-150 hover:scale-105 hover:text-neutral-600">&lt;</button>
+      <button id="recent-posts-prev" class="absolute -left-6 sm:-left-8 top-1/2 -translate-y-1/2 z-10 px-2 text-2xl no-underline text-inherit decoration-transparent transition-transform duration-150 hover:scale-105 hover:text-neutral-600 active:scale-95 active:text-neutral-900">&lt;</button><!-- Shrink and darken when pressed -->
       <div id="recent-posts-slider" class="flex overflow-x-auto snap-x snap-mandatory gap-2 scroll-smooth px-8 no-scrollbar">
       <?php
       $recent = new WP_Query( array(
@@ -121,10 +121,10 @@ get_header(); ?>
       endif;
       ?>
       </div>
-      <button id="recent-posts-next" class="absolute -right-6 sm:-right-8 top-1/2 -translate-y-1/2 z-10 px-2 text-2xl no-underline text-inherit decoration-transparent transition-transform duration-150 hover:scale-105 hover:text-neutral-600">&gt;</button>
+      <button id="recent-posts-next" class="absolute -right-6 sm:-right-8 top-1/2 -translate-y-1/2 z-10 px-2 text-2xl no-underline text-inherit decoration-transparent transition-transform duration-150 hover:scale-105 hover:text-neutral-600 active:scale-95 active:text-neutral-900">&gt;</button><!-- Shrink and darken when pressed -->
     </div>
     <a href="<?php echo esc_url( get_permalink( get_option( 'page_for_posts' ) ) ); ?>"
-       class="inline-block mt-8 font-bold text-white py-2 px-6 rounded transition-colors transition-transform duration-150 bg-neutral-600 hover:bg-neutral-400 hover:scale-105 no-underline">
+       class="inline-block mt-8 font-bold text-white py-2 px-6 rounded transition-colors transition-transform duration-150 bg-neutral-600 hover:bg-neutral-400 hover:scale-105 active:bg-neutral-700 active:scale-95 no-underline"><!-- Darken and shrink on click -->
       View All Posts
     </a>
   </div>

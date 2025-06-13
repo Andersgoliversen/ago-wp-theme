@@ -67,6 +67,8 @@
 @layer base {
   a {
     @apply underline decoration-neutral-400 text-neutral-800 transition-transform duration-150 hover:scale-105 hover:text-neutral-600 hover:decoration-neutral-600;
+    /* Darken and shrink slightly while the link is actively clicked */
+    @apply active:text-neutral-950 active:scale-95;
   }
 }
 
