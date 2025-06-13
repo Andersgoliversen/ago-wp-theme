@@ -78,10 +78,10 @@
                         <a href="https://www.youtube.com/@andersgoliversen" target="_blank" rel="noopener"
                                 class="no-underline decoration-transparent transition-transform duration-150 hover:scale-105 group"
                                 aria-label="YouTube channel">
-                                <svg viewBox="0 0 48 48" class="w-9 h-7" aria-hidden="true">
-                                        <rect x="4" y="10" width="40" height="28" rx="8" fill="#FF1A1A" class="youtube-bg transition-colors duration-150 group-hover:fill-[#FF5252]" />
-                                        <polygon points="20,30 20,18 31,24" fill="#fff"/>
-                                </svg>
+                        <svg viewBox="0 0 48 48" class="w-6 h-6" aria-hidden="true">
+                                <circle cx="24" cy="24" r="20" fill="#FF1A1A" class="youtube-bg transition-colors duration-150 group-hover:fill-[#FF5252]" />
+                                <polygon points="20,32 20,16 32,24" fill="#fff"/>
+                        </svg>
                         </a>
                         <style>
                         a[aria-label="YouTube channel"] .youtube-bg {
