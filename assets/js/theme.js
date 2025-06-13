@@ -29,3 +29,68 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('scroll', onScroll, { passive: true });
   }
 });
+
+// ---------------------------------------------------------------------------
+// Blog post slider on the front page
+// ---------------------------------------------------------------------------
+document.addEventListener('DOMContentLoaded', () => {
+  const slider = document.getElementById('recent-posts-slider');
+  const prevBtn = document.getElementById('recent-posts-prev');
+  const nextBtn = document.getElementById('recent-posts-next');
+
+  if (!slider || !prevBtn || !nextBtn) return;
+
+  let page = 1;
+  const perPage = 3;
+  let loading = false;
+
+  async function loadMore() {
+    if (loading) return;
+    loading = true;
+    try {
+      const res = await fetch(`/wp-json/wp/v2/posts?_embed&per_page=${perPage}&page=${page + 1}`);
+      if (!res.ok) return;
+      const posts = await res.json();
+      if (!Array.isArray(posts) || posts.length === 0) return;
+      page += 1;
+      for (const post of posts) {
+        const article = document.createElement('article');
+        article.className = 'flex-none w-80 snap-center flex flex-col items-center text-center';
+        const media = post._embedded && post._embedded['wp:featuredmedia'] ? post._embedded['wp:featuredmedia'][0].source_url : '';
+        article.innerHTML = `
+          <a href="${post.link}" class="block">
+            ${media ? `<img src="${media}" alt="" class="w-full h-40 object-cover rounded shadow">` : ''}
+            <h3 class="mt-4 text-lg font-semibold">${post.title.rendered}</h3>
+            <time datetime="${post.date}" class="text-sm text-neutral-500">${new Date(post.date).toLocaleDateString()}</time>
+          </a>`;
+        slider.appendChild(article);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      loading = false;
+    }
+  }
+
+  nextBtn.addEventListener('click', () => {
+    slider.scrollBy({ left: slider.clientWidth, behavior: 'smooth' });
+    if (slider.scrollWidth - slider.scrollLeft - slider.clientWidth < 50) {
+      loadMore();
+    }
+  });
+
+  prevBtn.addEventListener('click', () => {
+    slider.scrollBy({ left: -slider.clientWidth, behavior: 'smooth' });
+  });
+
+  let startX = 0;
+  slider.addEventListener('touchstart', e => {
+    startX = e.touches[0].clientX;
+  }, { passive: true });
+
+  slider.addEventListener('touchend', e => {
+    const diff = e.changedTouches[0].clientX - startX;
+    if (diff > 50) prevBtn.click();
+    if (diff < -50) nextBtn.click();
+  });
+});

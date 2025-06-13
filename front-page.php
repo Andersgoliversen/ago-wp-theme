@@ -93,7 +93,9 @@ get_header(); ?>
 <section id="recent-posts" aria-label="Latest from the Blog" class="py-16">
   <div class="max-w-5xl mx-auto px-4 text-center">
     <h2 class="text-2xl font-semibold mb-8">Latest from the Blog</h2>
-    <div class="grid gap-8 md:grid-cols-3">
+    <div class="relative">
+      <button id="recent-posts-prev" class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 rounded-full px-3 py-1 text-2xl">&lt;</button>
+      <div id="recent-posts-slider" class="flex overflow-x-auto snap-x snap-mandatory gap-4 scroll-smooth px-8 no-scrollbar">
       <?php
       $recent = new WP_Query( array(
         'posts_per_page' => 3,
@@ -102,10 +104,10 @@ get_header(); ?>
         while ( $recent->have_posts() ) :
           $recent->the_post();
       ?>
-          <article class="flex flex-col items-center text-center">
+          <article class="flex-none w-80 snap-center flex flex-col items-center text-center">
             <a href="<?php the_permalink(); ?>" class="block">
               <?php if ( has_post_thumbnail() ) : ?>
-                <?php the_post_thumbnail( 'thumbnail', array( 'class' => 'w-full h-32 object-cover rounded shadow' ) ); ?>
+                <?php the_post_thumbnail( 'medium', array( 'class' => 'w-full h-40 object-cover rounded shadow' ) ); ?>
               <?php endif; ?>
               <h3 class="mt-4 text-lg font-semibold"><?php the_title(); ?></h3>
               <time datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>" class="text-sm text-neutral-500">
@@ -118,6 +120,8 @@ get_header(); ?>
         wp_reset_postdata();
       endif;
       ?>
+      </div>
+      <button id="recent-posts-next" class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 rounded-full px-3 py-1 text-2xl">&gt;</button>
     </div>
     <a href="<?php echo esc_url( get_permalink( get_option( 'page_for_posts' ) ) ); ?>"
        class="inline-block mt-8 bg-neutral-800 text-white py-2 px-6 rounded transition-colors hover:bg-neutral-700">
