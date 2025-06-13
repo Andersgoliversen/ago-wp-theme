@@ -94,3 +94,36 @@ document.addEventListener('DOMContentLoaded', () => {
     if (diff < -50) nextBtn.click();
   });
 });
+
+// ---------------------------------------------------------------------------
+// Search form enhancements
+// ---------------------------------------------------------------------------
+document.addEventListener('DOMContentLoaded', () => {
+  const input = document.getElementById('search-field');
+  const button = document.getElementById('search-submit');
+  const icon = button ? button.querySelector('svg') : null;
+
+  if (input) {
+    const text = input.getAttribute('placeholder') || '';
+
+    function animatePlaceholder() {
+      input.placeholder = '';
+      let i = 0;
+      const interval = setInterval(() => {
+        input.placeholder = text.slice(0, i + 1);
+        i += 1;
+        if (i >= text.length) clearInterval(interval);
+      }, 80);
+    }
+
+    animatePlaceholder();
+    setInterval(animatePlaceholder, 30000);
+  }
+
+  if (button && icon) {
+    const stop = () => icon.classList.remove('ag-spin');
+    button.addEventListener('mousedown', () => icon.classList.add('ag-spin'));
+    button.addEventListener('mouseup', stop);
+    button.addEventListener('mouseleave', stop);
+  }
+});
