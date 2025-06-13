@@ -26,9 +26,9 @@
                         $logo_classes  = 'no-underline text-inherit decoration-transparent transition-transform duration-150 hover:scale-105 hover:opacity-80 inline-flex items-center';
                         // Add larger text size if on front page
                         if (is_front_page()) {
-                            $name_classes = 'no-underline text-inherit decoration-transparent transition-transform duration-150 hover:scale-105 hover:text-neutral-600 hover:opacity-80 text-xl md:text-2xl font-semibold';
+                            $name_classes = 'no-underline text-inherit decoration-transparent transition-transform duration-150 hover:scale-105 hover:text-[oklch(92.4%_0.12_95.746)] hover:opacity-80 text-xl md:text-2xl font-semibold';
                         } else {
-                            $name_classes = 'no-underline text-inherit decoration-transparent transition-transform duration-150 hover:scale-105 hover:text-neutral-600 hover:opacity-80 text-xl font-semibold';
+                            $name_classes = 'no-underline text-inherit decoration-transparent transition-transform duration-150 hover:scale-105 hover:text-[oklch(92.4%_0.12_95.746)] hover:opacity-80 text-xl font-semibold';
                         }
                         ?>
                         <a href="<?php echo esc_url(home_url('/')); ?>"
@@ -53,7 +53,7 @@
                                         ['slug' => '/about/',    'label' => 'About',    'check' => is_page('about')],
                                 ];
                                 foreach ($links as $l) {
-                                        $classes = 'no-underline text-inherit decoration-transparent transition-transform duration-150 hover:scale-105 hover:text-neutral-600';
+                                        $classes = 'no-underline text-inherit decoration-transparent transition-transform duration-150 hover:scale-105 hover:text-[oklch(92.4%_0.12_95.746)]';
                                         if ($l['check']) {
                                                 $classes .= ' font-semibold';
                                         }
