@@ -40,7 +40,7 @@
     75%     { transform: rotate(12deg); }
   }
 
-  .ag-interactive:hover .ag-icon {
+  .ag-interactive:hover .ag-icon:not(.ag-spin):not(.ag-spin-once) {
     animation: ag-wiggle 0.6s ease-in-out infinite;
   }
 }
