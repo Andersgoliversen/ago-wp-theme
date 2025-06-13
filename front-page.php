@@ -56,7 +56,7 @@ get_header(); ?>
       <h2 class="mt-4 text-xl font-semibold">Art</h2>
       <p class="mt-2 text-sm">My illustrations and drawings</p>
       <a href="https://andersgoliversen.com/gallery/"
-         class="mt-4 inline-block font-bold text-white py-2 px-4 rounded transition-colors transition-transform duration-150 bg-[oklch(82.8%_0.189_84.429)] hover:bg-[oklch(92.4%_0.12_95.746)] hover:scale-105">
+         class="mt-4 inline-block font-bold text-white py-2 px-4 rounded transition-colors transition-transform duration-150 bg-neutral-600 hover:bg-neutral-400 hover:scale-105 no-underline">
         View Gallery
       </a>
     </article>
@@ -69,7 +69,7 @@ get_header(); ?>
       <h2 class="mt-4 text-xl font-semibold">Rock Art Research</h2>
       <p class="mt-2 text-sm">Research on Norwegian rock art and petroglyphs</p>
       <a href="https://andersgoliversen.com/projects/prehistoric-norway/"
-         class="mt-4 inline-block font-bold text-white py-2 px-4 rounded transition-colors transition-transform duration-150 bg-[oklch(82.8%_0.189_84.429)] hover:bg-[oklch(92.4%_0.12_95.746)] hover:scale-105">
+         class="mt-4 inline-block font-bold text-white py-2 px-4 rounded transition-colors transition-transform duration-150 bg-neutral-600 hover:bg-neutral-400 hover:scale-105 no-underline">
         Explore Research
       </a>
     </article>
@@ -82,7 +82,7 @@ get_header(); ?>
       <h2 class="mt-4 text-xl font-semibold">Diurnalis</h2>
       <p class="mt-2 text-sm">Development art and animation for Diurnalis</p>
       <a href="https://andersgoliversen.com/projects/diurnalis/"
-         class="mt-4 inline-block font-bold text-white py-2 px-4 rounded transition-colors transition-transform duration-150 bg-[oklch(82.8%_0.189_84.429)] hover:bg-[oklch(92.4%_0.12_95.746)] hover:scale-105">
+         class="mt-4 inline-block font-bold text-white py-2 px-4 rounded transition-colors transition-transform duration-150 bg-neutral-600 hover:bg-neutral-400 hover:scale-105 no-underline">
         View Diurnalis
       </a>
     </article>
@@ -124,7 +124,7 @@ get_header(); ?>
       <button id="recent-posts-next" class="absolute -right-6 sm:-right-8 top-1/2 -translate-y-1/2 z-10 px-2 text-2xl no-underline text-inherit decoration-transparent transition-transform duration-150 hover:scale-105 hover:text-neutral-600">&gt;</button>
     </div>
     <a href="<?php echo esc_url( get_permalink( get_option( 'page_for_posts' ) ) ); ?>"
-       class="inline-block mt-8 font-bold text-white py-2 px-6 rounded transition-colors transition-transform duration-150 bg-[oklch(82.8%_0.189_84.429)] hover:bg-[oklch(92.4%_0.12_95.746)] hover:scale-105">
+       class="inline-block mt-8 font-bold text-white py-2 px-6 rounded transition-colors transition-transform duration-150 bg-neutral-600 hover:bg-neutral-400 hover:scale-105 no-underline">
       View All Posts
     </a>
   </div>
