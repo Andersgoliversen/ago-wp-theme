@@ -63,6 +63,28 @@
 #hero-img-1 { animation: heroFade1 32s ease-in-out infinite; }
 #hero-img-2 { animation: heroFade2 32s ease-in-out infinite; }
 
+/* -----------------------------------------------------------
+   Gallery card vertical pan & cross-fade
+   ----------------------------------------------------------- */
+@keyframes galleryPan1 {
+  0%   { opacity: 1; object-position: center top; }
+  45%  { opacity: 1; object-position: center bottom; }
+  55%  { opacity: 0; object-position: center bottom; }
+  90%  { opacity: 0; object-position: center top; }
+  100% { opacity: 1; object-position: center top; }
+}
+
+@keyframes galleryPan2 {
+  0%   { opacity: 0; object-position: center top; }
+  45%  { opacity: 0; object-position: center top; }
+  55%  { opacity: 1; object-position: center top; }
+  90%  { opacity: 1; object-position: center bottom; }
+  100% { opacity: 0; object-position: center bottom; }
+}
+
+#gallery-img-1 { animation: galleryPan1 20s ease-in-out infinite; }
+#gallery-img-2 { animation: galleryPan2 20s ease-in-out infinite; }
+
 /* Global link style */
 @layer base {
   a {
