@@ -89,18 +89,46 @@
    Diurnalis card zoom & cross-fade animation
    ----------------------------------------------------------- */
 @keyframes diurnalisSeq {
-  /* Visible while zooming between start and end */
-  0%   { opacity: 1; transform: scale(var(--zoom-start,1)); }
-  20%  { opacity: 1; transform: scale(var(--zoom-end,1.1)); }
-  /* Fade out before next image appears */
-  25%  { opacity: 0; transform: scale(var(--zoom-end,1.1)); }
+  /* Fade in while starting zoom */
+  0%   { opacity: 0;   transform: scale(var(--zoom-start,1)); }
+  5%   { opacity: 1;   transform: scale(var(--zoom-start,1)); }
+  /* Hold visible while zooming towards end value */
+  20%  { opacity: 1;   transform: scale(var(--zoom-end,1.2)); }
+  /* Fade out at the end of the image's slot */
+  25%  { opacity: 0;   transform: scale(var(--zoom-end,1.2)); }
   100% { opacity: 0; }
 }
 
-#diurnalis-img-1 { --zoom-start: 1;   --zoom-end: 1.1;  animation: diurnalisSeq 16s ease-in-out infinite; }
-#diurnalis-img-2 { --zoom-start: 1.1; --zoom-end: 1;   animation: diurnalisSeq 16s ease-in-out infinite; animation-delay: 4s; }
-#diurnalis-img-3 { --zoom-start: 1;   --zoom-end: 1.1;  animation: diurnalisSeq 16s ease-in-out infinite; animation-delay: 8s; }
-#diurnalis-img-4 { --zoom-start: 1.1; --zoom-end: 1;   animation: diurnalisSeq 16s ease-in-out infinite; animation-delay: 12s; }
+.diurnalis-img {
+  opacity: 0;
+  animation: diurnalisSeq 24s ease-in-out infinite;
+  animation-play-state: paused;
+}
+#diurnalis-img-1 {
+  opacity: 1; /* visible before animation starts */
+  --zoom-start: 1;
+  --zoom-end: 1.2;
+  animation-delay: 0s;
+}
+#diurnalis-img-2 {
+  --zoom-start: 1.2;
+  --zoom-end: 1;
+  animation-delay: 4.8s;
+}
+#diurnalis-img-3 {
+  --zoom-start: 1;
+  --zoom-end: 1.2;
+  animation-delay: 10.8s;
+}
+#diurnalis-img-4 {
+  --zoom-start: 1.2;
+  --zoom-end: 1;
+  animation-delay: 16.8s;
+}
+
+body.diurnalis-ready .diurnalis-img {
+  animation-play-state: running;
+}
 
 /* Global link style */
 @layer base {
