@@ -85,6 +85,23 @@
 #gallery-img-1 { animation: galleryPan1 20s ease-in-out infinite; }
 #gallery-img-2 { animation: galleryPan2 20s ease-in-out infinite; }
 
+/* -----------------------------------------------------------
+   Diurnalis card zoom & cross-fade animation
+   ----------------------------------------------------------- */
+@keyframes diurnalisSeq {
+  /* Visible while zooming between start and end */
+  0%   { opacity: 1; transform: scale(var(--zoom-start,1)); }
+  20%  { opacity: 1; transform: scale(var(--zoom-end,1.1)); }
+  /* Fade out before next image appears */
+  25%  { opacity: 0; transform: scale(var(--zoom-end,1.1)); }
+  100% { opacity: 0; }
+}
+
+#diurnalis-img-1 { --zoom-start: 1;   --zoom-end: 1.1;  animation: diurnalisSeq 16s ease-in-out infinite; }
+#diurnalis-img-2 { --zoom-start: 1.1; --zoom-end: 1;   animation: diurnalisSeq 16s ease-in-out infinite; animation-delay: 4s; }
+#diurnalis-img-3 { --zoom-start: 1;   --zoom-end: 1.1;  animation: diurnalisSeq 16s ease-in-out infinite; animation-delay: 8s; }
+#diurnalis-img-4 { --zoom-start: 1.1; --zoom-end: 1;   animation: diurnalisSeq 16s ease-in-out infinite; animation-delay: 12s; }
+
 /* Global link style */
 @layer base {
   a {
