@@ -30,6 +30,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+// Start Diurnalis animations after full page load
+window.addEventListener('load', () => {
+  document.body.classList.add('diurnalis-ready');
+});
+
 // ---------------------------------------------------------------------------
 // Blog post slider on the front page
 // ---------------------------------------------------------------------------

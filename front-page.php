@@ -90,22 +90,22 @@ get_header(); ?>
       <div class="relative w-full h-48 overflow-hidden rounded shadow">
         <?php echo wp_get_attachment_image( 2950, 'full', false, array(
           'id'    => 'diurnalis-img-1',
-          'class' => 'absolute inset-0 w-full h-full object-cover',
+          'class' => 'diurnalis-img absolute inset-0 w-full h-full object-cover',
           'alt'   => 'title card from the Diurnalis episode Happy Birthday',
         ) ); ?>
         <?php echo wp_get_attachment_image( 2955, 'full', false, array(
           'id'    => 'diurnalis-img-2',
-          'class' => 'absolute inset-0 w-full h-full object-cover',
+          'class' => 'diurnalis-img absolute inset-0 w-full h-full object-cover',
           'alt'   => 'still frame from the Diurnalis episode Happy Birthday',
         ) ); ?>
         <?php echo wp_get_attachment_image( 2957, 'full', false, array(
           'id'    => 'diurnalis-img-3',
-          'class' => 'absolute inset-0 w-full h-full object-cover',
+          'class' => 'diurnalis-img absolute inset-0 w-full h-full object-cover',
           'alt'   => 'still frame from the Diurnalis episode Mystery',
         ) ); ?>
         <?php echo wp_get_attachment_image( 2949, 'full', false, array(
           'id'    => 'diurnalis-img-4',
-          'class' => 'absolute inset-0 w-full h-full object-cover',
+          'class' => 'diurnalis-img absolute inset-0 w-full h-full object-cover',
           'alt'   => 'title card from the Diurnalis episode Mystery',
         ) ); ?>
       </div>
