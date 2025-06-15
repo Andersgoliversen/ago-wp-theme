@@ -86,9 +86,29 @@ get_header(); ?>
 
     <!-- Diurnalis card -->
     <article class="w-[320px] flex flex-col items-center text-center">
-      <img src="<?php echo esc_url( wp_get_attachment_image_url( 8537, 'medium' ) ); ?>"
-           alt="Image of Elijah with a map from the Diurnalis episode &quot;Happy Birthday&quot;"
-           class="w-full h-48 object-cover rounded shadow" />
+      <!-- Four images zooming and cross-fading -->
+      <div class="relative w-full h-48 overflow-hidden rounded shadow">
+        <?php echo wp_get_attachment_image( 2950, 'full', false, array(
+          'id'    => 'diurnalis-img-1',
+          'class' => 'absolute inset-0 w-full h-full object-cover',
+          'alt'   => 'title card from the Diurnalis episode Happy Birthday',
+        ) ); ?>
+        <?php echo wp_get_attachment_image( 2955, 'full', false, array(
+          'id'    => 'diurnalis-img-2',
+          'class' => 'absolute inset-0 w-full h-full object-cover',
+          'alt'   => 'still frame from the Diurnalis episode Happy Birthday',
+        ) ); ?>
+        <?php echo wp_get_attachment_image( 2957, 'full', false, array(
+          'id'    => 'diurnalis-img-3',
+          'class' => 'absolute inset-0 w-full h-full object-cover',
+          'alt'   => 'still frame from the Diurnalis episode Mystery',
+        ) ); ?>
+        <?php echo wp_get_attachment_image( 2949, 'full', false, array(
+          'id'    => 'diurnalis-img-4',
+          'class' => 'absolute inset-0 w-full h-full object-cover',
+          'alt'   => 'title card from the Diurnalis episode Mystery',
+        ) ); ?>
+      </div>
       <h2 class="mt-4 text-xl font-semibold">Diurnalis</h2>
       <p class="mt-2 text-sm">Development art and animation for Diurnalis</p>
       <a href="https://andersgoliversen.com/projects/diurnalis/"
