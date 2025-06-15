@@ -87,47 +87,78 @@
 
 /* -----------------------------------------------------------
    Diurnalis card zoom & cross-fade animation
+
+   Overall Logic:
+   - A sequence of images fades and zooms, creating a continuous loop.
+   - Each image uses the same 24-second `diurnalisSeq` animation definition.
+   - `animation-delay` staggers the start of this 24s animation for each image,
+     creating the sequence.
+   - Animations are paused by default and start when the `body` tag gets
+     the class `diurnalis-ready`.
    ----------------------------------------------------------- */
+
+/*
+ * Defines the animation for a single image in the Diurnalis sequence.
+ * Each image's animation cycle is 24 seconds long, matching the overall sequence duration.
+ *
+ * Keyframe percentages:
+ * - 0%-5% (0s to 1.2s): Image fades in and establishes initial zoom scale.
+ *   Zoom scale is defined by `--zoom-start` (or fallback 0.7).
+ * - 5%-25% (1.2s to 6s): Image is fully opaque and visible.
+ *   Zoom transition occurs towards `--zoom-end` (or fallback 1.4).
+ * - 25%-30% (6s to 7.2s): Image fades out. Zoom is at its end state.
+ *   The 25% mark (6s) is critical for handoff: as this image starts fading out,
+ *   the next image in sequence (delayed appropriately) starts fading in.
+ * - 30%-100% (7.2s to 24s): Image remains transparent. This ensures it's hidden
+ *   outside its active "slot" in the sequence.
+ */
 @keyframes diurnalisSeq {
-  /* Fade in while starting zoom */
-  0%   { opacity: 0;   transform: scale(var(--zoom-start,1)); }
-  5%   { opacity: 1;   transform: scale(var(--zoom-start,1)); }
-  /* Hold visible while zooming towards end value */
-  20%  { opacity: 1;   transform: scale(var(--zoom-end,1.2)); }
-  /* Fade out at the end of the image's slot */
-  25%  { opacity: 0;   transform: scale(var(--zoom-end,1.2)); }
-  100% { opacity: 0; }
+  0%   { opacity: 0;   transform: scale(var(--zoom-start,0.7)); } /* Start of image's cycle: invisible, initial zoom */
+  5%   { opacity: 1;   transform: scale(var(--zoom-start,0.7)); } /* Faded in, holds initial zoom */
+  25%  { opacity: 1;   transform: scale(var(--zoom-end,1.4)); }   /* Fully visible, zoom reaches end state, about to fade out */
+  30%  { opacity: 0;   transform: scale(var(--zoom-end,1.4)); }   /* Faded out, maintains end zoom state */
+  100% { opacity: 0; }                                          /* Remainder of 24s cycle: stays transparent */
 }
 
+/* Base styles for all images in the Diurnalis sequence */
 .diurnalis-img {
-  opacity: 0;
-  animation: diurnalisSeq 24s ease-in-out infinite;
-  animation-play-state: paused;
-}
-#diurnalis-img-1 {
-  opacity: 1; /* visible before animation starts */
-  --zoom-start: 1;
-  --zoom-end: 1.2;
-  animation-delay: 0s;
-}
-#diurnalis-img-2 {
-  --zoom-start: 1.2;
-  --zoom-end: 1;
-  animation-delay: 4.8s;
-}
-#diurnalis-img-3 {
-  --zoom-start: 1;
-  --zoom-end: 1.2;
-  animation-delay: 10.8s;
-}
-#diurnalis-img-4 {
-  --zoom-start: 1.2;
-  --zoom-end: 1;
-  animation-delay: 16.8s;
+  opacity: 0; /* Default state: hidden. Overridden by #diurnalis-img-1 for initial view */
+  animation: diurnalisSeq 24s ease-in-out infinite; /* Common animation properties */
+  animation-play-state: paused; /* Animation is paused until explicitly started */
 }
 
+/* Specific styles for each image in the sequence */
+/* #diurnalis-img-1: First image in sequence (e.g., ID 2950) */
+#diurnalis-img-1 {
+  opacity: 1; /* Visible on page load, before animations start */
+  --zoom-start: 0.7; /* Zooms IN from 0.7 to 1.4 */
+  --zoom-end: 1.4;
+  animation-delay: 0s; /* Starts its 24s animation cycle immediately */
+}
+/* #diurnalis-img-2: Second image in sequence (e.g., ID 2955) */
+#diurnalis-img-2 {
+  --zoom-start: 1.4; /* Zooms OUT from 1.4 to 0.7 */
+  --zoom-end: 0.7;
+  animation-delay: 6s; /* Starts its 24s animation 6s into the main 24s cycle timeline */
+                       /* This aligns with #diurnalis-img-1 starting its fade-out (at its 25% mark) */
+}
+/* #diurnalis-img-3: Third image in sequence (e.g., ID 2957) */
+#diurnalis-img-3 {
+  --zoom-start: 0.7; /* Zooms IN from 0.7 to 1.4 */
+  --zoom-end: 1.4;
+  animation-delay: 12s; /* Starts 12s into the main timeline (6s after #diurnalis-img-2) */
+}
+/* #diurnalis-img-4: Fourth image in sequence (e.g., ID 2949) */
+#diurnalis-img-4 {
+  --zoom-start: 1.4; /* Zooms OUT from 1.4 to 0.7 */
+  --zoom-end: 0.7;
+  animation-delay: 18s; /* Starts 18s into the main timeline (6s after #diurnalis-img-3) */
+                        /* This image will cross-fade with #diurnalis-img-1 at the 24s wrap-around point */
+}
+
+/* Triggers the Diurnalis animations to start playing */
 body.diurnalis-ready .diurnalis-img {
-  animation-play-state: running;
+  animation-play-state: running; /* Changes from 'paused' to 'running' */
 }
 
 /* Global link style */
