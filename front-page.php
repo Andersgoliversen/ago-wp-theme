@@ -50,9 +50,19 @@ get_header(); ?>
   <div class="max-w-7xl mx-auto grid gap-12 md:grid-cols-3 justify-center px-4">
     <!-- Gallery card -->
     <article class="w-[320px] flex flex-col items-center text-center">
-      <img src="<?php echo esc_url( wp_get_attachment_image_url( 8538, 'medium' ) ); ?>"
-           alt="Artwork of human alien hybrid"
-           class="w-full h-48 object-cover rounded shadow" />
+      <!-- Two tall images panning vertically inside the card -->
+      <div class="relative w-full h-48 overflow-hidden rounded shadow">
+        <?php echo wp_get_attachment_image( 3133, 'full', false, array(
+          'id'    => 'gallery-img-1',
+          'class' => 'absolute inset-0 w-full h-full object-cover',
+          'alt'   => 'Artwork of human alien hybrid',
+        ) ); ?>
+        <?php echo wp_get_attachment_image( 3072, 'full', false, array(
+          'id'    => 'gallery-img-2',
+          'class' => 'absolute inset-0 w-full h-full object-cover',
+          'alt'   => 'Artwork of a mermonkey with wings',
+        ) ); ?>
+      </div>
       <h2 class="mt-4 text-xl font-semibold">Art</h2>
       <p class="mt-2 text-sm">My illustrations and drawings</p>
       <a href="https://andersgoliversen.com/gallery/"
