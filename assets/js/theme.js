@@ -181,3 +181,58 @@ document.addEventListener('DOMContentLoaded', () => {
     el.addEventListener('touchend', stop);
   });
 });
+
+// ---------------------------------------------------------------------------
+// Rock Art Research card image sequence
+// ---------------------------------------------------------------------------
+document.addEventListener('DOMContentLoaded', () => {
+  const card = document.getElementById('rock-art-card');
+  if (!card) return; // exit if the card is not on the page
+
+  const imgs = Array.from(card.querySelectorAll('.rock-art-img'));
+  let current = 0;      // index of the image currently shown
+  let altToggle = 0;    // toggles between the two alternative drawings
+
+  const wiggleDuration = 200;  // in milliseconds
+  const bounceDuration = 600;  // in milliseconds
+  const delay = 5000;          // wait time before each transition
+
+  // Show the first image (photograph) initially
+  imgs[current].classList.add('active');
+
+  // Determine the next image index in the 0 → 1 → 0 → 2 loop
+  function getNextIndex() {
+    if (current === 0) {
+      return altToggle === 0 ? 1 : 2;
+    }
+    altToggle = altToggle === 0 ? 1 : 0; // swap between the two drawings
+    return 0;
+  }
+
+  // Switch the visible image with a cross-fade
+  function switchImage() {
+    const next = getNextIndex();
+    imgs[current].classList.remove('active');
+    imgs[next].classList.add('active');
+    current = next;
+  }
+
+  // Handles the wiggle, bounce and image swap
+  function animate() {
+    card.classList.add('rock-wiggle');
+    setTimeout(() => {
+      card.classList.remove('rock-wiggle');
+      card.classList.add('rock-bounce');
+      switchImage();
+      setTimeout(() => {
+        card.classList.remove('rock-bounce');
+      }, bounceDuration);
+    }, wiggleDuration);
+  }
+
+  // Initial delay before the first animation, then repeat
+  setTimeout(() => {
+    animate();
+    setInterval(animate, delay + wiggleDuration + bounceDuration);
+  }, delay);
+});

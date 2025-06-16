@@ -86,6 +86,37 @@
 #gallery-img-2 { animation: galleryPan2 20s ease-in-out infinite; }
 
 /* -----------------------------------------------------------
+   Rock Art Research card fade & bounce sequence
+   ----------------------------------------------------------- */
+@layer utilities {
+  /* Images are absolutely positioned and cross-fade when the
+     'active' class is switched via JavaScript */
+  .rock-art-img {
+    @apply opacity-0 transition-opacity duration-[600ms] ease-in-out;
+  }
+  .rock-art-img.active {
+    @apply opacity-100;
+  }
+}
+
+/* Wiggle effect before each bounce */
+@keyframes rockWiggle {
+  0%,100% { transform: rotate(0deg); }
+  50%     { transform: rotate(-3deg); }
+  75%     { transform: rotate(3deg); }
+}
+
+/* Bounce scaling used during image transitions */
+@keyframes rockBounce {
+  0%,100% { transform: scale(1); }
+  50%     { transform: scale(1.08); }
+  80%     { transform: scale(0.96); }
+}
+
+#rock-art-card.rock-wiggle { animation: rockWiggle 0.2s ease-in-out; }
+#rock-art-card.rock-bounce { animation: rockBounce 0.6s ease-in-out; }
+
+/* -----------------------------------------------------------
    Diurnalis card zoom & cross-fade animation
 
    Overall Logic:
