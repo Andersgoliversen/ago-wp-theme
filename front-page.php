@@ -73,9 +73,24 @@ get_header(); ?>
 
     <!-- Rock Art Research card -->
     <article class="w-[320px] flex flex-col items-center text-center">
-      <img src="<?php echo esc_url( wp_get_attachment_image_url( 8536, 'medium' ) ); ?>"
-           alt="A petroglyph photo from Solbergfeltet"
-           class="w-full h-48 object-cover rounded shadow" />
+      <!-- Three-image sequence with JS-controlled transitions -->
+      <div id="rock-art-card" class="relative w-full h-48 overflow-hidden rounded shadow">
+        <?php echo wp_get_attachment_image( 8783, 'full', false, array(
+          'id'    => 'rock-art-img-1',
+          'class' => 'rock-art-img absolute inset-0 w-full h-full object-cover',
+          'alt'   => 'photograph of a petroglyph at Moelv',
+        ) ); ?>
+        <?php echo wp_get_attachment_image( 8782, 'full', false, array(
+          'id'    => 'rock-art-img-2',
+          'class' => 'rock-art-img absolute inset-0 w-full h-full object-cover',
+          'alt'   => 'pencil drawing of the same Moelv petroglyph as a moose calf',
+        ) ); ?>
+        <?php echo wp_get_attachment_image( 8781, 'full', false, array(
+          'id'    => 'rock-art-img-3',
+          'class' => 'rock-art-img absolute inset-0 w-full h-full object-cover',
+          'alt'   => 'pencil drawing of the same Moelv petroglyph as a goat',
+        ) ); ?>
+      </div>
       <h2 class="mt-4 text-xl font-semibold">Rock Art Research</h2>
       <p class="mt-2 text-sm">Research on Norwegian rock art and petroglyphs</p>
       <a href="https://andersgoliversen.com/projects/prehistoric-norway/"
