@@ -56,11 +56,13 @@ get_header(); ?>
           'id'    => 'gallery-img-1',
           'class' => 'absolute inset-0 w-full h-full object-cover',
           'alt'   => 'Artwork of human alien hybrid',
+          'loading' => 'lazy',
         ) ); ?>
         <?php echo wp_get_attachment_image( 3072, 'full', false, array(
           'id'    => 'gallery-img-2',
           'class' => 'absolute inset-0 w-full h-full object-cover',
           'alt'   => 'Artwork of a mermonkey with wings',
+          'loading' => 'lazy',
         ) ); ?>
       </div>
       <h2 class="mt-4 text-xl font-semibold">Art</h2>
@@ -79,16 +81,19 @@ get_header(); ?>
           'id'    => 'rock-art-img-1',
           'class' => 'rock-art-img absolute inset-0 w-full h-full object-cover',
           'alt'   => 'photograph of a petroglyph at Moelv',
+          'loading' => 'lazy',
         ) ); ?>
         <?php echo wp_get_attachment_image( 8782, 'full', false, array(
           'id'    => 'rock-art-img-2',
           'class' => 'rock-art-img absolute inset-0 w-full h-full object-cover',
           'alt'   => 'pencil drawing of the same Moelv petroglyph as a moose calf',
+          'loading' => 'lazy',
         ) ); ?>
         <?php echo wp_get_attachment_image( 8781, 'full', false, array(
           'id'    => 'rock-art-img-3',
           'class' => 'rock-art-img absolute inset-0 w-full h-full object-cover',
           'alt'   => 'pencil drawing of the same Moelv petroglyph as a goat',
+          'loading' => 'lazy',
         ) ); ?>
       </div>
       <h2 class="mt-4 text-xl font-semibold">Rock Art Research</h2>
@@ -107,21 +112,25 @@ get_header(); ?>
           'id'    => 'diurnalis-img-1',
           'class' => 'diurnalis-img absolute inset-0 w-full h-full object-cover',
           'alt'   => 'title card from the Diurnalis episode Happy Birthday',
+          'loading' => 'lazy',
         ) ); ?>
         <?php echo wp_get_attachment_image( 2955, 'full', false, array(
           'id'    => 'diurnalis-img-2',
           'class' => 'diurnalis-img absolute inset-0 w-full h-full object-cover',
           'alt'   => 'still frame from the Diurnalis episode Happy Birthday',
+          'loading' => 'lazy',
         ) ); ?>
         <?php echo wp_get_attachment_image( 2957, 'full', false, array(
           'id'    => 'diurnalis-img-3',
           'class' => 'diurnalis-img absolute inset-0 w-full h-full object-cover',
           'alt'   => 'still frame from the Diurnalis episode Mystery',
+          'loading' => 'lazy',
         ) ); ?>
         <?php echo wp_get_attachment_image( 2949, 'full', false, array(
           'id'    => 'diurnalis-img-4',
           'class' => 'diurnalis-img absolute inset-0 w-full h-full object-cover',
           'alt'   => 'title card from the Diurnalis episode Mystery',
+          'loading' => 'lazy',
         ) ); ?>
       </div>
       <h2 class="mt-4 text-xl font-semibold">Diurnalis</h2>
@@ -152,7 +161,7 @@ get_header(); ?>
           <article class="flex-none snap-center flex flex-col items-center text-center w-full sm:w-1/2 lg:w-1/3 px-2">
             <a href="<?php the_permalink(); ?>" class="block">
               <?php if ( has_post_thumbnail() ) : ?>
-                <?php the_post_thumbnail( 'medium', array( 'class' => 'w-full h-48 object-cover rounded shadow' ) ); ?>
+                <?php the_post_thumbnail( 'medium', array( 'class' => 'w-full h-48 object-cover rounded shadow', 'alt' => esc_attr(get_the_title()) ) ); ?>
               <?php endif; ?>
               <h3 class="mt-4 text-lg font-semibold"><?php the_title(); ?></h3>
               <time datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>" class="text-sm text-neutral-500">

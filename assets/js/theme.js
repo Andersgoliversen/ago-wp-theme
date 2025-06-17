@@ -17,10 +17,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Only apply the parallax effect if reduced motion is not preferred.
   if (motionOK.matches) {
+    let lastKnownScrollPosition = 0;
+    let ticking = false;
+
     // Define the function to update the background position on scroll.
     const onScroll = () => {
-      // Apply a vertical translation to the background wrap based on the scroll position and factor.
-      bgWrap.style.transform = `translateY(${window.scrollY * factor}px)`;
+      lastKnownScrollPosition = window.scrollY;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          bgWrap.style.transform = `translateY(${lastKnownScrollPosition * factor}px)`;
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
     // Call onScroll once initially to set the correct position on page load.
     onScroll();
