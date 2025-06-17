@@ -19,7 +19,7 @@
 
         <header id="masthead"
                 class="bg-pagebg/60 backdrop-blur supports-[backdrop-filter]:bg-pagebg/30">
-                <div class="max-w-7xl mx-auto flex items-center justify-center gap-4 px-6 py-4">
+                <div class="max-w-7xl mx-auto flex flex-col items-center gap-4 px-6 py-4 md:flex-row md:justify-center">
 
                         <?php
                         /* ----------  Site logo and title ------------------- */
@@ -31,18 +31,21 @@
                                 $name_classes = 'no-underline text-inherit decoration-transparent transition-transform duration-150 hover:scale-105 hover:text-neutral-600 hover:opacity-80 active:scale-95 active:text-neutral-900 text-xl font-semibold'; // Add active state
                         }
                         ?>
-                        <a href="<?php echo esc_url(home_url('/')); ?>"
-                                class="<?php echo esc_attr($logo_classes); ?> ag-interactive">
-                                <img src="<?php echo esc_url(wp_get_attachment_image_url(8713, 'full')); ?>"
-                                        alt="<?php echo esc_attr(get_bloginfo('name') . ' - Home'); ?>"
-                                        class="h-[3em] w-auto ag-icon" />
-                        </a>
-                        <a href="<?php echo esc_url(home_url('/')); ?>"
-                                class="<?php echo esc_attr($name_classes); ?>">
-                                <?php bloginfo('name'); ?>
-                        </a>
+                        <div class="flex items-center gap-2">
+                                <a href="<?php echo esc_url(home_url('/')); ?>"
+                                        class="<?php echo esc_attr($logo_classes); ?> ag-interactive">
+                                        <img src="<?php echo esc_url(wp_get_attachment_image_url(8713, 'full')); ?>"
+                                                alt="<?php echo esc_attr(get_bloginfo('name') . ' - Home'); ?>"
+                                                class="h-[3em] w-auto ag-icon" />
+                                </a>
+                                <a href="<?php echo esc_url(home_url('/')); ?>"
+                                        class="<?php echo esc_attr($name_classes); ?>">
+                                        <?php bloginfo('name'); ?>
+                                </a>
+                        </div>
 
-                        <nav class="flex gap-4">
+                        <div class="flex flex-wrap items-center justify-center gap-4">
+                        <nav class="flex flex-wrap gap-4 justify-center">
                                 <?php
                                 /* ----------  Primary menu --------------------------------------- */
                                 $links = [
@@ -83,6 +86,7 @@
                                         <polygon points="20,32 20,16 34,24" fill="#fff" />
                                 </svg>
                         </a>
+                        </div>
 
                 </div>
 
