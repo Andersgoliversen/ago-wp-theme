@@ -1,4 +1,4 @@
-# Anders G Theme
+# Wordpress theme for andersgoliversen.com
 
 Classic WordPress theme using Tailwind CSS.
 
@@ -14,5 +14,3 @@ Activate the theme from the WordPress admin. The build step compiles Tailwind to
 ## Deployment Notes
 
 - Ensure `assets/css/theme.css` and `assets/js/theme.js` are present.
-- Customize colours in `tailwind.config.js`.
-- Images support WebP/AVIF when available.
