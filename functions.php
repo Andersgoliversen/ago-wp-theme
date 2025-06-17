@@ -30,7 +30,7 @@ function ag_enqueue_assets() {
     $theme_path = get_template_directory();
 
     $css = '/assets/css/theme.css';
-    $js  = '/assets/js/theme.js';
+    $js  = '/assets/js/theme.min.js'; // Changed to .min.js
 
     if ( file_exists( $theme_path . $css ) ) {
         // Enqueue the main stylesheet. filemtime() is used for cache-busting by appending
@@ -38,10 +38,13 @@ function ag_enqueue_assets() {
         wp_enqueue_style( 'ag-theme', $theme_uri . $css, array(), filemtime( $theme_path . $css ) );
     }
 
+    // Check if the minified JS file exists, otherwise fall back to the original.
     if ( file_exists( $theme_path . $js ) ) {
-        // Enqueue the main JavaScript file. filemtime() is used for cache-busting.
-        // The last parameter `true` enqueues the script in the footer.
         wp_enqueue_script( 'ag-theme', $theme_uri . $js, array(), filemtime( $theme_path . $js ), true );
+    } elseif ( file_exists( $theme_path . str_replace( '.min.js', '.js', $js ) ) ) {
+        // Fallback to non-minified version if .min.js is not found
+        $js_fallback = str_replace( '.min.js', '.js', $js );
+        wp_enqueue_script( 'ag-theme', $theme_uri . $js_fallback, array(), filemtime( $theme_path . $js_fallback ), true );
     }
 }
 add_action( 'wp_enqueue_scripts', 'ag_enqueue_assets' );
@@ -178,9 +181,22 @@ function ag_maybe_enqueue_lightbox() {
             // These are common ways WordPress galleries are inserted.
             if ( has_shortcode( $post->post_content, "gallery" ) || has_block( "core/gallery", $post ) ) {
                 // If a gallery is found, enqueue the lightbox JavaScript file.
-                // Assumes lightbox.js is located in assets/js/ and its version is "1.1".
-                // The last parameter `true` enqueues the script in the footer.
-                wp_enqueue_script( "ag-lightbox", get_template_directory_uri() . "/assets/js/lightbox.js", array(), "1.1", true );
+                $lightbox_js_path = '/assets/js/lightbox.min.js'; // Changed to .min.js
+                $lightbox_js_full_path = get_template_directory() . $lightbox_js_path;
+                $lightbox_js_uri = get_template_directory_uri() . $lightbox_js_path;
+                $version = "1.1";
+
+                if ( file_exists( $lightbox_js_full_path ) ) {
+                    wp_enqueue_script( "ag-lightbox", $lightbox_js_uri, array(), filemtime( $lightbox_js_full_path ), true );
+                } else {
+                    // Fallback to non-minified version if .min.js is not found
+                    $lightbox_js_fallback_path = str_replace( '.min.js', '.js', $lightbox_js_path );
+                    $lightbox_js_fallback_full_path = get_template_directory() . $lightbox_js_fallback_path;
+                    $lightbox_js_fallback_uri = get_template_directory_uri() . $lightbox_js_fallback_path;
+                    if ( file_exists( $lightbox_js_fallback_full_path ) ) {
+                        wp_enqueue_script( "ag-lightbox", $lightbox_js_fallback_uri, array(), filemtime( $lightbox_js_fallback_full_path ), true );
+                    }
+                }
             }
         }
     }
@@ -222,6 +238,39 @@ function ag_defer_scripts( $tag, $handle ) {
     return $tag;
 }
 add_filter( 'script_loader_tag', 'ag_defer_scripts', 10, 2 );
+
+/**
+ * Adds meta description to the head.
+ */
+function ag_add_meta_description() {
+    $description = '';
+
+    if ( is_singular() ) {
+        $post = get_queried_object();
+        if ( $post && has_excerpt( $post ) ) {
+            $description = get_the_excerpt( $post );
+        } elseif ( $post ) {
+            $description = wp_trim_words( strip_shortcodes( $post->post_content ), 55, '...' );
+        }
+    } elseif ( is_front_page() ) {
+        $description = get_bloginfo( 'description' );
+    } elseif ( is_category() || is_tag() ) {
+        $description = term_description();
+    } else {
+        // Generic fallback
+        $description = sprintf(
+            // Translators: %1$s: Site name, %2$s: Site tagline
+            esc_html__( 'Explore content from %1$s: %2$s', 'andersgoliversen' ),
+            get_bloginfo( 'name' ),
+            get_bloginfo( 'description' )
+        );
+    }
+
+    if ( $description ) {
+        echo '<meta name="description" content="' . esc_attr( $description ) . '">' . "\n";
+    }
+}
+add_action( 'wp_head', 'ag_add_meta_description' );
 
 /**
  * Custom posts pagination layout.

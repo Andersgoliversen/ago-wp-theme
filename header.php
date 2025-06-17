@@ -34,7 +34,7 @@
                         <a href="<?php echo esc_url(home_url('/')); ?>"
                                 class="<?php echo esc_attr($logo_classes); ?> ag-interactive">
                                 <img src="<?php echo esc_url(wp_get_attachment_image_url(8713, 'full')); ?>"
-                                        alt="Logo"
+                                        alt="<?php echo esc_attr(get_bloginfo('name') . ' - Home'); ?>"
                                         class="h-[3em] w-auto ag-icon" />
                         </a>
                         <a href="<?php echo esc_url(home_url('/')); ?>"
@@ -83,15 +83,6 @@
                                         <polygon points="20,32 20,16 34,24" fill="#fff" />
                                 </svg>
                         </a>
-                        <style>
-                                .header-youtube-link .youtube-bg {
-                                        transition: fill 0.15s;
-                                }
-
-                                .header-youtube-link:hover .youtube-bg {
-                                        fill: #FF5252;
-                                }
-                        </style>
 
                 </div>
 

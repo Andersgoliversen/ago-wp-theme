@@ -208,3 +208,12 @@ body.diurnalis-ready .diurnalis-img {
     scrollbar-width: none;
   }
 }
+
+/* YouTube icon link hover effect */
+.header-youtube-link .youtube-bg {
+  transition: fill 0.15s;
+}
+
+.header-youtube-link:hover .youtube-bg {
+  fill: #FF5252;
+}
