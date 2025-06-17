@@ -13,4 +13,4 @@ The build step compiles `src/css/theme.src.css` to `assets/css/theme.css` and mi
 
 ## About this repository
 
-This project focuses on performance and simplicity. While it is tailored for andersgoliversen.com, other developers can explore the source to replicate aspects such as Tailwind integration, lazy-loaded images, and modern image formats.
+This project focuses on performance and simplicity. While it is tailored for andersgoliversen.com, other developers can explore the source to replicate aspects such as Tailwind integration, lazy-loaded images, and animated images/links/icons.
