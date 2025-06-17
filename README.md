@@ -1,6 +1,6 @@
 # Wordpress theme for andersgoliversen.com
 
-Classic WordPress theme using Tailwind CSS.
+A minimal WordPress theme powered by Tailwind CSS. The code here is what runs on [andersgoliversen.com](https://andersgoliversen.com) and may be useful as a reference for building your own theme.
 
 ## Setup
 
@@ -9,8 +9,8 @@ npm install
 npm run build
 ```
 
-Activate the theme from the WordPress admin. The build step compiles Tailwind to `assets/css/theme.css`.
+The build step compiles `src/css/theme.src.css` to `assets/css/theme.css` and minifies JavaScript. Activate the theme in the WordPress admin panel after building.
 
-## Deployment Notes
+## About this repository
 
-- Ensure `assets/css/theme.css` and `assets/js/theme.js` are present.
+This project focuses on performance and simplicity. While it is tailored for andersgoliversen.com, other developers can explore the source to replicate aspects such as Tailwind integration, lazy-loaded images, and modern image formats.
