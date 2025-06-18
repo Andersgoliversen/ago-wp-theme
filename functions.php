@@ -320,3 +320,18 @@ function ag_custom_posts_pagination() {
     echo '</nav>';
 }
 
+/**
+ * Append the post date to single post content before Jetpack additions.
+ *
+ * @param string $content The post content.
+ * @return string Modified content with publication date appended.
+ */
+function ag_append_post_date( $content ) {
+    if ( is_single() && in_the_loop() && is_main_query() ) {
+        $date = '<time datetime="' . esc_attr( get_the_date( 'c' ) ) . '" class="block text-sm italic text-neutral-500">' . esc_html( get_the_date( 'F j, Y' ) ) . '</time>';
+        $content .= $date;
+    }
+    return $content;
+}
+add_filter( 'the_content', 'ag_append_post_date', 18 );
+
