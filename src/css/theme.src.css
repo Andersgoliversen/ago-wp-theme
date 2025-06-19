@@ -180,7 +180,19 @@ body.diurnalis-ready .diurnalis-img {
 
 @layer base {
   figcaption, .wp-caption-text {
-    @apply text-sm text-neutral-500;
+    /* Slightly lighter color than regular text */
+    @apply text-sm text-neutral-400;
+  }
+
+  /* Scale captions together with linked images */
+  figure > a + figcaption {
+    @apply transition-transform duration-150;
+  }
+  figure > a:hover + figcaption {
+    @apply scale-105;
+  }
+  figure > a:active + figcaption {
+    @apply scale-95;
   }
 }
 @layer base {
