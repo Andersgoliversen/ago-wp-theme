@@ -245,30 +245,3 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(animate, delay + wiggleDuration + bounceDuration);
   }, delay);
 });
-
-document.addEventListener('DOMContentLoaded', () => {
-  const galleries = document.querySelectorAll('.wp-block-gallery, .gallery');
-
-  galleries.forEach(gallery => {
-    const links = gallery.querySelectorAll('a');
-
-    links.forEach(link => {
-      const figure = link.querySelector('figure'); // Check if a figure element is inside the link
-
-      if (figure) {
-        // Check if the figure is a direct child of the link,
-        // or if its parent is the link. This helps ensure we're not grabbing
-        // deeply nested figures that aren't the main linked image.
-        if (figure.parentElement === link) {
-          const wrapper = document.createElement('div');
-          wrapper.classList.add('image-link-wrapper');
-
-          // Insert the wrapper into the link
-          link.appendChild(wrapper);
-          // Move the figure into the wrapper
-          wrapper.appendChild(figure);
-        }
-      }
-    });
-  });
-});
