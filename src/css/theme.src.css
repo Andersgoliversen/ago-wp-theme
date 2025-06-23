@@ -184,15 +184,18 @@ body.diurnalis-ready .diurnalis-img {
     @apply text-sm text-neutral-400;
   }
 
-  /* Scale captions together with linked images */
-  figure > a + figcaption {
-    @apply transition-transform duration-150 origin-top;
+}
+
+@layer base {
+  figure.group > a {
+    transition: none !important;
+    transform: none !important;
   }
-  figure > a:hover + figcaption {
-    @apply scale-105;
+  figure.group:hover {
+    transform: scale(1.05);
   }
-  figure > a:active + figcaption {
-    @apply scale-95;
+  figure.group:active {
+    transform: scale(0.95);
   }
 }
 @layer base {
