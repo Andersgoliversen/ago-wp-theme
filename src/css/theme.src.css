@@ -186,7 +186,7 @@ body.diurnalis-ready .diurnalis-img {
 
   /* Scale captions together with linked images */
   figure > a + figcaption {
-    @apply transition-transform duration-150;
+    @apply transition-transform duration-150 origin-top;
   }
   figure > a:hover + figcaption {
     @apply scale-105;
