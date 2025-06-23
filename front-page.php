@@ -46,7 +46,7 @@ get_header(); ?>
   </div>
 </section>
 <!-- Main content area with three featured sections -->
-<section id="main-areas" aria-label="Main content" class="py-16">
+<section id="main-areas" aria-label="Main content" class="py-16 pb-12">
   <div class="max-w-7xl mx-auto grid gap-12 md:grid-cols-3 justify-center px-4">
     <!-- Gallery card -->
     <article class="w-[320px] flex flex-col items-center text-center">
@@ -144,7 +144,7 @@ get_header(); ?>
 </section>
 
 <!-- Latest Posts Section -->
-<section id="recent-posts" aria-label="Latest from the Blog" class="py-16">
+<section id="recent-posts" aria-label="Latest from the Blog" class="py-16 pt-12">
   <div class="max-w-5xl mx-auto px-4 text-center">
     <h2 class="text-2xl font-semibold mb-8">Latest from the Blog</h2>
     <div class="relative">
