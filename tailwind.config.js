@@ -14,5 +14,12 @@ module.exports = {
       },
     },
   },
+  corePlugins: {
+    transform: true,
+    transformOrigin: true,
+    transitionProperty: true,
+    transitionDuration: true,
+    scale: true,
+  },
   plugins: [],
 };
