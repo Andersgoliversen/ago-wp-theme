@@ -35,13 +35,17 @@
                                 <a href="<?php echo esc_url(home_url('/')); ?>"
                                         class="<?php echo esc_attr($logo_classes); ?> ag-interactive">
                                         <?php
+                                        // Use 'medium' size for the logo for better performance
+                                        // and add fetchpriority high as it's likely an LCP element.
                                         echo wp_get_attachment_image(
                                                 8713,
-                                                'full',
+                                                'medium', // Changed from 'full' to 'medium'
                                                 false,
                                                 [
-                                                        'class' => 'h-[3em] w-auto ag-icon',
-                                                        'alt'   => get_bloginfo('name') . ' - Home',
+                                                        'class'           => 'h-[3em] w-auto ag-icon', // Tailwind class for height, width auto
+                                                        'alt'             => get_bloginfo('name') . ' - Home',
+                                                        'fetchpriority'   => 'high', // Prioritize fetching this image
+                                                        'loading'         => 'eager', // Eager load LCP candidates
                                                 ]
                                         );
                                         ?>

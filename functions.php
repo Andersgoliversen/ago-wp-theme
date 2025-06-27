@@ -107,13 +107,19 @@ function ag_fallback_nav() {
  * @return array
  */
 function ag_lazy_loading( $attr ) {
-    // Adds loading="lazy" to image attributes.
+    // Adds loading="lazy" to image attributes if not already set,
+    // and if fetchpriority="high" or loading="eager" is not set.
     // This improves initial page load performance by deferring the loading of off-screen images
     // until they are about to enter the viewport.
-    $attr['loading'] = 'lazy';
+    if ( ! isset( $attr['loading'] ) && ! isset( $attr['fetchpriority'] ) ) {
+        $attr['loading'] = 'lazy';
+    } elseif ( isset( $attr['fetchpriority'] ) && $attr['fetchpriority'] === 'high' && ! isset( $attr['loading'] ) ) {
+        // If fetchpriority is high, ensure loading is eager if not specified.
+        $attr['loading'] = 'eager';
+    }
     return $attr;
 }
-add_filter( 'wp_get_attachment_image_attributes', 'ag_lazy_loading' );
+add_filter( 'wp_get_attachment_image_attributes', 'ag_lazy_loading', 20 ); // Increased priority to run after potential WP core additions.
 
 /**
  * Prefer AVIF or WebP sources when available.

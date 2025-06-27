@@ -66,13 +66,13 @@ get_header(); ?>
     <article class="w-[320px] flex flex-col items-center text-center">
       <!-- Two tall images panning vertically inside the card -->
       <div class="relative w-full h-48 overflow-hidden rounded shadow">
-        <?php echo wp_get_attachment_image( 3133, 'full', false, array(
+        <?php echo wp_get_attachment_image( 3133, 'medium', false, array( // Changed 'full' to 'medium'
           'id'    => 'gallery-img-1',
           'class' => 'absolute inset-0 w-full h-full object-cover',
           'alt'   => 'Artwork of human alien hybrid',
           'loading' => 'lazy',
         ) ); ?>
-        <?php echo wp_get_attachment_image( 3072, 'full', false, array(
+        <?php echo wp_get_attachment_image( 3072, 'medium', false, array( // Changed 'full' to 'medium'
           'id'    => 'gallery-img-2',
           'class' => 'absolute inset-0 w-full h-full object-cover',
           'alt'   => 'Artwork of a mermonkey with wings',
@@ -91,19 +91,19 @@ get_header(); ?>
     <article class="w-[320px] flex flex-col items-center text-center">
       <!-- Three-image sequence with JS-controlled transitions -->
       <div id="rock-art-card" class="relative w-full h-48 overflow-hidden rounded shadow">
-        <?php echo wp_get_attachment_image( 8783, 'full', false, array(
+        <?php echo wp_get_attachment_image( 8783, 'medium', false, array( // Changed 'full' to 'medium'
           'id'    => 'rock-art-img-1',
           'class' => 'rock-art-img absolute inset-0 w-full h-full object-cover',
           'alt'   => 'photograph of a petroglyph at Moelv',
           'loading' => 'lazy',
         ) ); ?>
-        <?php echo wp_get_attachment_image( 8782, 'full', false, array(
+        <?php echo wp_get_attachment_image( 8782, 'medium', false, array( // Changed 'full' to 'medium'
           'id'    => 'rock-art-img-2',
           'class' => 'rock-art-img absolute inset-0 w-full h-full object-cover',
           'alt'   => 'pencil drawing of the same Moelv petroglyph as a moose calf',
           'loading' => 'lazy',
         ) ); ?>
-        <?php echo wp_get_attachment_image( 8781, 'full', false, array(
+        <?php echo wp_get_attachment_image( 8781, 'medium', false, array( // Changed 'full' to 'medium'
           'id'    => 'rock-art-img-3',
           'class' => 'rock-art-img absolute inset-0 w-full h-full object-cover',
           'alt'   => 'pencil drawing of the same Moelv petroglyph as a goat',
@@ -122,25 +122,25 @@ get_header(); ?>
     <article class="w-[320px] flex flex-col items-center text-center">
       <!-- Four images zooming and cross-fading -->
       <div class="relative w-full h-48 overflow-hidden rounded shadow">
-        <?php echo wp_get_attachment_image( 2950, 'full', false, array(
+        <?php echo wp_get_attachment_image( 2950, 'medium', false, array( // Changed 'full' to 'medium'
           'id'    => 'diurnalis-img-1',
           'class' => 'diurnalis-img absolute inset-0 w-full h-full object-cover',
           'alt'   => 'title card from the Diurnalis episode Happy Birthday',
           'loading' => 'lazy',
         ) ); ?>
-        <?php echo wp_get_attachment_image( 2955, 'full', false, array(
+        <?php echo wp_get_attachment_image( 2955, 'medium', false, array( // Changed 'full' to 'medium'
           'id'    => 'diurnalis-img-2',
           'class' => 'diurnalis-img absolute inset-0 w-full h-full object-cover',
           'alt'   => 'still frame from the Diurnalis episode Happy Birthday',
           'loading' => 'lazy',
         ) ); ?>
-        <?php echo wp_get_attachment_image( 2957, 'full', false, array(
+        <?php echo wp_get_attachment_image( 2957, 'medium', false, array( // Changed 'full' to 'medium'
           'id'    => 'diurnalis-img-3',
           'class' => 'diurnalis-img absolute inset-0 w-full h-full object-cover',
           'alt'   => 'still frame from the Diurnalis episode Mystery',
           'loading' => 'lazy',
         ) ); ?>
-        <?php echo wp_get_attachment_image( 2949, 'full', false, array(
+        <?php echo wp_get_attachment_image( 2949, 'medium', false, array( // Changed 'full' to 'medium'
           'id'    => 'diurnalis-img-4',
           'class' => 'diurnalis-img absolute inset-0 w-full h-full object-cover',
           'alt'   => 'title card from the Diurnalis episode Mystery',
