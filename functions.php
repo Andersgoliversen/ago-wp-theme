@@ -409,3 +409,4 @@ function ag_group_gallery_figures( $block_content, $block ) {
 }
 add_filter( 'render_block', 'ag_group_gallery_figures', 10, 2 );
 
+require_once get_template_directory() . '/inc/related-posts.php';

@@ -213,14 +213,14 @@ body.diurnalis-ready .diurnalis-img {
    Related posts styling
    ----------------------------------------------------------- */
 @layer components {
-  /* Smaller thumbnails with cropping for Jetpack related posts */
-  .jp-relatedposts-post img {
-    @apply w-20 h-20 object-cover object-center mx-auto;
+  .related-posts__list {
+    @apply grid gap-6 sm:grid-cols-3;
   }
-
-  /* Slightly larger titles */
-  .jp-relatedposts-post-title {
-    @apply text-lg;
+  .related-posts__item {
+    @apply text-center space-y-2;
+  }
+  .related-posts__title {
+    @apply text-lg font-semibold block;
   }
 }
 

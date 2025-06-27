@@ -6,6 +6,7 @@
             the_post();
             the_title( '<h1 class="text-3xl font-semibold mb-4">', '</h1>' );
             the_content();
+            get_template_part( 'template-parts/related-posts' );
         endwhile;
     endif;
     ?>
