@@ -62,6 +62,27 @@ function ag_output_root_vars() {
 add_action( 'wp_head', 'ag_output_root_vars', 0 );
 
 /**
+ * Preload hero images on the front page.
+ *
+ * Preloading ensures the largest images begin downloading
+ * as soon as possible, improving Largest Contentful Paint.
+ */
+function ag_preload_hero_images() {
+    if ( ! is_front_page() ) {
+        return;
+    }
+
+    $ids = array( 8697, 8698 );
+    foreach ( $ids as $id ) {
+        $url = wp_get_attachment_image_url( $id, 'full' );
+        if ( $url ) {
+            printf( "<link rel='preload' as='image' href='%s'>\n", esc_url( $url ) );
+        }
+    }
+}
+add_action( 'wp_head', 'ag_preload_hero_images', 1 );
+
+/**
  * Basic navigation fallback when no menu is assigned.
  * Provides a simple list of pages if no custom menu is set in Appearance > Menus.
  * This improves user experience on fresh installs or if a menu is accidentally unassigned.
@@ -216,6 +237,21 @@ function ag_cleanup_wp() {
     wp_deregister_script( 'wp-embed' );
 }
 add_action( 'init', 'ag_cleanup_wp' );
+
+/**
+ * Dequeue default block styles to reduce unused CSS.
+ *
+ * Removing these styles saves several kilobytes of CSS on each request
+ * because the theme relies on its own Tailwind styles.
+ */
+function ag_remove_block_css() {
+    // These styles are enqueued by WordPress core for block themes.
+    wp_dequeue_style( 'wp-block-library' );
+    wp_dequeue_style( 'wp-block-library-theme' );
+    wp_dequeue_style( 'classic-theme-styles' );
+    wp_dequeue_style( 'global-styles' );
+}
+add_action( 'wp_enqueue_scripts', 'ag_remove_block_css', 20 );
 
 /**
  * Defer theme script loading.
