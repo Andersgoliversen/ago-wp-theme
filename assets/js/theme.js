@@ -71,9 +71,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const article = document.createElement('article');
         article.className = 'flex-none w-80 snap-center flex flex-col items-center text-center';
         const media = post._embedded && post._embedded['wp:featuredmedia'] ? post._embedded['wp:featuredmedia'][0].source_url : '';
+        // Add loading="lazy" to dynamically loaded images for better performance.
+        // Also, provide a more descriptive alt text if possible, using post title.
+        const altText = post.title.rendered || 'Blog post image';
         article.innerHTML = `
           <a href="${post.link}" class="block">
-            ${media ? `<img src="${media}" alt="" class="w-full h-40 object-cover rounded shadow">` : ''}
+            ${media ? `<img src="${media}" alt="${altText}" class="w-full h-40 object-cover rounded shadow" loading="lazy">` : ''}
             <h3 class="mt-4 text-lg font-semibold">${post.title.rendered}</h3>
             <time datetime="${post.date}" class="text-sm text-neutral-500">${new Date(post.date).toLocaleDateString()}</time>
           </a>`;
