@@ -259,15 +259,15 @@ body.diurnalis-ready .diurnalis-img {
     @apply transition-opacity duration-150;
   }
   .theme-toggle .sun {
-    @apply opacity-100 text-gray-700;
+    @apply opacity-100 text-gray-600;
   }
   .dark .theme-toggle .sun {
-    @apply opacity-40 text-gray-500;
+    @apply opacity-40 text-gray-300;
   }
   .theme-toggle .moon {
     @apply opacity-40 text-gray-500;
   }
   .dark .theme-toggle .moon {
-    @apply opacity-100 text-gray-700;
+    @apply opacity-100 text-gray-200;
   }
 }
