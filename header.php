@@ -59,8 +59,8 @@
                                         class="<?php echo esc_attr($name_classes); ?>">
                                         <?php bloginfo('name'); ?>
                                 </a>
-                                <button class="theme-toggle md:hidden no-underline decoration-transparent transition-transform duration-150 hover:scale-105 active:scale-95 ml-2" aria-label="Toggle color scheme">
-                                        <svg class="sun w-5 h-5" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <button class="theme-toggle md:hidden no-underline decoration-transparent ml-2" aria-label="Toggle color scheme">
+                                        <svg class="sun w-5 h-5 transition-transform duration-150 hover:scale-105 active:scale-95" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                 <circle cx="12" cy="12" r="5"/>
                                                 <g>
                                                         <line x1="12" y1="1" x2="12" y2="3"/>
@@ -73,7 +73,7 @@
                                                         <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
                                                 </g>
                                         </svg>
-                                        <svg class="moon w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                                        <svg class="moon w-5 h-5 transition-transform duration-150 hover:scale-105 active:scale-95" viewBox="0 0 24 24" fill="currentColor">
                                                 <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
                                         </svg>
                                 </button>
@@ -121,8 +121,8 @@
                                         <polygon points="20,32 20,16 34,24" fill="#fff" />
                                 </svg>
                         </a>
-                        <button class="theme-toggle hidden md:inline-flex no-underline decoration-transparent transition-transform duration-150 hover:scale-105 active:scale-95 ml-2" aria-label="Toggle color scheme">
-                                <svg class="sun w-5 h-5" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <button class="theme-toggle hidden md:inline-flex no-underline decoration-transparent ml-2" aria-label="Toggle color scheme">
+                                <svg class="sun w-5 h-5 transition-transform duration-150 hover:scale-105 active:scale-95" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <circle cx="12" cy="12" r="5"/>
                                         <g>
                                                 <line x1="12" y1="1" x2="12" y2="3"/>
@@ -135,7 +135,7 @@
                                                 <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
                                         </g>
                                 </svg>
-                                <svg class="moon w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                                <svg class="moon w-5 h-5 transition-transform duration-150 hover:scale-105 active:scale-95" viewBox="0 0 24 24" fill="currentColor">
                                         <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
                                 </svg>
                         </button>
