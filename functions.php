@@ -53,11 +53,9 @@ add_action( 'wp_enqueue_scripts', 'ag_enqueue_assets' );
  * Output custom root variables.
  */
 function ag_output_root_vars() {
-    // The CSS variable --pagebg is static and therefore safe from XSS.
-    // If this variable were to become dynamic (e.g., user-configurable),
-    // it would need proper sanitization/escaping, like esc_html() or esc_attr()
-    // depending on the context.
-    echo '<style>:root{--pagebg:oklch(97% 0.001 106.424);}</style>' . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+    $light = 'oklch(97% 0.001 106.424)';
+    $dark  = 'oklch(25% 0.02 264)';
+    echo '<style>:root{--pagebg-light:' . $light . ';--pagebg-dark:' . $dark . ';--pagebg:' . $light . ';}@media(prefers-color-scheme:dark){:root{--pagebg:var(--pagebg-dark);}}.dark{--pagebg:var(--pagebg-dark);}</style>' . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 add_action( 'wp_head', 'ag_output_root_vars', 0 );
 

@@ -169,19 +169,29 @@ body.diurnalis-ready .diurnalis-img {
   animation-play-state: running;
 }
 
+@layer base {
+  body {
+    @apply bg-pagebg text-neutral-800;
+  }
+  .dark body {
+    @apply bg-neutral-950 text-neutral-200;
+  }
+}
+
 /* Global link style */
 @layer base {
   a {
     @apply underline decoration-neutral-400 text-neutral-800 transition-transform duration-150 hover:scale-105 hover:text-neutral-600 hover:decoration-neutral-600;
     /* Darken and shrink slightly while the link is actively clicked */
     @apply active:text-neutral-950 active:scale-95;
+    @apply dark:text-neutral-200 dark:hover:text-neutral-100 dark:active:text-neutral-50;
   }
 }
 
 @layer base {
   figcaption, .wp-caption-text {
     /* Slightly lighter color than regular text */
-    @apply text-sm text-neutral-400;
+    @apply text-sm text-neutral-400 dark:text-neutral-500;
   }
 
 }
@@ -241,4 +251,23 @@ body.diurnalis-ready .diurnalis-img {
 
 .header-youtube-link:hover .youtube-bg {
   fill: #FF5252;
+}
+
+/* Theme toggle styles */
+@layer components {
+  .theme-toggle svg {
+    @apply transition-opacity duration-150;
+  }
+  .theme-toggle .sun {
+    @apply opacity-100 text-yellow-500;
+  }
+  .dark .theme-toggle .sun {
+    @apply opacity-40;
+  }
+  .theme-toggle .moon {
+    @apply opacity-40 text-yellow-200;
+  }
+  .dark .theme-toggle .moon {
+    @apply opacity-100;
+  }
 }
