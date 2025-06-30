@@ -45,6 +45,18 @@ window.addEventListener('load', () => {
 });
 
 // ---------------------------------------------------------------------------
+// Theme toggle
+// ---------------------------------------------------------------------------
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.theme-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const dark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', dark ? 'dark' : 'light');
+    });
+  });
+});
+
+// ---------------------------------------------------------------------------
 // Blog post slider on the front page
 // ---------------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
