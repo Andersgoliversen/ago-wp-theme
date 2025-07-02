@@ -363,36 +363,5 @@ function ag_append_post_date( $content ) {
 }
 add_filter( 'the_content', 'ag_append_post_date', 18 );
 
-/**
- * Add scaling container classes to gallery figures.
- *
- * Ensures images and captions scale together by attaching
- * Tailwind utility classes to <figure> elements generated
- * by core image and gallery blocks.
- *
- * @param string $block_content The block HTML.
- * @param array  $block         Block metadata.
- * @return string Filtered block HTML.
- */
-function ag_group_gallery_figures( $block_content, $block ) {
-    if ( isset( $block['blockName'] ) && in_array( $block['blockName'], array( 'core/image', 'core/gallery' ), true ) ) {
-        $block_content = preg_replace_callback(
-            '/<figure([^>]*)>/i',
-            static function ( $matches ) {
-                $attrs = $matches[1];
-                $classes = 'group transition-transform duration-150 origin-top';
-                if ( preg_match( '/class="([^"]*)"/i', $attrs, $m ) ) {
-                    $attrs = str_replace( $m[0], 'class="' . $m[1] . ' ' . $classes . '"', $attrs );
-                } else {
-                    $attrs .= ' class="' . $classes . '"';
-                }
-                return '<figure' . $attrs . '>';
-            },
-            $block_content
-        );
-    }
-    return $block_content;
-}
-add_filter( 'render_block', 'ag_group_gallery_figures', 10, 2 );
 
 require_once get_template_directory() . '/inc/related-posts.php';

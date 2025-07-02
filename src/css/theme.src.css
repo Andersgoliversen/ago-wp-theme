@@ -197,15 +197,10 @@ body.diurnalis-ready .diurnalis-img {
 }
 
 @layer base {
-  figure.group > a {
+  /* Disable link scaling for figures so images don't zoom */
+  figure > a {
     transition: none !important;
     transform: none !important;
-  }
-  figure.group:hover {
-    transform: scale(1.05);
-  }
-  figure.group:active {
-    transform: scale(0.95);
   }
 }
 @layer base {
