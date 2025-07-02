@@ -8,7 +8,7 @@
   // Create the lightbox overlay div.
   const overlay = document.createElement('div');
   // Style the overlay for a full-screen, semi-transparent background with centered content.
-  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.9);display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:9999;';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;align-items:center;justify-content:center;flex-direction:column;z-index:9999;';
   // Initially hidden.
   overlay.hidden = true;
   // Set ARIA attributes for accessibility:
@@ -71,6 +71,7 @@
     // Store the currently focused element before opening the lightbox.
     lastFocusedElement = document.activeElement;
     overlay.hidden = false; // Show the overlay.
+    overlay.style.display = 'flex';
     // Focus the overlay (or a specific element within it, e.g., nextBtn) to enable keyboard navigation.
     nextBtn.focus(); // Or overlay.focus();
   }
@@ -92,6 +93,7 @@
   // Function to close the lightbox.
   function close(){
     overlay.hidden = true; // Hide the overlay.
+    overlay.style.display = 'none';
     // Restore focus to the element that was focused before the lightbox was opened.
     if (lastFocusedElement) {
       lastFocusedElement.focus();
