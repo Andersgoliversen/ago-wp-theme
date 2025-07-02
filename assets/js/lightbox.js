@@ -1,8 +1,9 @@
 // IIFE (Immediately Invoked Function Expression) to encapsulate the lightbox logic,
 // preventing global scope pollution and providing a private namespace.
 (function(){
-  // Select all images inside the main content area. If none, exit script.
-  const images = Array.from(document.querySelectorAll('#content img'));
+  // Select all images inside the main content area except those in the
+  // related posts section. If none, exit script.
+  const images = Array.from(document.querySelectorAll('#content img:not(.related-posts__image)'));
   if(!images.length) return;
 
   // Create the lightbox overlay div.
