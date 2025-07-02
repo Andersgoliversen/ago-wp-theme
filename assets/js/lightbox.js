@@ -54,8 +54,8 @@
   function getCaption(imgEl){
     const fig = imgEl.closest('figure'); // Find the parent <figure> element.
     const figcap = fig ? fig.querySelector('figcaption') : null; // Find <figcaption> within <figure>.
-    // Return figcaption text or alt text from the image element.
-    return figcap ? figcap.textContent : (imgEl.alt || '');
+    // Return figcaption HTML or alt text from the image element.
+    return figcap ? figcap.innerHTML : (imgEl.alt || '');
   }
 
   // Function to display the lightbox with the image at a given index.
@@ -67,7 +67,7 @@
     // Use the link href if it points to an image, otherwise fall back to the image src.
     const href = link && /\.(jpe?g|png|gif|webp|svg|bmp)(\?.*)?$/i.test(link.href) ? link.href : imgEl.src;
     img.src = href; // Set the image source.
-    caption.textContent = getCaption(imgEl); // Set the caption text.
+    caption.innerHTML = getCaption(imgEl); // Set the caption HTML.
 
     // Store the currently focused element before opening the lightbox.
     lastFocusedElement = document.activeElement;
