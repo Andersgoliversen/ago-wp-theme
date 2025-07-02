@@ -193,40 +193,28 @@ function ag_modern_image_formats( $sources, $size_array, $image_src, $image_meta
 add_filter( 'wp_calculate_image_srcset', 'ag_modern_image_formats', 10, 5 );
 
 /**
- * Enqueue lightbox on gallery pages only.
- * Only enqueues the script if the page is singular, has content, and contains a gallery shortcode or block.
+ * Enqueue the lightbox script on singular pages so all images can open in a lightbox.
  */
-function ag_maybe_enqueue_lightbox() {
-    // Only proceed if the current view is a singular page (e.g., a post or a page, not an archive).
+function ag_enqueue_lightbox() {
     if ( is_singular() ) {
-        $post = get_post(); // Get the current post object.
-        // Ensure the post object is valid and has content to check.
-        if ( $post && ! empty( $post->post_content ) ) {
-            // Check if the post content contains either a [gallery] shortcode or a core/gallery block.
-            // These are common ways WordPress galleries are inserted.
-            if ( has_shortcode( $post->post_content, "gallery" ) || has_block( "core/gallery", $post ) ) {
-                // If a gallery is found, enqueue the lightbox JavaScript file.
-                $lightbox_js_path = '/assets/js/lightbox.min.js'; // Changed to .min.js
-                $lightbox_js_full_path = get_template_directory() . $lightbox_js_path;
-                $lightbox_js_uri = get_template_directory_uri() . $lightbox_js_path;
-                $version = "1.1";
+        $lightbox_js_path = '/assets/js/lightbox.min.js';
+        $lightbox_js_full_path = get_template_directory() . $lightbox_js_path;
+        $lightbox_js_uri = get_template_directory_uri() . $lightbox_js_path;
 
-                if ( file_exists( $lightbox_js_full_path ) ) {
-                    wp_enqueue_script( "ag-lightbox", $lightbox_js_uri, array(), filemtime( $lightbox_js_full_path ), true );
-                } else {
-                    // Fallback to non-minified version if .min.js is not found
-                    $lightbox_js_fallback_path = str_replace( '.min.js', '.js', $lightbox_js_path );
-                    $lightbox_js_fallback_full_path = get_template_directory() . $lightbox_js_fallback_path;
-                    $lightbox_js_fallback_uri = get_template_directory_uri() . $lightbox_js_fallback_path;
-                    if ( file_exists( $lightbox_js_fallback_full_path ) ) {
-                        wp_enqueue_script( "ag-lightbox", $lightbox_js_fallback_uri, array(), filemtime( $lightbox_js_fallback_full_path ), true );
-                    }
-                }
+        if ( file_exists( $lightbox_js_full_path ) ) {
+            wp_enqueue_script( 'ag-lightbox', $lightbox_js_uri, array(), filemtime( $lightbox_js_full_path ), true );
+        } else {
+            // Fallback to non-minified version if .min.js is not found.
+            $lightbox_js_fallback_path = str_replace( '.min.js', '.js', $lightbox_js_path );
+            $lightbox_js_fallback_full_path = get_template_directory() . $lightbox_js_fallback_path;
+            $lightbox_js_fallback_uri = get_template_directory_uri() . $lightbox_js_fallback_path;
+            if ( file_exists( $lightbox_js_fallback_full_path ) ) {
+                wp_enqueue_script( 'ag-lightbox', $lightbox_js_fallback_uri, array(), filemtime( $lightbox_js_fallback_full_path ), true );
             }
         }
     }
 }
-add_action( 'wp_enqueue_scripts', 'ag_maybe_enqueue_lightbox' );
+add_action( 'wp_enqueue_scripts', 'ag_enqueue_lightbox' );
 
 /**
  * Remove unused WordPress assets to improve performance and reduce clutter.
