@@ -1,9 +1,9 @@
 // IIFE (Immediately Invoked Function Expression) to encapsulate the lightbox logic,
 // preventing global scope pollution and providing a private namespace.
 (function(){
-  // Select all gallery links. If none, exit script.
-  const links = Array.from(document.querySelectorAll('.gallery a'));
-  if(!links.length) return;
+  // Select all images inside the main content area. If none, exit script.
+  const images = Array.from(document.querySelectorAll('#content img'));
+  if(!images.length) return;
 
   // Create the lightbox overlay div.
   const overlay = document.createElement('div');
@@ -21,6 +21,7 @@
 
   // Populate overlay with image, caption, and navigation buttons.
   overlay.innerHTML = `
+    <button class="lb-close" style="position:absolute;top:1rem;right:1rem;font-size:2rem;color:white;background:none;border:none;cursor:pointer">&times;</button>
     <button class="lb-prev" style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);font-size:2rem;color:white;background:none;border:none;cursor:pointer">\u276E</button>
     <img style="max-height:80vh;max-width:90vw;margin-bottom:.5rem" />
     <div class="lb-caption" style="color:white;text-align:center"></div>
@@ -34,10 +35,12 @@
   const caption = overlay.querySelector('.lb-caption');
   const prevBtn = overlay.querySelector('.lb-prev');
   const nextBtn = overlay.querySelector('.lb-next');
+  const closeBtn = overlay.querySelector('.lb-close');
 
   // Set ARIA labels for navigation buttons for screen readers.
   prevBtn.setAttribute('aria-label', 'Previous image');
   nextBtn.setAttribute('aria-label', 'Next image');
+  closeBtn.setAttribute('aria-label', 'Close');
 
   // Keep track of the current image index.
   let index = 0;
@@ -47,20 +50,23 @@
   // Function to extract a caption for the image.
   // It tries to find a <figcaption> within the link's parent <figure>.
   // Falls back to the link's title attribute or the alt attribute of the <img> inside the link.
-  function getCaption(link){
-    const fig = link.closest('figure'); // Find the parent <figure> element.
+  function getCaption(imgEl){
+    const fig = imgEl.closest('figure'); // Find the parent <figure> element.
     const figcap = fig ? fig.querySelector('figcaption') : null; // Find <figcaption> within <figure>.
-    // Return figcaption text, or link title, or image alt text, or an empty string.
-    return figcap ? figcap.textContent : (link.title || link.querySelector('img')?.alt || '');
+    // Return figcaption text or alt text from the image element.
+    return figcap ? figcap.textContent : (imgEl.alt || '');
   }
 
   // Function to display the lightbox with the image at a given index.
   function show(i){
     // Calculate the correct index, wrapping around if necessary.
-    index = (i + links.length) % links.length;
-    const link = links[index]; // Get the link for the current index.
-    img.src = link.href; // Set the image source.
-    caption.textContent = getCaption(link); // Set the caption text.
+    index = (i + images.length) % images.length;
+    const imgEl = images[index]; // Get the image for the current index.
+    const link = imgEl.closest('a');
+    // Use the link href if it points to an image, otherwise fall back to the image src.
+    const href = link && /\.(jpe?g|png|gif|webp|svg|bmp)(\?.*)?$/i.test(link.href) ? link.href : imgEl.src;
+    img.src = href; // Set the image source.
+    caption.textContent = getCaption(imgEl); // Set the caption text.
 
     // Store the currently focused element before opening the lightbox.
     lastFocusedElement = document.activeElement;
@@ -69,10 +75,12 @@
     nextBtn.focus(); // Or overlay.focus();
   }
 
-  // Add click event listeners to each gallery link to open the lightbox.
-  links.forEach((link, i) => {
-    link.addEventListener('click', e => {
-      e.preventDefault(); // Prevent default link navigation.
+  // Add click event listeners to each image to open the lightbox.
+  images.forEach((imgEl, i) => {
+    const parentLink = imgEl.closest('a');
+    if(parentLink) parentLink.addEventListener('click', e => e.preventDefault());
+    imgEl.addEventListener('click', e => {
+      e.preventDefault();
       show(i); // Show the lightbox with the clicked image.
     });
   });
@@ -93,12 +101,13 @@
   // Event listeners for next, previous, and close actions.
   nextBtn.addEventListener('click', next); // Next button click.
   prevBtn.addEventListener('click', prev); // Previous button click.
+  closeBtn.addEventListener('click', close); // Close button click.
   // Close lightbox if the overlay background (not content within it) is clicked.
   overlay.addEventListener('click', e => { if(e.target === overlay) close(); });
 
   // Define focusable elements within the lightbox for focus trapping.
-  // For this simple lightbox, it's just the previous and next buttons.
-  const firstFocusableElement = prevBtn;
+  // The first is the close button and the last is the next button.
+  const firstFocusableElement = closeBtn;
   const lastFocusableElement = nextBtn;
 
   // Keyboard navigation and accessibility event listener.
