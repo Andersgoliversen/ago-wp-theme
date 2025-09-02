@@ -59,26 +59,6 @@ function ag_output_root_vars() {
 }
 add_action( 'wp_head', 'ag_output_root_vars', 0 );
 
-/**
- * Preload hero images on the front page.
- *
- * Preloading ensures the largest images begin downloading
- * as soon as possible, improving Largest Contentful Paint.
- */
-function ag_preload_hero_images() {
-    if ( ! is_front_page() ) {
-        return;
-    }
-
-    $ids = array( 8697, 8698 );
-    foreach ( $ids as $id ) {
-        $url = wp_get_attachment_image_url( $id, 'full' );
-        if ( $url ) {
-            printf( "<link rel='preload' as='image' href='%s'>\n", esc_url( $url ) );
-        }
-    }
-}
-add_action( 'wp_head', 'ag_preload_hero_images', 1 );
 
 /**
  * Basic navigation fallback when no menu is assigned.
