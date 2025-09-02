@@ -87,7 +87,6 @@
                                         ['slug' => '/blog/',     'label' => 'Blog',     'check' => is_home() || is_category()],
                                         ['slug' => '/gallery/',  'label' => 'Gallery',  'check' => is_page('gallery')],
                                         ['slug' => '/projects/', 'label' => 'Projects', 'check' => is_page('projects')],
-                                        ['slug' => '/shop/',     'label' => 'Shop',     'check' => is_page('shop')],
                                         ['slug' => '/about/',    'label' => 'About',    'check' => is_page('about')],
                                 ];
                                 foreach ($links as $l) {
