@@ -7,16 +7,6 @@
    ----------------------------------------------------------- */
 @layer utilities {
 
-  /* ── Text fade-in-up ─────────────────────────────────────── */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to   { opacity: 1; transform: none; }
-  }
-
-  .animate-fadeUp {
-    animation: fadeUp 0.8s ease-out forwards;
-  }
-
   /* ── Icon animations ───────────────────────────────────── */
   @keyframes ag-spin {
     to { transform: rotate(360deg); }
@@ -44,28 +34,6 @@
     animation: ag-wiggle 0.6s ease-in-out infinite;
   }
 }
-
-/* -----------------------------------------------------------
-   Hero-section cross-fade
-   (two independent timelines so first image is never grey)
-   ----------------------------------------------------------- */
-@keyframes heroFade1 {          /* satellite image – ID 3512 */
-  0%    { opacity: 1; }
-  25%   { opacity: 1; }
-  50%   { opacity: 0; }
-  75%   { opacity: 0; }
-  100%  { opacity: 1; }
-}
-@keyframes heroFade2 {          /* infrared image – ID 3513 */
-  0%    { opacity: 0; }
-  25%   { opacity: 0; }
-  50%   { opacity: 1; }
-  75%   { opacity: 1; }
-  100%  { opacity: 0; }
-}
-
-#hero-img-1 { animation: heroFade1 40s ease-in-out infinite; }
-#hero-img-2 { animation: heroFade2 40s ease-in-out infinite; }
 
 /* -----------------------------------------------------------
    Gallery card vertical pan & cross-fade

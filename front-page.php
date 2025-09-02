@@ -1,64 +1,10 @@
 <?php
 
 /**
- * Front-page template
- * Hero section with cross-fading images and centred text.
+ * Front-page template.
  */
 get_header(); ?>
 
-<section id="hero"
-  aria-label="Hero"
-  class="relative isolate overflow-hidden w-full aspect-[1914/548]">
-
-  <!-- Parallax wrapper for background images -->
-  <div id="hero-bg-wrap"
-    class="absolute inset-0 -z-10 will-change-transform">
-
-    <?php echo wp_get_attachment_image(
-        8697,
-        'full',
-        false,
-        array(
-            'id'            => 'hero-img-1',
-            'class'         => 'absolute inset-0 h-full w-full object-cover',
-            'alt'           => 'Satellite view of forest fire in Siberia',
-            'loading'       => 'eager',
-            // fetchpriority hints the browser this image is crucial for LCP.
-            'fetchpriority' => 'high',
-        )
-    ); ?>
-
-    <?php echo wp_get_attachment_image(
-        8698,
-        'full',
-        false,
-        array(
-            'id'            => 'hero-img-2',
-            'class'         => 'absolute inset-0 h-full w-full object-cover',
-            'alt'           => 'Infra-red rendering of the same fire',
-            'loading'       => 'lazy',
-        )
-    ); ?>
-
-    <!-- Dark overlay to boost legibility -->
-    <div class="absolute inset-0 bg-black/30 md:bg-black/30 mix-blend-multiply"></div>
-  </div>
-
-  <!-- Centred heading + subtitle -->
-  <div class="relative z-10 flex h-full flex-col items-center justify-center
-              text-center px-4 pointer-events-none">
-
-    <h1 class="text-white text-2xl sm:text-4xl md:text-6xl font-semibold tracking-wide
-               drop-shadow-lg animate-fadeUp">
-      Artist and researcher
-    </h1>
-
-    <p class="mt-4 text-sm sm:text-lg md:text-2xl tracking-widest text-white
-              drop-shadow-lg animate-fadeUp delay-[300ms]">
-      Exploring creativity, technology, art history, and the future of human expression
-    </p>
-  </div>
-</section>
 <!-- Main content area with three featured sections -->
 <section id="main-areas" aria-label="Main content" class="py-16 pb-12">
   <div class="max-w-7xl mx-auto grid gap-12 md:grid-cols-3 justify-center px-4">
