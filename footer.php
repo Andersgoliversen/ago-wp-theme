@@ -5,7 +5,6 @@
             [ 'slug' => '/blog/',     'label' => 'Blog' ],
             [ 'slug' => '/gallery/',  'label' => 'Gallery' ],
             [ 'slug' => '/projects/', 'label' => 'Projects' ],
-            [ 'slug' => '/shop/',     'label' => 'Shop' ],
             [ 'slug' => '/about/',    'label' => 'About' ],
         ];
         ?>
