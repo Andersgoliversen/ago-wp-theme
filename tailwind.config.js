@@ -11,7 +11,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        pagebg: 'oklch(97% 0.001 106.424)',
+        pagebg: '#f7f5f2',
       },
     },
   },

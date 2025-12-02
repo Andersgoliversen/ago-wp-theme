@@ -23,6 +23,20 @@ function ag_theme_setup() {
 add_action( 'after_setup_theme', 'ag_theme_setup' );
 
 /**
+ * Enqueue theme fonts from Google Fonts using a single optimized request.
+ */
+function ag_enqueue_fonts() {
+    if ( is_admin() ) {
+        return;
+    }
+
+    $fonts_url = 'https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,700;1,400;1,700&family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap';
+
+    wp_enqueue_style( 'ag-fonts', $fonts_url, array(), null );
+}
+add_action( 'wp_enqueue_scripts', 'ag_enqueue_fonts', 5 );
+
+/**
  * Enqueue theme assets with file modification time for cache busting.
  */
 function ag_enqueue_assets() {
@@ -53,8 +67,8 @@ add_action( 'wp_enqueue_scripts', 'ag_enqueue_assets' );
  * Output custom root variables.
  */
 function ag_output_root_vars() {
-    $light = 'oklch(97% 0.001 106.424)';
-    $dark  = 'oklch(25% 0.02 264)';
+    $light = '#f7f5f2';
+    $dark  = '#0f1115';
     echo '<style>:root{--pagebg-light:' . $light . ';--pagebg-dark:' . $dark . ';--pagebg:' . $light . ';}@media(prefers-color-scheme:dark){:root{--pagebg:var(--pagebg-dark);}}.dark{--pagebg:var(--pagebg-dark);}</style>' . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 add_action( 'wp_head', 'ag_output_root_vars', 0 );

@@ -138,22 +138,67 @@ body.diurnalis-ready .diurnalis-img {
 }
 
 @layer base {
+  /* Calming, legible base typography */
   body {
-    @apply bg-pagebg text-neutral-800;
+    font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 17px;
+    line-height: 1.6;
+    letter-spacing: 0.2px;
+    color: #111111;
+    background-color: #f7f5f2;
+    text-rendering: optimizeLegibility;
   }
   .dark body {
-    @apply bg-neutral-950 text-neutral-200;
+    color: #e5e5e5;
+    background-color: #0f1115;
   }
 }
 
 /* Global link style */
 @layer base {
   a {
-    @apply underline decoration-neutral-400 text-neutral-800 transition-transform duration-150 hover:scale-105 hover:text-neutral-600 hover:decoration-neutral-600;
-    /* Darken and shrink slightly while the link is actively clicked */
-    @apply active:text-neutral-950 active:scale-95;
-    @apply dark:text-neutral-200 dark:hover:text-neutral-100 dark:active:text-neutral-50;
+    color: #111111;
+    text-decoration-color: #8a8a8a;
+    text-decoration-thickness: 0.08em;
+    transition: color 150ms ease, text-decoration-color 150ms ease, transform 150ms ease;
   }
+  a:hover {
+    color: #1f1f1f;
+    text-decoration-color: #4b5563;
+    transform: scale(1.03);
+  }
+  a:active {
+    color: #000000;
+    transform: scale(0.97);
+  }
+  .dark a {
+    color: #e5e5e5;
+    text-decoration-color: #9ca3af;
+  }
+  .dark a:hover {
+    color: #f4f4f5;
+    text-decoration-color: #cbd5e1;
+  }
+  .dark a:active {
+    color: #ffffff;
+  }
+}
+
+/* Navigation, forms, and UI elements stay on the Source Sans Pro system */
+@layer base {
+  nav, .menu, .menu-item, .wp-block-navigation,
+  .wp-block-navigation a, .wp-block-navigation__responsive-container,
+  button, input, select, textarea, label,
+  .wp-block-button__link,
+  small, time, .meta, .meta-text {
+    font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    letter-spacing: 0.2px;
+  }
+
+  nav a, .menu a, .wp-block-navigation a { font-weight: 600; }
+  button, .wp-block-button__link, input[type="submit"], input[type="button"], input[type="reset"] { font-weight: 700; }
+  small, time, .meta, .meta-text { color: #1f1f1f; }
+  .dark small, .dark time, .dark .meta, .dark .meta-text { color: #d6d6d6; }
 }
 
 @layer base {
@@ -172,13 +217,51 @@ body.diurnalis-ready .diurnalis-img {
   }
 }
 @layer base {
-  h1 { @apply text-4xl font-bold mt-6 mb-4; }
-  h2 { @apply text-3xl font-semibold mt-5 mb-3; }
-  h3 { @apply text-2xl font-semibold mt-4 mb-2; }
-  h4 { @apply text-xl font-semibold mt-3 mb-2; }
-  h5 { @apply text-lg font-semibold mt-3 mb-1; }
-  h6 { @apply text-base font-semibold mt-3 mb-1; }
-  p { @apply mt-0 mb-4; }
+  /* Alegreya heading scale for a biophilic feel */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: "Alegreya", "Georgia", serif;
+    color: #0d0d0d;
+    letter-spacing: 0.2px;
+    margin-top: 1.5em;
+    margin-bottom: 0.65em;
+  }
+  h1 { font-size: 2.4rem; line-height: 1.15; font-weight: 700; }
+  h2 { font-size: 2rem;  line-height: 1.2;  font-weight: 700; }
+  h3 { font-size: 1.6rem; line-height: 1.25; font-weight: 700; }
+  h4 { font-size: 1.3rem; line-height: 1.3;  font-weight: 700; }
+  h5 { font-size: 1.1rem; line-height: 1.4;  font-weight: 600; }
+  h6 { font-size: 1rem;   line-height: 1.4;  font-weight: 600; letter-spacing: 0.3px; }
+  .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 { color: #f5f5f5; }
+
+  p {
+    margin: 0 0 1.25em;
+  }
+}
+
+@layer components {
+  /* Comfortable reading width for long-form content */
+  #content,
+  .entry-content,
+  .wp-block-post-content {
+    max-width: min(72ch, 100%);
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  #content p,
+  #content ul,
+  #content ol,
+  #content blockquote,
+  .entry-content p,
+  .entry-content ul,
+  .entry-content ol,
+  .entry-content blockquote,
+  .wp-block-post-content p,
+  .wp-block-post-content ul,
+  .wp-block-post-content ol,
+  .wp-block-post-content blockquote {
+    max-width: 72ch;
+  }
 }
 
 
