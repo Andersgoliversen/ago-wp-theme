@@ -450,15 +450,15 @@ body.diurnalis-ready .diurnalis-img {
 @layer components {
   /* Layout surfaces and chroma */
   #masthead {
-    background-color: var(--headerbg);
+    background-color: transparent;
     color: var(--color-text);
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: none;
   }
 
   footer {
-    background-color: var(--footerbg);
+    background-color: transparent;
     color: var(--color-text);
-    border-top: 1px solid var(--border-color);
+    border-top: none;
   }
 
   article,
@@ -468,7 +468,7 @@ body.diurnalis-ready .diurnalis-img {
   .wp-block-post,
   .post,
   .page {
-    background-color: var(--content-surface);
+    background-color: transparent;
   }
 }
 
