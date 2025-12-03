@@ -128,7 +128,7 @@ function ag_output_root_vars() {
         . '--page-texture:var(--page-texture-dark);'
         . '--content-surface:var(--panelbg-dark);'
         . '}}';
-    $style .= '.dark{'
+    $style .= '.dark,[data-theme="dark"]{'
         . '--pagebg:var(--pagebg-dark);'
         . '--panelbg:var(--panelbg-dark);'
         . '--headerbg:var(--headerbg-dark);'
