@@ -142,7 +142,6 @@ body.diurnalis-ready .diurnalis-img {
   :root {
     color-scheme: light;
   }
-  :root[data-theme="dark"],
   .dark {
     color-scheme: dark;
   }
