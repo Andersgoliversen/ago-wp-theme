@@ -67,9 +67,84 @@ add_action( 'wp_enqueue_scripts', 'ag_enqueue_assets' );
  * Output custom root variables.
  */
 function ag_output_root_vars() {
-    $light = '#f7f5f2';
-    $dark  = '#0f1115';
-    echo '<style>:root{--pagebg-light:' . $light . ';--pagebg-dark:' . $dark . ';--pagebg:' . $light . ';}@media(prefers-color-scheme:dark){:root{--pagebg:var(--pagebg-dark);}}.dark{--pagebg:var(--pagebg-dark);}</style>' . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+    $paper_texture = wp_get_attachment_image_url( 9848, 'full' );
+    $stone_texture = wp_get_attachment_image_url( 9849, 'full' );
+
+    $paper_texture = $paper_texture ? 'url(' . esc_url_raw( $paper_texture ) . ')' : 'none';
+    $stone_texture = $stone_texture ? 'url(' . esc_url_raw( $stone_texture ) . ')' : 'none';
+
+    $style  = '<style>';
+    $style .= ':root{'
+        . '--pagebg-light:#F6F2EC;'
+        . '--pagebg-dark:#161613;'
+        . '--panelbg-dark:#1C1C18;'
+        . '--headerbg-light:#EFE5D8;'
+        . '--headerbg-dark:#191A16;'
+        . '--footerbg-light:#E5DACB;'
+        . '--footerbg-dark:#141411;'
+        . '--color-text-light:#222222;'
+        . '--color-text-dark:#E8E4DC;'
+        . '--color-muted-light:#555555;'
+        . '--color-muted-dark:#B9B4AA;'
+        . '--border-light:#D9CEC0;'
+        . '--border-dark:#2A2A24;'
+        . '--accent-primary-light:#2F5D46;'
+        . '--accent-primary-dark:#7BBF97;'
+        . '--accent-hover-light:#3F7A5D;'
+        . '--accent-hover-dark:#A3D9BB;'
+        . '--accent-secondary-light:#B4683C;'
+        . '--accent-secondary-dark:#C98553;'
+        . '--focus-ring-light:var(--accent-secondary-light);'
+        . '--focus-ring-dark:#D4A06A;'
+        . '--page-texture-light:' . $paper_texture . ';'
+        . '--page-texture-dark:' . $stone_texture . ';'
+        . '--pagebg:var(--pagebg-light);'
+        . '--panelbg:var(--pagebg-light);'
+        . '--headerbg:var(--headerbg-light);'
+        . '--footerbg:var(--footerbg-light);'
+        . '--color-text:var(--color-text-light);'
+        . '--color-muted:var(--color-muted-light);'
+        . '--border-color:var(--border-light);'
+        . '--accent-primary:var(--accent-primary-light);'
+        . '--accent-hover:var(--accent-hover-light);'
+        . '--accent-secondary:var(--accent-secondary-light);'
+        . '--focus-ring:var(--focus-ring-light);'
+        . '--page-texture:var(--page-texture-light);'
+        . '--content-surface:var(--pagebg);'
+        . '}';
+    $style .= '@media(prefers-color-scheme:dark){:root{'
+        . '--pagebg:var(--pagebg-dark);'
+        . '--panelbg:var(--panelbg-dark);'
+        . '--headerbg:var(--headerbg-dark);'
+        . '--footerbg:var(--footerbg-dark);'
+        . '--color-text:var(--color-text-dark);'
+        . '--color-muted:var(--color-muted-dark);'
+        . '--border-color:var(--border-dark);'
+        . '--accent-primary:var(--accent-primary-dark);'
+        . '--accent-hover:var(--accent-hover-dark);'
+        . '--accent-secondary:var(--accent-secondary-dark);'
+        . '--focus-ring:var(--focus-ring-dark);'
+        . '--page-texture:var(--page-texture-dark);'
+        . '--content-surface:var(--panelbg-dark);'
+        . '}}';
+    $style .= '.dark{'
+        . '--pagebg:var(--pagebg-dark);'
+        . '--panelbg:var(--panelbg-dark);'
+        . '--headerbg:var(--headerbg-dark);'
+        . '--footerbg:var(--footerbg-dark);'
+        . '--color-text:var(--color-text-dark);'
+        . '--color-muted:var(--color-muted-dark);'
+        . '--border-color:var(--border-dark);'
+        . '--accent-primary:var(--accent-primary-dark);'
+        . '--accent-hover:var(--accent-hover-dark);'
+        . '--accent-secondary:var(--accent-secondary-dark);'
+        . '--focus-ring:var(--focus-ring-dark);'
+        . '--page-texture:var(--page-texture-dark);'
+        . '--content-surface:var(--panelbg-dark);'
+        . '}';
+    $style .= '</style>' . "\n";
+
+    echo $style; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 add_action( 'wp_head', 'ag_output_root_vars', 0 );
 
