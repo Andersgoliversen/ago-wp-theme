@@ -74,9 +74,10 @@ function ag_output_root_vars() {
     $stone_texture = $stone_texture ? 'url(' . esc_url_raw( $stone_texture ) . ')' : 'none';
 
     $style  = '<style>';
-    $style .= ':root{'
+    $style .= ':root{' 
         . '--pagebg-light:#F6F2EC;'
         . '--pagebg-dark:#161613;'
+        . '--panelbg-light:#F6F2EC;'
         . '--panelbg-dark:#1C1C18;'
         . '--headerbg-light:#EFE5D8;'
         . '--headerbg-dark:#191A16;'
@@ -99,7 +100,7 @@ function ag_output_root_vars() {
         . '--page-texture-light:' . $paper_texture . ';'
         . '--page-texture-dark:' . $stone_texture . ';'
         . '--pagebg:var(--pagebg-light);'
-        . '--panelbg:var(--pagebg-light);'
+        . '--panelbg:var(--panelbg-light);'
         . '--headerbg:var(--headerbg-light);'
         . '--footerbg:var(--footerbg-light);'
         . '--color-text:var(--color-text-light);'
@@ -110,7 +111,7 @@ function ag_output_root_vars() {
         . '--accent-secondary:var(--accent-secondary-light);'
         . '--focus-ring:var(--focus-ring-light);'
         . '--page-texture:var(--page-texture-light);'
-        . '--content-surface:var(--pagebg);'
+        . '--content-surface:var(--panelbg-light);'
         . '}';
     $style .= '@media(prefers-color-scheme:dark){:root{'
         . '--pagebg:var(--pagebg-dark);'
@@ -127,7 +128,7 @@ function ag_output_root_vars() {
         . '--page-texture:var(--page-texture-dark);'
         . '--content-surface:var(--panelbg-dark);'
         . '}}';
-    $style .= '.dark{'
+    $style .= '.dark,[data-theme="dark"]{'
         . '--pagebg:var(--pagebg-dark);'
         . '--panelbg:var(--panelbg-dark);'
         . '--headerbg:var(--headerbg-dark);'

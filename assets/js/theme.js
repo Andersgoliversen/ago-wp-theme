@@ -12,10 +12,35 @@ window.addEventListener('load', () => {
 // Theme toggle
 // ---------------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
+  const root = document.documentElement;
+  const storageKey = 'theme';
+  const darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+  function applyTheme(theme) {
+    root.classList.toggle('dark', theme === 'dark');
+    root.dataset.theme = theme;
+  }
+
+  function currentPreference() {
+    const stored = localStorage.getItem(storageKey);
+    if (stored === 'dark' || stored === 'light') {
+      return stored;
+    }
+    return darkQuery.matches ? 'dark' : 'light';
+  }
+
+  function syncTheme() {
+    applyTheme(currentPreference());
+  }
+
+  darkQuery.addEventListener('change', syncTheme);
+  syncTheme();
+
   document.querySelectorAll('.theme-toggle').forEach(btn => {
     btn.addEventListener('click', () => {
-      const dark = document.documentElement.classList.toggle('dark');
-      localStorage.setItem('theme', dark ? 'dark' : 'light');
+      const next = root.classList.contains('dark') ? 'light' : 'dark';
+      applyTheme(next);
+      localStorage.setItem(storageKey, next);
     });
   });
 });
