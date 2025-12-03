@@ -141,9 +141,83 @@ body.diurnalis-ready .diurnalis-img {
   /* Calming, legible base typography */
   :root {
     color-scheme: light;
+    /* Light palette (fallback if inline vars are stripped) */
+    --pagebg-light: #F6F2EC;
+    --panelbg-light: #F6F2EC;
+    --headerbg-light: #EFE5D8;
+    --footerbg-light: #E5DACB;
+    --color-text-light: #222222;
+    --color-muted-light: #555555;
+    --border-light: #D9CEC0;
+    --accent-primary-light: #2F5D46;
+    --accent-hover-light: #3F7A5D;
+    --accent-secondary-light: #B4683C;
+    --focus-ring-light: var(--accent-secondary-light);
+
+    /* Dark palette */
+    --pagebg-dark: #161613;
+    --panelbg-dark: #1C1C18;
+    --headerbg-dark: #191A16;
+    --footerbg-dark: #141411;
+    --color-text-dark: #E8E4DC;
+    --color-muted-dark: #B9B4AA;
+    --border-dark: #2A2A24;
+    --accent-primary-dark: #7BBF97;
+    --accent-hover-dark: #A3D9BB;
+    --accent-secondary-dark: #C98553;
+    --focus-ring-dark: #D4A06A;
+
+    /* Defaults (follow light) */
+    --pagebg: var(--pagebg-light);
+    --panelbg: var(--panelbg-light);
+    --headerbg: var(--headerbg-light);
+    --footerbg: var(--footerbg-light);
+    --color-text: var(--color-text-light);
+    --color-muted: var(--color-muted-light);
+    --border-color: var(--border-light);
+    --accent-primary: var(--accent-primary-light);
+    --accent-hover: var(--accent-hover-light);
+    --accent-secondary: var(--accent-secondary-light);
+    --focus-ring: var(--focus-ring-light);
+    /* Leave textures to inline PHP to preserve dynamic URLs; fall back to none */
+    --page-texture: var(--page-texture-light, none);
+    --content-surface: var(--panelbg-light);
   }
   .dark {
     color-scheme: dark;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --pagebg: var(--pagebg-dark);
+      --panelbg: var(--panelbg-dark);
+      --headerbg: var(--headerbg-dark);
+      --footerbg: var(--footerbg-dark);
+      --color-text: var(--color-text-dark);
+      --color-muted: var(--color-muted-dark);
+      --border-color: var(--border-dark);
+      --accent-primary: var(--accent-primary-dark);
+      --accent-hover: var(--accent-hover-dark);
+      --accent-secondary: var(--accent-secondary-dark);
+      --focus-ring: var(--focus-ring-dark);
+      --page-texture: var(--page-texture-dark, var(--page-texture-light, none));
+      --content-surface: var(--panelbg-dark);
+    }
+  }
+  .dark,
+  [data-theme="dark"] {
+    --pagebg: var(--pagebg-dark);
+    --panelbg: var(--panelbg-dark);
+    --headerbg: var(--headerbg-dark);
+    --footerbg: var(--footerbg-dark);
+    --color-text: var(--color-text-dark);
+    --color-muted: var(--color-muted-dark);
+    --border-color: var(--border-dark);
+    --accent-primary: var(--accent-primary-dark);
+    --accent-hover: var(--accent-hover-dark);
+    --accent-secondary: var(--accent-secondary-dark);
+    --focus-ring: var(--focus-ring-dark);
+    --page-texture: var(--page-texture-dark, var(--page-texture-light, none));
+    --content-surface: var(--panelbg-dark);
   }
   html,
   body {
