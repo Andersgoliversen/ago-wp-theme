@@ -139,17 +139,26 @@ body.diurnalis-ready .diurnalis-img {
 
 @layer base {
   /* Calming, legible base typography */
+  :root {
+    color-scheme: light;
+  }
+  .dark {
+    color-scheme: dark;
+  }
+  html,
+  body {
+    background-color: var(--pagebg);
+    background-image: var(--page-texture);
+    background-repeat: repeat;
+    background-size: 512px 512px;
+    background-attachment: fixed;
+  }
   body {
     font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     font-size: 17px;
     line-height: 1.6;
     letter-spacing: 0.2px;
     color: var(--color-text);
-    background-color: var(--pagebg);
-    background-image: var(--page-texture);
-    background-repeat: repeat;
-    background-size: 512px 512px;
-    background-attachment: fixed;
     text-rendering: optimizeLegibility;
   }
 }
@@ -157,12 +166,16 @@ body.diurnalis-ready .diurnalis-img {
 /* Global link style */
 @layer base {
   a {
-    color: inherit;
-    text-decoration-color: transparent;
-    text-decoration-thickness: 0.08em;
+    color: var(--accent-primary);
+    text-decoration-line: underline;
+    text-decoration-color: currentColor;
+    text-decoration-thickness: 0.12em;
+    text-underline-offset: 0.18em;
+    font-weight: 500;
     transition: color 150ms ease, text-decoration-color 150ms ease, transform 150ms ease;
   }
   a:hover {
+    color: var(--accent-hover);
     transform: scale(1.03);
   }
   a:active {
