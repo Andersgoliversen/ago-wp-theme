@@ -3,6 +3,14 @@
  * – global interactions loaded on every page
  */
 
+const runWhenIdle = (callback) => {
+  if ('requestIdleCallback' in window) {
+    window.requestIdleCallback(callback, { timeout: 2000 });
+  } else {
+    setTimeout(callback, 1);
+  }
+};
+
 // Start Diurnalis animations after full page load
 window.addEventListener('load', () => {
   document.body.classList.add('diurnalis-ready');
@@ -117,81 +125,83 @@ document.addEventListener('DOMContentLoaded', () => {
 // Search form enhancements
 // ---------------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
-  const input = document.getElementById('search-field');
-  const button = document.getElementById('search-submit');
-  const warning = document.getElementById('search-warning');
+  runWhenIdle(() => {
+    const input = document.getElementById('search-field');
+    const button = document.getElementById('search-submit');
+    const warning = document.getElementById('search-warning');
 
-  if (input) {
-    const text = input.getAttribute('placeholder') || '';
+    if (input) {
+      const text = input.getAttribute('placeholder') || '';
 
-    function animatePlaceholder() {
-      input.placeholder = '';
-      let i = 0;
-      const interval = setInterval(() => {
-        input.placeholder = text.slice(0, i + 1);
-        i += 1;
-        if (i >= text.length) clearInterval(interval);
-      }, 80);
+      function animatePlaceholder() {
+        input.placeholder = '';
+        let i = 0;
+        const interval = setInterval(() => {
+          input.placeholder = text.slice(0, i + 1);
+          i += 1;
+          if (i >= text.length) clearInterval(interval);
+        }, 80);
+      }
+
+      animatePlaceholder();
+      setInterval(animatePlaceholder, 30000);
     }
 
-    animatePlaceholder();
-    setInterval(animatePlaceholder, 30000);
-  }
+    if (button) {
+      button.addEventListener('click', (e) => {
+        if (input && input.value.trim() === '') {
+          e.preventDefault();
+          if (warning) warning.classList.remove('hidden');
+        }
+      });
+    }
 
-  if (button) {
-    button.addEventListener('click', (e) => {
-      if (input && input.value.trim() === '') {
-        e.preventDefault();
-        if (warning) warning.classList.remove('hidden');
-      }
-    });
-  }
+    const hideWarning = () => warning && warning.classList.add('hidden');
+    document.addEventListener('click', hideWarning);
+    document.addEventListener('scroll', hideWarning, { passive: true });
 
-  const hideWarning = () => warning && warning.classList.add('hidden');
-  document.addEventListener('click', hideWarning);
-  document.addEventListener('scroll', hideWarning, { passive: true });
+    document.querySelectorAll('.ag-interactive').forEach(el => {
+      const icon = el.querySelector('.ag-icon');
+      if (!icon) return;
 
-  document.querySelectorAll('.ag-interactive').forEach(el => {
-    const icon = el.querySelector('.ag-icon');
-    if (!icon) return;
+      let hold = false;
+      let timer;
+      let duration = 1.5;
 
-    let hold = false;
-    let timer;
-    let duration = 1.5;
-
-    const stop = () => {
-      hold = false;
-      clearTimeout(timer);
-      icon.classList.remove('ag-spin', 'ag-spin-once');
-      icon.style.removeProperty('--ag-spin-duration');
-    };
-
-    const startSpin = () => {
-      if (!hold) return;
-      icon.classList.remove('ag-spin-once');
-      icon.classList.add('ag-spin');
-      icon.style.setProperty('--ag-spin-duration', duration + 's');
-      const accelerate = () => {
-        if (!hold) return;
-        duration = Math.max(0.2, duration - 0.3);
-        icon.style.setProperty('--ag-spin-duration', duration + 's');
-        if (duration > 0.2) timer = setTimeout(accelerate, 200);
+      const stop = () => {
+        hold = false;
+        clearTimeout(timer);
+        icon.classList.remove('ag-spin', 'ag-spin-once');
+        icon.style.removeProperty('--ag-spin-duration');
       };
-      accelerate();
-    };
 
-    const handlePress = () => {
-      hold = true;
-      duration = 1.5;
-      icon.classList.add('ag-spin-once');
-      timer = setTimeout(startSpin, 1400); // 0.4s spin + 1s pause
-    };
+      const startSpin = () => {
+        if (!hold) return;
+        icon.classList.remove('ag-spin-once');
+        icon.classList.add('ag-spin');
+        icon.style.setProperty('--ag-spin-duration', duration + 's');
+        const accelerate = () => {
+          if (!hold) return;
+          duration = Math.max(0.2, duration - 0.3);
+          icon.style.setProperty('--ag-spin-duration', duration + 's');
+          if (duration > 0.2) timer = setTimeout(accelerate, 200);
+        };
+        accelerate();
+      };
 
-    el.addEventListener('mousedown', handlePress);
-    el.addEventListener('touchstart', handlePress, { passive: true });
-    el.addEventListener('mouseup', stop);
-    el.addEventListener('mouseleave', stop);
-    el.addEventListener('touchend', stop);
+      const handlePress = () => {
+        hold = true;
+        duration = 1.5;
+        icon.classList.add('ag-spin-once');
+        timer = setTimeout(startSpin, 1400); // 0.4s spin + 1s pause
+      };
+
+      el.addEventListener('mousedown', handlePress);
+      el.addEventListener('touchstart', handlePress, { passive: true });
+      el.addEventListener('mouseup', stop);
+      el.addEventListener('mouseleave', stop);
+      el.addEventListener('touchend', stop);
+    });
   });
 });
 
@@ -199,53 +209,55 @@ document.addEventListener('DOMContentLoaded', () => {
 // Rock Art Research card image sequence
 // ---------------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
-  const card = document.getElementById('rock-art-card');
-  if (!card) return; // exit if the card is not on the page
+  runWhenIdle(() => {
+    const card = document.getElementById('rock-art-card');
+    if (!card) return; // exit if the card is not on the page
 
-  const imgs = Array.from(card.querySelectorAll('.rock-art-img'));
-  let current = 0;      // index of the image currently shown
-  let altToggle = 0;    // toggles between the two alternative drawings
+    const imgs = Array.from(card.querySelectorAll('.rock-art-img'));
+    let current = 0;      // index of the image currently shown
+    let altToggle = 0;    // toggles between the two alternative drawings
 
-  const wiggleDuration = 200;  // in milliseconds
-  const bounceDuration = 600;  // in milliseconds
-  const delay = 5000;          // wait time before each transition
+    const wiggleDuration = 200;  // in milliseconds
+    const bounceDuration = 600;  // in milliseconds
+    const delay = 5000;          // wait time before each transition
 
-  // Show the first image (photograph) initially
-  imgs[current].classList.add('active');
+    // Show the first image (photograph) initially
+    imgs[current].classList.add('active');
 
-  // Determine the next image index in the 0 → 1 → 0 → 2 loop
-  function getNextIndex() {
-    if (current === 0) {
-      return altToggle === 0 ? 1 : 2;
+    // Determine the next image index in the 0 → 1 → 0 → 2 loop
+    function getNextIndex() {
+      if (current === 0) {
+        return altToggle === 0 ? 1 : 2;
+      }
+      altToggle = altToggle === 0 ? 1 : 0; // swap between the two drawings
+      return 0;
     }
-    altToggle = altToggle === 0 ? 1 : 0; // swap between the two drawings
-    return 0;
-  }
 
-  // Switch the visible image with a cross-fade
-  function switchImage() {
-    const next = getNextIndex();
-    imgs[current].classList.remove('active');
-    imgs[next].classList.add('active');
-    current = next;
-  }
+    // Switch the visible image with a cross-fade
+    function switchImage() {
+      const next = getNextIndex();
+      imgs[current].classList.remove('active');
+      imgs[next].classList.add('active');
+      current = next;
+    }
 
-  // Handles the wiggle, bounce and image swap
-  function animate() {
-    card.classList.add('rock-wiggle');
-    setTimeout(() => {
-      card.classList.remove('rock-wiggle');
-      card.classList.add('rock-bounce');
-      switchImage();
+    // Handles the wiggle, bounce and image swap
+    function animate() {
+      card.classList.add('rock-wiggle');
       setTimeout(() => {
-        card.classList.remove('rock-bounce');
-      }, bounceDuration);
-    }, wiggleDuration);
-  }
+        card.classList.remove('rock-wiggle');
+        card.classList.add('rock-bounce');
+        switchImage();
+        setTimeout(() => {
+          card.classList.remove('rock-bounce');
+        }, bounceDuration);
+      }, wiggleDuration);
+    }
 
-  // Initial delay before the first animation, then repeat
-  setTimeout(() => {
-    animate();
-    setInterval(animate, delay + wiggleDuration + bounceDuration);
-  }, delay);
+    // Initial delay before the first animation, then repeat
+    setTimeout(() => {
+      animate();
+      setInterval(animate, delay + wiggleDuration + bounceDuration);
+    }, delay);
+  });
 });
