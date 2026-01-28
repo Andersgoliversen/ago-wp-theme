@@ -16,7 +16,8 @@ get_header(); ?>
           'id'    => 'gallery-img-1',
           'class' => 'absolute inset-0 w-full h-full object-cover',
           'alt'   => 'Artwork of human alien hybrid',
-          'loading' => 'lazy',
+          'loading' => 'eager',
+          'fetchpriority' => 'high',
         ) ); ?>
         <?php echo wp_get_attachment_image( 3072, 'medium', false, array( // Changed 'full' to 'medium'
           'id'    => 'gallery-img-2',

@@ -37,6 +37,26 @@ function ag_enqueue_fonts() {
 add_action( 'wp_enqueue_scripts', 'ag_enqueue_fonts', 5 );
 
 /**
+ * Preconnect to font origins for faster text rendering.
+ *
+ * @param array  $urls          Resource hints.
+ * @param string $relation_type Relation type.
+ * @return array
+ */
+function ag_resource_hints( $urls, $relation_type ) {
+    if ( 'preconnect' === $relation_type ) {
+        $urls[] = 'https://fonts.googleapis.com';
+        $urls[] = array(
+            'href'        => 'https://fonts.gstatic.com',
+            'crossorigin' => 'anonymous',
+        );
+    }
+
+    return $urls;
+}
+add_filter( 'wp_resource_hints', 'ag_resource_hints', 10, 2 );
+
+/**
  * Enqueue theme assets with file modification time for cache busting.
  */
 function ag_enqueue_assets() {
