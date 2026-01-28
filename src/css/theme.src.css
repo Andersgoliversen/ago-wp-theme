@@ -198,7 +198,7 @@ body.diurnalis-ready .diurnalis-img {
     color-scheme: dark;
   }
   @media (prefers-color-scheme: dark) {
-    :root {
+    :root:not([data-theme]) {
       --pagebg: var(--pagebg-dark);
       --panelbg: var(--panelbg-dark);
       --headerbg: var(--headerbg-dark);
@@ -239,6 +239,27 @@ body.diurnalis-ready .diurnalis-img {
     --page-overlay-3: radial-gradient(150% 140% at 100% 100%, transparent 44%, var(--edge-1) 74%, transparent 100%);
     --page-texture: var(--page-texture-dark, var(--page-texture-light, none));
     --content-surface: var(--panelbg-dark);
+  }
+  [data-theme="light"] {
+    color-scheme: light;
+    --pagebg: var(--pagebg-light);
+    --panelbg: var(--panelbg-light);
+    --headerbg: var(--headerbg-light);
+    --footerbg: var(--footerbg-light);
+    --color-text: var(--color-text-light);
+    --color-muted: var(--color-muted-light);
+    --border-color: var(--border-light);
+    --accent-primary: var(--accent-primary-light);
+    --accent-hover: var(--accent-hover-light);
+    --accent-secondary: var(--accent-secondary-light);
+    --focus-ring: var(--focus-ring-light);
+    --edge-1: var(--edge-light-1);
+    --edge-2: var(--edge-light-2);
+    --page-overlay-1: radial-gradient(130% 130% at 50% 45%, transparent 45%, var(--edge-1) 70%, transparent 100%);
+    --page-overlay-2: radial-gradient(150% 120% at 0% 0%, transparent 40%, var(--edge-2) 72%, transparent 100%);
+    --page-overlay-3: radial-gradient(150% 140% at 100% 100%, transparent 44%, var(--edge-1) 74%, transparent 100%);
+    --page-texture: var(--page-texture-light, none);
+    --content-surface: var(--panelbg-light);
   }
   html,
   body {
