@@ -38,24 +38,18 @@
 /* -----------------------------------------------------------
    Gallery card vertical pan & cross-fade
    ----------------------------------------------------------- */
-@keyframes galleryPan1 {
+@keyframes galleryPan {
   0%   { opacity: 1; object-position: center top; }
-  45%  { opacity: 1; object-position: center bottom; }
-  55%  { opacity: 0; object-position: center bottom; }
-  90%  { opacity: 0; object-position: center top; }
-  100% { opacity: 1; object-position: center top; }
+  16%  { opacity: 1; object-position: center bottom; }
+  22%  { opacity: 0; object-position: center bottom; }
+  100% { opacity: 0; object-position: center top; }
 }
 
-@keyframes galleryPan2 {
-  0%   { opacity: 0; object-position: center top; }
-  45%  { opacity: 0; object-position: center top; }
-  55%  { opacity: 1; object-position: center top; }
-  90%  { opacity: 1; object-position: center bottom; }
-  100% { opacity: 0; object-position: center bottom; }
+.gallery-img {
+  opacity: 0;
+  animation: galleryPan 50s ease-in-out infinite;
+  animation-delay: var(--gallery-delay,0s);
 }
-
-#gallery-img-1 { animation: galleryPan1 20s ease-in-out infinite; }
-#gallery-img-2 { animation: galleryPan2 20s ease-in-out infinite; }
 
 /* -----------------------------------------------------------
    Rock Art Research card fade & bounce sequence

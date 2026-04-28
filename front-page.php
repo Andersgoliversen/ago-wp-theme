@@ -10,24 +10,54 @@ get_header(); ?>
   <div class="max-w-7xl mx-auto grid gap-12 md:grid-cols-3 justify-center px-4">
     <!-- Gallery card -->
     <article class="w-[320px] flex flex-col items-center text-center">
-      <!-- Two tall images panning vertically inside the card -->
+      <a href="https://andersgoliversen.com/gallery/" class="block no-underline text-inherit">
+      <!-- Artwork images panning vertically inside the card -->
       <div class="relative w-full h-48 overflow-hidden rounded shadow">
-        <?php echo wp_get_attachment_image( 3133, 'medium', false, array( // Changed 'full' to 'medium'
-          'id'    => 'gallery-img-1',
-          'class' => 'absolute inset-0 w-full h-full object-cover',
-          'alt'   => 'Artwork of human alien hybrid',
-          'loading' => 'eager',
-          'fetchpriority' => 'high',
-        ) ); ?>
-        <?php echo wp_get_attachment_image( 3072, 'medium', false, array( // Changed 'full' to 'medium'
-          'id'    => 'gallery-img-2',
-          'class' => 'absolute inset-0 w-full h-full object-cover',
-          'alt'   => 'Artwork of a mermonkey with wings',
-          'loading' => 'lazy',
-        ) ); ?>
+        <?php
+        $gallery_images = array(
+          array(
+            'attachment_id' => 3133,
+            'alt'           => 'Artwork of human alien hybrid',
+          ),
+          array(
+            'attachment_id' => 3072,
+            'alt'           => 'Artwork of a mermonkey with wings',
+          ),
+          array(
+            'attachment_id' => 3525,
+            'alt'           => 'Artwork of a big tree',
+          ),
+          array(
+            'attachment_id' => 3567,
+            'alt'           => 'Illustration titled Why is it so dark?',
+          ),
+          array(
+            'attachment_id' => 3155,
+            'alt'           => 'Artwork of Ullandhaugtårnet',
+          ),
+        );
+
+        foreach ( $gallery_images as $index => $gallery_image ) {
+          $image_number = $index + 1;
+          $attributes   = array(
+            'id'      => 'gallery-img-' . $image_number,
+            'class'   => 'gallery-img absolute inset-0 w-full h-full object-cover',
+            'alt'     => $gallery_image['alt'],
+            'loading' => 0 === $index ? 'eager' : 'lazy',
+            'style'   => '--gallery-delay: ' . ( $index * 10 ) . 's;',
+          );
+
+          if ( 0 === $index ) {
+            $attributes['fetchpriority'] = 'high';
+          }
+
+          echo wp_get_attachment_image( $gallery_image['attachment_id'], 'medium', false, $attributes );
+        }
+        ?>
       </div>
       <h2 class="mt-4 text-xl font-semibold">Art</h2>
       <p class="mt-2 text-sm">My illustrations and drawings</p>
+      </a>
       <a href="https://andersgoliversen.com/gallery/"
          class="mt-4 inline-block font-bold text-white py-2 px-4 rounded transition-colors transition-transform duration-150 bg-neutral-600 dark:bg-neutral-500 hover:bg-neutral-400 dark:hover:bg-neutral-400 hover:scale-105 active:bg-neutral-700 dark:active:bg-neutral-600 active:scale-95 no-underline"><!-- Darken and shrink on click -->
         View Gallery
@@ -36,6 +66,7 @@ get_header(); ?>
 
     <!-- Rock Art Research card -->
     <article class="w-[320px] flex flex-col items-center text-center">
+      <a href="https://andersgoliversen.com/projects/prehistoric-norway/" class="block no-underline text-inherit">
       <!-- Three-image sequence with JS-controlled transitions -->
       <div id="rock-art-card" class="relative w-full h-48 overflow-hidden rounded shadow">
         <?php echo wp_get_attachment_image( 8783, 'medium', false, array( // Changed 'full' to 'medium'
@@ -59,6 +90,7 @@ get_header(); ?>
       </div>
       <h2 class="mt-4 text-xl font-semibold">Rock Art Research</h2>
       <p class="mt-2 text-sm">Research on Norwegian rock art and petroglyphs</p>
+      </a>
       <a href="https://andersgoliversen.com/projects/prehistoric-norway/"
          class="mt-4 inline-block font-bold text-white py-2 px-4 rounded transition-colors transition-transform duration-150 bg-neutral-600 dark:bg-neutral-500 hover:bg-neutral-400 dark:hover:bg-neutral-400 hover:scale-105 active:bg-neutral-700 dark:active:bg-neutral-600 active:scale-95 no-underline"><!-- Darken and shrink on click -->
         Explore Research
@@ -67,6 +99,7 @@ get_header(); ?>
 
     <!-- Diurnalis card -->
     <article class="w-[320px] flex flex-col items-center text-center">
+      <a href="https://andersgoliversen.com/projects/diurnalis/" class="block no-underline text-inherit">
       <!-- Four images zooming and cross-fading -->
       <div class="relative w-full h-48 overflow-hidden rounded shadow">
         <?php echo wp_get_attachment_image( 2950, 'medium', false, array( // Changed 'full' to 'medium'
@@ -96,6 +129,7 @@ get_header(); ?>
       </div>
       <h2 class="mt-4 text-xl font-semibold">Diurnalis</h2>
       <p class="mt-2 text-sm">Development art and animation for Diurnalis</p>
+      </a>
       <a href="https://andersgoliversen.com/projects/diurnalis/"
          class="mt-4 inline-block font-bold text-white py-2 px-4 rounded transition-colors transition-transform duration-150 bg-neutral-600 dark:bg-neutral-500 hover:bg-neutral-400 dark:hover:bg-neutral-400 hover:scale-105 active:bg-neutral-700 dark:active:bg-neutral-600 active:scale-95 no-underline"><!-- Darken and shrink on click -->
         View Diurnalis
