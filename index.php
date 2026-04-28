@@ -1,6 +1,6 @@
 <?php get_header(); ?>
 
-<main class="max-w-3xl mx-auto px-4 py-12 space-y-12">
+<main id="content" class="max-w-3xl mx-auto px-4 py-12 space-y-12">
 <?php
 if ( have_posts() ) :
         while ( have_posts() ) :
@@ -17,7 +17,7 @@ if ( have_posts() ) :
 
                     the_excerpt();
 
-                    echo '<time datetime="' . esc_attr( get_the_date( 'c' ) ) . '" class="block text-sm italic text-neutral-500">' . esc_html( get_the_date( 'F j, Y' ) ) . '</time>';
+                    echo '<time datetime="' . esc_attr( get_the_date( 'c' ) ) . '" class="block text-sm italic meta-text">' . esc_html( get_the_date( 'F j, Y' ) ) . '</time>';
                     ?>
                 </article>
                 <?php

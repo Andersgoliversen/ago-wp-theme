@@ -16,9 +16,9 @@
             const stored = localStorage.getItem('theme');
             const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
             const initial = stored ? stored : (prefersDark ? 'dark' : 'light');
+            document.documentElement.dataset.theme = initial;
             if (initial === 'dark') {
                 document.documentElement.classList.add('dark');
-                document.documentElement.dataset.theme = 'dark';
             }
         })();
         </script>
