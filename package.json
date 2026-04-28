@@ -2,7 +2,6 @@
   "name": "andersg-theme",
   "private": true,
   "devDependencies": {
-    "@wordpress/scripts": "^19.2.4",
     "archiver": "^7.0.1",
     "autoprefixer": "^10.4.21",
     "globby": "^14.1.0",
