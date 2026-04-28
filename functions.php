@@ -455,6 +455,105 @@ function ag_add_meta_description() {
 add_action( 'wp_head', 'ag_add_meta_description' );
 
 /**
+ * Detect common SEO plugins so the theme does not duplicate their canonical or schema output.
+ *
+ * @return bool
+ */
+function ag_has_seo_plugin() {
+    return defined( 'WPSEO_VERSION' )
+        || defined( 'RANK_MATH_VERSION' )
+        || defined( 'AIOSEO_VERSION' )
+        || defined( 'SEOPRESS_VERSION' );
+}
+
+/**
+ * Prevent empty listing pages from being indexed as thin archive/search results.
+ *
+ * @param array $robots Robots directives.
+ * @return array
+ */
+function ag_noindex_empty_listings( $robots ) {
+    if ( ! is_archive() && ! is_search() ) {
+        return $robots;
+    }
+
+    global $wp_query;
+
+    if ( $wp_query instanceof WP_Query && 0 === (int) $wp_query->post_count ) {
+        $robots['noindex'] = true;
+        $robots['follow']  = true;
+    }
+
+    return $robots;
+}
+add_filter( 'wp_robots', 'ag_noindex_empty_listings' );
+
+/**
+ * Add canonical tags for archive-style listing pages when no SEO plugin owns them.
+ */
+function ag_add_archive_canonical() {
+    if ( ag_has_seo_plugin() || is_singular() || is_404() || is_search() ) {
+        return;
+    }
+
+    if ( ! is_home() && ! is_archive() ) {
+        return;
+    }
+
+    $url = get_pagenum_link( max( 1, get_query_var( 'paged' ) ) );
+
+    if ( $url ) {
+        echo '<link rel="canonical" href="' . esc_url( $url ) . '">' . "\n";
+    }
+}
+add_action( 'wp_head', 'ag_add_archive_canonical', 9 );
+
+/**
+ * Output minimal JSON-LD for singular content when no SEO plugin owns structured data.
+ */
+function ag_add_singular_structured_data() {
+    if ( ag_has_seo_plugin() || ! is_singular() ) {
+        return;
+    }
+
+    $post = get_queried_object();
+    if ( ! $post instanceof WP_Post ) {
+        return;
+    }
+
+    $schema_type = is_single() ? 'Article' : 'WebPage';
+    $data        = array(
+        '@context'      => 'https://schema.org',
+        '@type'         => $schema_type,
+        'headline'      => get_the_title( $post ),
+        'url'           => get_permalink( $post ),
+        'datePublished' => get_the_date( DATE_W3C, $post ),
+        'dateModified'  => get_the_modified_date( DATE_W3C, $post ),
+        'author'        => array(
+            '@type' => 'Person',
+            'name'  => get_the_author_meta( 'display_name', $post->post_author ),
+        ),
+        'publisher'     => array(
+            '@type' => 'Organization',
+            'name'  => get_bloginfo( 'name' ),
+        ),
+    );
+
+    $description = get_the_excerpt( $post );
+    if ( $description ) {
+        $data['description'] = wp_strip_all_tags( $description );
+    }
+
+    $image = get_the_post_thumbnail_url( $post, 'full' );
+    if ( $image ) {
+        $data['image'] = $image;
+    }
+
+    echo '<script type="application/ld+json">' . wp_json_encode( $data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ) . '</script>' . "\n";
+}
+add_action( 'wp_head', 'ag_add_singular_structured_data' );
+
+/**
  * Custom posts pagination layout.
  * Outputs Previous/Next links at the edges with page numbers aligned
  * depending on current position.

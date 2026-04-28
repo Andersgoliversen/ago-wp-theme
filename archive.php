@@ -7,7 +7,7 @@
     if ( have_posts() ) :
         while ( have_posts() ) :
             the_post();
-            the_title( '<h2 class="text-2xl font-semibold mb-4">', '</h2>' );
+            the_title( '<h2 class="text-2xl font-semibold mb-4"><a href="' . esc_url( get_permalink() ) . '">', '</a></h2>' );
             the_excerpt();
         endwhile;
         ag_custom_posts_pagination();
