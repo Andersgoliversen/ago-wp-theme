@@ -9,6 +9,8 @@
  * Register navigation and theme supports.
  */
 function ag_theme_setup() {
+    load_theme_textdomain( 'andersgoliversen', get_template_directory() . '/languages' );
+
     // Register a primary navigation menu.
     register_nav_menus( array( 'primary' => __( 'Primary', 'andersgoliversen' ) ) );
     // Let WordPress manage the document title.
@@ -21,6 +23,82 @@ function ag_theme_setup() {
     add_theme_support( 'custom-logo' );
 }
 add_action( 'after_setup_theme', 'ag_theme_setup' );
+
+/**
+ * Return the default navigation links used when no menu is assigned.
+ *
+ * @return array[]
+ */
+function ag_default_nav_links() {
+    return array(
+        array(
+            'slug'  => '/blog/',
+            'label' => __( 'Blog', 'andersgoliversen' ),
+            'check' => is_home() || is_category(),
+        ),
+        array(
+            'slug'  => '/gallery/',
+            'label' => __( 'Gallery', 'andersgoliversen' ),
+            'check' => is_page( 'gallery' ),
+        ),
+        array(
+            'slug'  => '/projects/',
+            'label' => __( 'Projects', 'andersgoliversen' ),
+            'check' => is_page( 'projects' ),
+        ),
+        array(
+            'slug'  => '/about/',
+            'label' => __( 'About', 'andersgoliversen' ),
+            'check' => is_page( 'about' ),
+        ),
+    );
+}
+
+/**
+ * Render fallback links matching the current site navigation.
+ *
+ * @param bool $mark_current Whether to mark current fallback links.
+ */
+function ag_render_fallback_nav_links( $mark_current = true ) {
+    foreach ( ag_default_nav_links() as $link ) {
+        $classes = 'no-underline text-inherit decoration-transparent transition-transform duration-150 hover:scale-105 active:scale-95';
+
+        if ( $mark_current && $link['check'] ) {
+            $classes .= ' font-semibold';
+        }
+
+        printf(
+            '<a href="%1$s" class="%2$s">%3$s</a>',
+            esc_url( home_url( $link['slug'] ) ),
+            esc_attr( $classes ),
+            esc_html( $link['label'] )
+        );
+    }
+}
+
+/**
+ * Add the theme's link classes to assigned WordPress menus.
+ *
+ * @param array    $atts Menu item link attributes.
+ * @param WP_Post  $item Menu item.
+ * @param stdClass $args Menu args.
+ * @return array
+ */
+function ag_nav_menu_link_attributes( $atts, $item, $args ) {
+    if ( empty( $args->theme_location ) || 'primary' !== $args->theme_location ) {
+        return $atts;
+    }
+
+    $classes = 'no-underline text-inherit decoration-transparent transition-transform duration-150 hover:scale-105 active:scale-95';
+    if ( in_array( 'current-menu-item', (array) $item->classes, true ) || in_array( 'current_page_item', (array) $item->classes, true ) ) {
+        $classes .= ' font-semibold';
+    }
+
+    $atts['class'] = empty( $atts['class'] ) ? $classes : $atts['class'] . ' ' . $classes;
+
+    return $atts;
+}
+add_filter( 'nav_menu_link_attributes', 'ag_nav_menu_link_attributes', 10, 3 );
 
 /**
  * Enqueue theme fonts from Google Fonts using a single optimized request.
@@ -80,6 +158,14 @@ function ag_enqueue_assets() {
         $js_fallback = str_replace( '.min.js', '.js', $js );
         wp_enqueue_script( 'ag-theme', $theme_uri . $js_fallback, array(), filemtime( $theme_path . $js_fallback ), true );
     }
+
+    wp_localize_script(
+        'ag-theme',
+        'agThemeL10n',
+        array(
+            'blogPostImageAlt' => __( 'Blog post image', 'andersgoliversen' ),
+        )
+    );
 }
 add_action( 'wp_enqueue_scripts', 'ag_enqueue_assets' );
 

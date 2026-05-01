@@ -6,7 +6,7 @@
 get_header(); ?>
 
 <!-- Main content area with three featured sections -->
-<section id="main-areas" aria-label="Main content" class="py-16 pb-12">
+<section id="main-areas" aria-label="<?php esc_attr_e( 'Main content', 'andersgoliversen' ); ?>" class="py-16 pb-12">
   <div class="max-w-7xl mx-auto grid gap-12 md:grid-cols-3 justify-center px-4">
     <!-- Gallery card -->
     <article class="w-[320px] flex flex-col items-center text-center">
@@ -17,23 +17,23 @@ get_header(); ?>
         $gallery_images = array(
           array(
             'attachment_id' => 3133,
-            'alt'           => 'Artwork of human alien hybrid',
+            'alt'           => __( 'Artwork of human alien hybrid', 'andersgoliversen' ),
           ),
           array(
             'attachment_id' => 3072,
-            'alt'           => 'Artwork of a mermonkey with wings',
+            'alt'           => __( 'Artwork of a mermonkey with wings', 'andersgoliversen' ),
           ),
           array(
             'attachment_id' => 3525,
-            'alt'           => 'Artwork of a big tree',
+            'alt'           => __( 'Artwork of a big tree', 'andersgoliversen' ),
           ),
           array(
             'attachment_id' => 3567,
-            'alt'           => 'Illustration titled Why is it so dark?',
+            'alt'           => __( 'Illustration titled Why is it so dark?', 'andersgoliversen' ),
           ),
           array(
             'attachment_id' => 3155,
-            'alt'           => 'Artwork of Ullandhaugtårnet',
+            'alt'           => __( 'Artwork of Ullandhaugtarnet', 'andersgoliversen' ),
           ),
         );
 
@@ -55,12 +55,12 @@ get_header(); ?>
         }
         ?>
       </div>
-      <h2 class="mt-4 text-xl font-semibold">Art</h2>
-      <p class="mt-2 text-sm">My illustrations and drawings</p>
+      <h2 class="mt-4 text-xl font-semibold"><?php esc_html_e( 'Art', 'andersgoliversen' ); ?></h2>
+      <p class="mt-2 text-sm"><?php esc_html_e( 'My illustrations and drawings', 'andersgoliversen' ); ?></p>
       </a>
       <a href="https://andersgoliversen.com/gallery/"
          class="mt-4 inline-block font-bold text-white py-2 px-4 rounded transition-colors transition-transform duration-150 bg-neutral-600 dark:bg-neutral-500 hover:bg-neutral-400 dark:hover:bg-neutral-400 hover:scale-105 active:bg-neutral-700 dark:active:bg-neutral-600 active:scale-95 no-underline"><!-- Darken and shrink on click -->
-        View Gallery
+        <?php esc_html_e( 'View Gallery', 'andersgoliversen' ); ?>
       </a>
     </article>
 
@@ -72,28 +72,28 @@ get_header(); ?>
         <?php echo wp_get_attachment_image( 8783, 'medium', false, array( // Changed 'full' to 'medium'
           'id'    => 'rock-art-img-1',
           'class' => 'rock-art-img absolute inset-0 w-full h-full object-cover',
-          'alt'   => 'photograph of a petroglyph at Moelv',
+          'alt'   => __( 'Photograph of a petroglyph at Moelv', 'andersgoliversen' ),
           'loading' => 'lazy',
         ) ); ?>
         <?php echo wp_get_attachment_image( 8782, 'medium', false, array( // Changed 'full' to 'medium'
           'id'    => 'rock-art-img-2',
           'class' => 'rock-art-img absolute inset-0 w-full h-full object-cover',
-          'alt'   => 'pencil drawing of the same Moelv petroglyph as a moose calf',
+          'alt'   => __( 'Pencil drawing of the same Moelv petroglyph as a moose calf', 'andersgoliversen' ),
           'loading' => 'lazy',
         ) ); ?>
         <?php echo wp_get_attachment_image( 8781, 'medium', false, array( // Changed 'full' to 'medium'
           'id'    => 'rock-art-img-3',
           'class' => 'rock-art-img absolute inset-0 w-full h-full object-cover',
-          'alt'   => 'pencil drawing of the same Moelv petroglyph as a goat',
+          'alt'   => __( 'Pencil drawing of the same Moelv petroglyph as a goat', 'andersgoliversen' ),
           'loading' => 'lazy',
         ) ); ?>
       </div>
-      <h2 class="mt-4 text-xl font-semibold">Rock Art Research</h2>
-      <p class="mt-2 text-sm">Research on Norwegian rock art and petroglyphs</p>
+      <h2 class="mt-4 text-xl font-semibold"><?php esc_html_e( 'Rock Art Research', 'andersgoliversen' ); ?></h2>
+      <p class="mt-2 text-sm"><?php esc_html_e( 'Research on Norwegian rock art and petroglyphs', 'andersgoliversen' ); ?></p>
       </a>
       <a href="https://andersgoliversen.com/projects/prehistoric-norway/"
          class="mt-4 inline-block font-bold text-white py-2 px-4 rounded transition-colors transition-transform duration-150 bg-neutral-600 dark:bg-neutral-500 hover:bg-neutral-400 dark:hover:bg-neutral-400 hover:scale-105 active:bg-neutral-700 dark:active:bg-neutral-600 active:scale-95 no-underline"><!-- Darken and shrink on click -->
-        Explore Research
+        <?php esc_html_e( 'Explore Research', 'andersgoliversen' ); ?>
       </a>
     </article>
 
@@ -105,45 +105,45 @@ get_header(); ?>
         <?php echo wp_get_attachment_image( 2950, 'medium', false, array( // Changed 'full' to 'medium'
           'id'    => 'diurnalis-img-1',
           'class' => 'diurnalis-img absolute inset-0 w-full h-full object-cover',
-          'alt'   => 'title card from the Diurnalis episode Happy Birthday',
+          'alt'   => __( 'Title card from the Diurnalis episode Happy Birthday', 'andersgoliversen' ),
           'loading' => 'lazy',
         ) ); ?>
         <?php echo wp_get_attachment_image( 2955, 'medium', false, array( // Changed 'full' to 'medium'
           'id'    => 'diurnalis-img-2',
           'class' => 'diurnalis-img absolute inset-0 w-full h-full object-cover',
-          'alt'   => 'still frame from the Diurnalis episode Happy Birthday',
+          'alt'   => __( 'Still frame from the Diurnalis episode Happy Birthday', 'andersgoliversen' ),
           'loading' => 'lazy',
         ) ); ?>
         <?php echo wp_get_attachment_image( 2957, 'medium', false, array( // Changed 'full' to 'medium'
           'id'    => 'diurnalis-img-3',
           'class' => 'diurnalis-img absolute inset-0 w-full h-full object-cover',
-          'alt'   => 'still frame from the Diurnalis episode Mystery',
+          'alt'   => __( 'Still frame from the Diurnalis episode Mystery', 'andersgoliversen' ),
           'loading' => 'lazy',
         ) ); ?>
         <?php echo wp_get_attachment_image( 2949, 'medium', false, array( // Changed 'full' to 'medium'
           'id'    => 'diurnalis-img-4',
           'class' => 'diurnalis-img absolute inset-0 w-full h-full object-cover',
-          'alt'   => 'title card from the Diurnalis episode Mystery',
+          'alt'   => __( 'Title card from the Diurnalis episode Mystery', 'andersgoliversen' ),
           'loading' => 'lazy',
         ) ); ?>
       </div>
-      <h2 class="mt-4 text-xl font-semibold">Diurnalis</h2>
-      <p class="mt-2 text-sm">Development art and animation for Diurnalis</p>
+      <h2 class="mt-4 text-xl font-semibold"><?php esc_html_e( 'Diurnalis', 'andersgoliversen' ); ?></h2>
+      <p class="mt-2 text-sm"><?php esc_html_e( 'Development art and animation for Diurnalis', 'andersgoliversen' ); ?></p>
       </a>
       <a href="https://andersgoliversen.com/projects/diurnalis/"
          class="mt-4 inline-block font-bold text-white py-2 px-4 rounded transition-colors transition-transform duration-150 bg-neutral-600 dark:bg-neutral-500 hover:bg-neutral-400 dark:hover:bg-neutral-400 hover:scale-105 active:bg-neutral-700 dark:active:bg-neutral-600 active:scale-95 no-underline"><!-- Darken and shrink on click -->
-        View Diurnalis
+        <?php esc_html_e( 'View Diurnalis', 'andersgoliversen' ); ?>
       </a>
     </article>
   </div>
 </section>
 
 <!-- Latest Posts Section -->
-<section id="recent-posts" aria-label="Latest from the Blog" class="py-16 pt-12">
+<section id="recent-posts" aria-label="<?php esc_attr_e( 'Latest from the Blog', 'andersgoliversen' ); ?>" class="py-16 pt-12">
   <div class="max-w-5xl mx-auto px-4 text-center">
-    <h2 class="text-2xl font-semibold mb-8">Latest from the Blog</h2>
+    <h2 class="text-2xl font-semibold mb-8"><?php esc_html_e( 'Latest from the Blog', 'andersgoliversen' ); ?></h2>
     <div class="relative">
-      <button id="recent-posts-prev" class="absolute -left-4 sm:-left-6 md:-left-8 top-1/2 -translate-y-1/2 z-10 px-2 text-2xl no-underline text-inherit decoration-transparent transition-transform duration-150 hover:scale-105 hover:text-neutral-600 dark:hover:text-neutral-300 active:scale-95 active:text-neutral-900 dark:active:text-neutral-100">&lt;</button><!-- Shrink and darken when pressed -->
+      <button id="recent-posts-prev" class="absolute -left-4 sm:-left-6 md:-left-8 top-1/2 -translate-y-1/2 z-10 px-2 text-2xl no-underline text-inherit decoration-transparent transition-transform duration-150 hover:scale-105 hover:text-neutral-600 dark:hover:text-neutral-300 active:scale-95 active:text-neutral-900 dark:active:text-neutral-100" aria-label="<?php esc_attr_e( 'Previous posts', 'andersgoliversen' ); ?>">&lt;</button><!-- Shrink and darken when pressed -->
       <div id="recent-posts-slider" class="flex overflow-x-auto snap-x snap-mandatory gap-2 scroll-smooth px-8 no-scrollbar">
       <?php
       $recent = new WP_Query( array(
@@ -170,11 +170,11 @@ get_header(); ?>
       endif;
       ?>
       </div>
-      <button id="recent-posts-next" class="absolute -right-4 sm:-right-6 md:-right-8 top-1/2 -translate-y-1/2 z-10 px-2 text-2xl no-underline text-inherit decoration-transparent transition-transform duration-150 hover:scale-105 hover:text-neutral-600 dark:hover:text-neutral-300 active:scale-95 active:text-neutral-900 dark:active:text-neutral-100">&gt;</button><!-- Shrink and darken when pressed -->
+      <button id="recent-posts-next" class="absolute -right-4 sm:-right-6 md:-right-8 top-1/2 -translate-y-1/2 z-10 px-2 text-2xl no-underline text-inherit decoration-transparent transition-transform duration-150 hover:scale-105 hover:text-neutral-600 dark:hover:text-neutral-300 active:scale-95 active:text-neutral-900 dark:active:text-neutral-100" aria-label="<?php esc_attr_e( 'Next posts', 'andersgoliversen' ); ?>">&gt;</button><!-- Shrink and darken when pressed -->
     </div>
     <a href="<?php echo esc_url( get_permalink( get_option( 'page_for_posts' ) ) ); ?>"
        class="inline-block mt-8 font-bold text-white py-2 px-6 rounded transition-colors transition-transform duration-150 bg-neutral-600 dark:bg-neutral-500 hover:bg-neutral-400 dark:hover:bg-neutral-400 hover:scale-105 active:bg-neutral-700 dark:active:bg-neutral-600 active:scale-95 no-underline"><!-- Darken and shrink on click -->
-      View All Posts
+      <?php esc_html_e( 'View All Posts', 'andersgoliversen' ); ?>
     </a>
   </div>
 </section>

@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const media = post._embedded && post._embedded['wp:featuredmedia'] ? post._embedded['wp:featuredmedia'][0].source_url : '';
         // Add loading="lazy" to dynamically loaded images for better performance.
         // Also, provide a more descriptive alt text if possible, using post title.
-        const altText = post.title.rendered || 'Blog post image';
+        const altText = post.title.rendered || (window.agThemeL10n && window.agThemeL10n.blogPostImageAlt ? window.agThemeL10n.blogPostImageAlt : 'Blog post image');
         article.innerHTML = `
           <a href="${post.link}" class="block">
             ${media ? `<img src="${media}" alt="${altText}" class="w-full h-40 object-cover rounded shadow" loading="lazy">` : ''}

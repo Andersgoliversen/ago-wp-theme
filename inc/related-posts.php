@@ -2,7 +2,7 @@
 /**
  * Related posts functionality.
  *
- * @package ago
+ * @package andersgoliversen
  */
 
 /**
@@ -114,7 +114,7 @@ function ago_render_related_posts( $post_id = 0 ) {
     }
 
     echo '<section aria-labelledby="related-posts-title" class="related-posts">';
-    echo '<h2 id="related-posts-title" class="related-posts__heading">' . esc_html__( 'Related Posts', 'ago' ) . '</h2>';
+    echo '<h2 id="related-posts-title" class="related-posts__heading">' . esc_html__( 'Related Posts', 'andersgoliversen' ) . '</h2>';
     echo '<ul class="related-posts__list">';
 
     foreach ( $ids as $index => $id ) {
