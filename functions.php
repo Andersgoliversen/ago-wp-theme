@@ -553,6 +553,176 @@ function ag_has_seo_plugin() {
 }
 
 /**
+ * Return the blog index crumb used for post breadcrumbs.
+ *
+ * @return array
+ */
+function ag_get_blog_crumb() {
+    $posts_page_id = (int) get_option( 'page_for_posts' );
+
+    if ( $posts_page_id ) {
+        return array(
+            'label' => get_the_title( $posts_page_id ),
+            'url'   => get_permalink( $posts_page_id ),
+        );
+    }
+
+    return array(
+        'label' => __( 'Blog', 'andersgoliversen' ),
+        'url'   => home_url( '/blog/' ),
+    );
+}
+
+/**
+ * Return the assigned category that should represent this post in breadcrumbs.
+ *
+ * For posts with multiple categories, prefer a primary category set by common
+ * SEO plugins. Otherwise use the deepest assigned category for a stable trail.
+ *
+ * @param int|WP_Post $post Post object or ID.
+ * @return WP_Term|null
+ */
+function ag_get_post_breadcrumb_category( $post = 0 ) {
+    $post = get_post( $post );
+
+    if ( ! $post instanceof WP_Post ) {
+        return null;
+    }
+
+    $categories = get_the_category( $post->ID );
+    if ( empty( $categories ) ) {
+        return null;
+    }
+
+    $category_ids = wp_list_pluck( $categories, 'term_id' );
+    $primary_ids  = array(
+        (int) get_post_meta( $post->ID, '_yoast_wpseo_primary_category', true ),
+        (int) get_post_meta( $post->ID, 'rank_math_primary_category', true ),
+        (int) get_post_meta( $post->ID, '_aioseo_primary_category', true ),
+    );
+
+    foreach ( $primary_ids as $primary_id ) {
+        if ( $primary_id && in_array( $primary_id, $category_ids, true ) ) {
+            $primary = get_category( $primary_id );
+
+            if ( $primary instanceof WP_Term && ! is_wp_error( $primary ) ) {
+                return $primary;
+            }
+        }
+    }
+
+    usort(
+        $categories,
+        function ( $a, $b ) {
+            $a_depth = count( get_ancestors( $a->term_id, 'category' ) );
+            $b_depth = count( get_ancestors( $b->term_id, 'category' ) );
+
+            if ( $a_depth !== $b_depth ) {
+                return $b_depth <=> $a_depth;
+            }
+
+            return strcasecmp( $a->name, $b->name );
+        }
+    );
+
+    return $categories[0];
+}
+
+/**
+ * Build breadcrumb items for the current singular post.
+ *
+ * @param int|WP_Post $post Post object or ID.
+ * @return array[]
+ */
+function ag_get_post_breadcrumb_items( $post = 0 ) {
+    $post = get_post( $post );
+
+    if ( ! $post instanceof WP_Post || 'post' !== $post->post_type ) {
+        return array();
+    }
+
+    $items = array(
+        array(
+            'label' => __( 'Home', 'andersgoliversen' ),
+            'url'   => home_url( '/' ),
+        ),
+        ag_get_blog_crumb(),
+    );
+
+    $category = ag_get_post_breadcrumb_category( $post );
+    if ( $category ) {
+        $ancestors = array_reverse( get_ancestors( $category->term_id, 'category' ) );
+
+        foreach ( $ancestors as $ancestor_id ) {
+            $ancestor = get_category( $ancestor_id );
+
+            if ( $ancestor instanceof WP_Term && ! is_wp_error( $ancestor ) ) {
+                $items[] = array(
+                    'label' => $ancestor->name,
+                    'url'   => get_category_link( $ancestor ),
+                );
+            }
+        }
+
+        $items[] = array(
+            'label' => $category->name,
+            'url'   => get_category_link( $category ),
+        );
+    }
+
+    $items[] = array(
+        'label' => get_the_title( $post ),
+        'url'   => get_permalink( $post ),
+    );
+
+    return array_values(
+        array_filter(
+            $items,
+            function ( $item ) {
+                return ! empty( $item['label'] ) && ! empty( $item['url'] );
+            }
+        )
+    );
+}
+
+/**
+ * Render breadcrumbs for single posts.
+ *
+ * @param int|WP_Post $post Post object or ID.
+ */
+function ag_render_post_breadcrumbs( $post = 0 ) {
+    $items = ag_get_post_breadcrumb_items( $post );
+
+    if ( count( $items ) < 2 ) {
+        return;
+    }
+
+    echo '<nav class="ag-breadcrumb mb-8 text-sm meta-text" aria-label="' . esc_attr__( 'Breadcrumb', 'andersgoliversen' ) . '">';
+    echo '<ol class="flex flex-wrap items-center gap-2">';
+
+    $last_index = count( $items ) - 1;
+
+    foreach ( $items as $index => $item ) {
+        echo '<li class="inline-flex items-center gap-2">';
+
+        if ( $index === $last_index ) {
+            echo '<span aria-current="page">' . esc_html( $item['label'] ) . '</span>';
+        } else {
+            echo '<a href="' . esc_url( $item['url'] ) . '">' . esc_html( $item['label'] ) . '</a>';
+        }
+
+        if ( $index < $last_index ) {
+            echo '<span aria-hidden="true">/</span>';
+        }
+
+        echo '</li>';
+    }
+
+    echo '</ol>';
+    echo '</nav>';
+}
+
+/**
  * Prevent empty listing pages from being indexed as thin archive/search results.
  *
  * @param array $robots Robots directives.
@@ -635,9 +805,54 @@ function ag_add_singular_structured_data() {
         $data['image'] = $image;
     }
 
+    if ( is_single() ) {
+        $category = ag_get_post_breadcrumb_category( $post );
+        if ( $category ) {
+            $data['articleSection'] = $category->name;
+        }
+
+        $tags = get_the_tags( $post->ID );
+        if ( $tags ) {
+            $data['keywords'] = implode( ', ', wp_list_pluck( $tags, 'name' ) );
+        }
+    }
+
     echo '<script type="application/ld+json">' . wp_json_encode( $data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ) . '</script>' . "\n";
 }
 add_action( 'wp_head', 'ag_add_singular_structured_data' );
+
+/**
+ * Output BreadcrumbList JSON-LD for single posts when no SEO plugin owns schema.
+ */
+function ag_add_breadcrumb_structured_data() {
+    if ( ag_has_seo_plugin() || ! is_single() ) {
+        return;
+    }
+
+    $items = ag_get_post_breadcrumb_items( get_queried_object() );
+
+    if ( count( $items ) < 2 ) {
+        return;
+    }
+
+    $data = array(
+        '@context'        => 'https://schema.org',
+        '@type'           => 'BreadcrumbList',
+        'itemListElement' => array(),
+    );
+
+    foreach ( $items as $index => $item ) {
+        $data['itemListElement'][] = array(
+            '@type'    => 'ListItem',
+            'position' => $index + 1,
+            'name'     => wp_strip_all_tags( $item['label'] ),
+            'item'     => $item['url'],
+        );
+    }
+
+    echo '<script type="application/ld+json">' . wp_json_encode( $data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ) . '</script>' . "\n";
+}
+add_action( 'wp_head', 'ag_add_breadcrumb_structured_data' );
 
 /**
  * Custom posts pagination layout.

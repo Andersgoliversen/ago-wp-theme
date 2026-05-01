@@ -4,6 +4,7 @@
     if ( have_posts() ) :
         while ( have_posts() ) :
             the_post();
+            ag_render_post_breadcrumbs();
             the_title( '<h1 class="text-3xl font-semibold mb-4">', '</h1>' );
             the_content();
             $tags = get_the_tags();
