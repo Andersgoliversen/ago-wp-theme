@@ -154,7 +154,7 @@ get_header(); ?>
           $recent->the_post();
       ?>
           <article class="flex-none snap-center flex flex-col items-center text-center w-full sm:w-1/2 lg:w-1/3 px-2">
-            <a href="<?php the_permalink(); ?>" class="block">
+            <a href="<?php the_permalink(); ?>" class="recent-post-link block">
               <?php if ( has_post_thumbnail() ) : ?>
                 <?php the_post_thumbnail( 'medium', array( 'class' => 'w-full h-48 object-cover rounded shadow', 'alt' => esc_attr(get_the_title()) ) ); ?>
               <?php endif; ?>

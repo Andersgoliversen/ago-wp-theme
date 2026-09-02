@@ -603,6 +603,30 @@ body.diurnalis-ready .diurnalis-img {
 
 
 /* -----------------------------------------------------------
+   Recent post cards
+   ----------------------------------------------------------- */
+@layer components {
+  #recent-posts .recent-post-link {
+    color: var(--color-text);
+    transition: color 150ms ease, transform 150ms ease;
+  }
+
+  #recent-posts .recent-post-link h3 {
+    color: inherit;
+    transition: color 150ms ease;
+  }
+
+  #recent-posts .recent-post-link:hover {
+    color: var(--accent-hover);
+    transform: scale(1.03);
+  }
+
+  #recent-posts .recent-post-link:active {
+    transform: scale(0.97);
+  }
+}
+
+/* -----------------------------------------------------------
    Related posts styling
    ----------------------------------------------------------- */
 @layer components {
@@ -616,6 +640,17 @@ body.diurnalis-ready .diurnalis-img {
 
   .related-posts__title {
     @apply text-lg font-semibold block;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #recent-posts .recent-post-link {
+    transition: color 150ms ease;
+  }
+
+  #recent-posts .recent-post-link:hover,
+  #recent-posts .recent-post-link:active {
+    transform: none;
   }
 }
 

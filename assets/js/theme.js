@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
         article.className = 'flex-none snap-center flex flex-col items-center text-center w-full sm:w-1/2 lg:w-1/3 px-2';
 
         const link = document.createElement('a');
-        link.className = 'block';
+        link.className = 'recent-post-link block';
         link.href = postUrl.href;
 
         if (mediaUrl) {
