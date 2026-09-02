@@ -67,28 +67,83 @@ document.addEventListener('DOMContentLoaded', () => {
   const perPage = 3;
   let loading = false;
 
+  function htmlToText(value) {
+    const documentFragment = new DOMParser().parseFromString(String(value || ''), 'text/html');
+    return documentFragment.body.textContent.trim();
+  }
+
+  function safeHttpUrl(value) {
+    if (typeof value !== 'string' || value.trim() === '') return null;
+
+    try {
+      const url = new URL(value, window.location.href);
+      return url.protocol === 'http:' || url.protocol === 'https:' ? url : null;
+    } catch (error) {
+      return null;
+    }
+  }
+
   async function loadMore() {
     if (loading) return;
     loading = true;
     try {
-      const res = await fetch(`/wp-json/wp/v2/posts?_embed&per_page=${perPage}&page=${page + 1}`);
+      const localizedUrl = window.agThemeL10n && window.agThemeL10n.restPostsUrl;
+      const requestUrl = new URL(localizedUrl || '/wp-json/wp/v2/posts', window.location.href);
+      requestUrl.searchParams.set('_embed', '1');
+      requestUrl.searchParams.set('per_page', String(perPage));
+      requestUrl.searchParams.set('page', String(page + 1));
+
+      const res = await fetch(requestUrl.toString());
       if (!res.ok) return;
       const posts = await res.json();
       if (!Array.isArray(posts) || posts.length === 0) return;
       page += 1;
       for (const post of posts) {
+        const postUrl = safeHttpUrl(post.link);
+        if (!postUrl) continue;
+
+        const featuredMedia = post._embedded && Array.isArray(post._embedded['wp:featuredmedia'])
+          ? post._embedded['wp:featuredmedia'][0]
+          : null;
+        const mediaUrl = featuredMedia ? safeHttpUrl(featuredMedia.source_url) : null;
+        const titleText = htmlToText(post.title && post.title.rendered);
+        const fallbackAlt = window.agThemeL10n && window.agThemeL10n.blogPostImageAlt
+          ? window.agThemeL10n.blogPostImageAlt
+          : 'Blog post image';
+
         const article = document.createElement('article');
-        article.className = 'flex-none w-80 snap-center flex flex-col items-center text-center';
-        const media = post._embedded && post._embedded['wp:featuredmedia'] ? post._embedded['wp:featuredmedia'][0].source_url : '';
-        // Add loading="lazy" to dynamically loaded images for better performance.
-        // Also, provide a more descriptive alt text if possible, using post title.
-        const altText = post.title.rendered || (window.agThemeL10n && window.agThemeL10n.blogPostImageAlt ? window.agThemeL10n.blogPostImageAlt : 'Blog post image');
-        article.innerHTML = `
-          <a href="${post.link}" class="block">
-            ${media ? `<img src="${media}" alt="${altText}" class="w-full h-40 object-cover rounded shadow" loading="lazy">` : ''}
-            <h3 class="mt-4 text-lg font-semibold">${post.title.rendered}</h3>
-            <time datetime="${post.date}" class="text-sm text-neutral-500">${new Date(post.date).toLocaleDateString()}</time>
-          </a>`;
+        article.className = 'flex-none snap-center flex flex-col items-center text-center w-full sm:w-1/2 lg:w-1/3 px-2';
+
+        const link = document.createElement('a');
+        link.className = 'block';
+        link.href = postUrl.href;
+
+        if (mediaUrl) {
+          const image = document.createElement('img');
+          image.src = mediaUrl.href;
+          const mediaAlt = typeof featuredMedia.alt_text === 'string' ? featuredMedia.alt_text : '';
+          image.alt = (mediaAlt || titleText || fallbackAlt).trim();
+          image.className = 'w-full h-48 object-cover rounded shadow';
+          image.loading = 'lazy';
+          image.decoding = 'async';
+          link.appendChild(image);
+        }
+
+        const title = document.createElement('h3');
+        title.className = 'mt-4 text-lg font-semibold';
+        title.textContent = titleText;
+        link.appendChild(title);
+
+        const date = new Date(post.date);
+        if (!Number.isNaN(date.getTime())) {
+          const time = document.createElement('time');
+          time.dateTime = post.date;
+          time.className = 'text-sm text-neutral-500';
+          time.textContent = date.toLocaleDateString();
+          link.appendChild(time);
+        }
+
+        article.appendChild(link);
         slider.appendChild(article);
       }
     } catch (e) {
@@ -127,8 +182,8 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', () => {
   runWhenIdle(() => {
     const input = document.getElementById('search-field');
-    const button = document.getElementById('search-submit');
     const warning = document.getElementById('search-warning');
+    const form = input ? input.form : null;
 
     if (input) {
       const text = input.getAttribute('placeholder') || '';
@@ -147,17 +202,26 @@ document.addEventListener('DOMContentLoaded', () => {
       setInterval(animatePlaceholder, 30000);
     }
 
-    if (button) {
-      button.addEventListener('click', (e) => {
-        if (input && input.value.trim() === '') {
-          e.preventDefault();
-          if (warning) warning.classList.remove('hidden');
-        }
+    const hideWarning = () => {
+      if (warning) warning.classList.add('hidden');
+      if (input) input.removeAttribute('aria-invalid');
+    };
+
+    if (form) {
+      form.addEventListener('submit', (event) => {
+        if (input.value.trim() !== '') return;
+
+        event.preventDefault();
+        if (warning) warning.classList.remove('hidden');
+        input.setAttribute('aria-invalid', 'true');
+        input.focus();
       });
     }
 
-    const hideWarning = () => warning && warning.classList.add('hidden');
-    document.addEventListener('click', hideWarning);
+    if (input) input.addEventListener('input', hideWarning);
+    document.addEventListener('click', (event) => {
+      if (!form || !form.contains(event.target)) hideWarning();
+    });
     document.addEventListener('scroll', hideWarning, { passive: true });
 
     document.querySelectorAll('.ag-interactive').forEach(el => {

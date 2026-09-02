@@ -164,6 +164,7 @@ function ag_enqueue_assets() {
         'agThemeL10n',
         array(
             'blogPostImageAlt' => __( 'Blog post image', 'andersgoliversen' ),
+            'restPostsUrl'     => esc_url_raw( rest_url( 'wp/v2/posts' ) ),
         )
     );
 }
@@ -269,56 +270,6 @@ function ag_output_root_vars() {
     echo $style; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 add_action( 'wp_head', 'ag_output_root_vars', 0 );
-
-/**
- * Allow bfcache for public home page visits by removing no-store.
- *
- * Site Health warns when the home page sends Cache-Control: no-store, which
- * prevents fast back/forward navigations. Remove only the no-store directive
- * for unauthenticated front-page requests so dynamic or admin responses are
- * unaffected.
- *
- * @param array $headers Response headers.
- * @return array
- */
-function ag_allow_bfcache_on_home( $headers ) {
-    if ( is_admin() || is_user_logged_in() ) {
-        return $headers;
-    }
-
-    if ( ! is_front_page() && ! is_home() ) {
-        return $headers;
-    }
-
-    if ( ! isset( $headers['Cache-Control'] ) ) {
-        return $headers;
-    }
-
-    $directives = array_map( 'trim', explode( ',', $headers['Cache-Control'] ) );
-    $filtered   = array();
-
-    foreach ( $directives as $directive ) {
-        if ( '' === $directive ) {
-            continue;
-        }
-
-        if ( 'no-store' === strtolower( $directive ) ) {
-            continue;
-        }
-
-        $filtered[] = $directive;
-    }
-
-    if ( empty( $filtered ) ) {
-        unset( $headers['Cache-Control'] );
-    } else {
-        $headers['Cache-Control'] = implode( ', ', $filtered );
-    }
-
-    return $headers;
-}
-add_filter( 'wp_headers', 'ag_allow_bfcache_on_home' );
-
 
 /**
  * Basic navigation fallback when no menu is assigned.
@@ -469,21 +420,6 @@ function ag_cleanup_wp() {
     wp_deregister_script( 'wp-embed' );
 }
 add_action( 'init', 'ag_cleanup_wp' );
-
-/**
- * Dequeue default block styles to reduce unused CSS.
- *
- * Removing these styles saves several kilobytes of CSS on each request
- * because the theme relies on its own Tailwind styles.
- */
-function ag_remove_block_css() {
-    // These styles are enqueued by WordPress core for block themes.
-    wp_dequeue_style( 'wp-block-library' );
-    wp_dequeue_style( 'wp-block-library-theme' );
-    wp_dequeue_style( 'classic-theme-styles' );
-    wp_dequeue_style( 'global-styles' );
-}
-add_action( 'wp_enqueue_scripts', 'ag_remove_block_css', 20 );
 
 /**
  * Defer theme script loading.

@@ -12,7 +12,12 @@
     "terser": "^5.42.0"
   },
   "scripts": {
-    "build": "tailwindcss -c tailwind.config.js -i ./src/css/theme.src.css -o ./assets/css/theme.css --minify",
+    "build:css": "tailwindcss -c tailwind.config.js -i ./src/css/theme.src.css -o ./assets/css/theme.css --minify",
+    "build:js": "terser ./assets/js/theme.js -c -m -o ./assets/js/theme.min.js && terser ./assets/js/lightbox.js -c -m -o ./assets/js/lightbox.min.js",
+    "build": "npm run build:css && npm run build:js",
+    "lint:css": "stylelint \"src/css/**/*.css\"",
+    "lint:js": "node --check ./assets/js/theme.js && node --check ./assets/js/lightbox.js && node --check ./tools/package.js",
+    "lint": "npm run lint:css && npm run lint:js",
     "zip": "npm run build && node tools/package.js"
   }
 }

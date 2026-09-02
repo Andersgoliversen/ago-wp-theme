@@ -1,9 +1,24 @@
 // IIFE (Immediately Invoked Function Expression) to encapsulate the lightbox logic,
 // preventing global scope pollution and providing a private namespace.
 (function(){
-  // Select all images inside the main content area except those in the
-  // related posts section. If none, exit script.
-  const images = Array.from(document.querySelectorAll('#content img:not(.related-posts__image)'));
+  function isDirectImageLink(link) {
+    if (!link) return false;
+
+    try {
+      const url = new URL(link.href, window.location.href);
+      return /\.(?:avif|bmp|gif|jpe?g|png|svg|webp)$/i.test(url.pathname);
+    } catch (error) {
+      return false;
+    }
+  }
+
+  // Respect images linked to pages or downloads. Unlinked images and images
+  // linked directly to supported image files participate in the lightbox.
+  const images = Array.from(document.querySelectorAll('#content img:not(.related-posts__image)'))
+    .filter(imgEl => {
+      const link = imgEl.closest('a');
+      return !link || isDirectImageLink(link);
+    });
   if(!images.length) return;
 
   // Create the lightbox overlay div.
@@ -48,14 +63,18 @@
   // Store the element that was focused before the lightbox was opened.
   let lastFocusedElement;
 
-  // Function to extract a caption for the image.
-  // It tries to find a <figcaption> within the link's parent <figure>.
-  // Falls back to the link's title attribute or the alt attribute of the <img> inside the link.
-  function getCaption(imgEl){
+  // Copy the existing caption nodes so caption links remain usable without
+  // parsing another HTML string. Fall back to the image's alternative text.
+  function setCaption(imgEl){
     const fig = imgEl.closest('figure'); // Find the parent <figure> element.
     const figcap = fig ? fig.querySelector('figcaption') : null; // Find <figcaption> within <figure>.
-    // Return figcaption HTML or alt text from the image element.
-    return figcap ? figcap.innerHTML : (imgEl.alt || '');
+    caption.replaceChildren();
+
+    if (figcap) {
+      Array.from(figcap.childNodes).forEach(node => caption.appendChild(node.cloneNode(true)));
+    } else {
+      caption.textContent = imgEl.alt || '';
+    }
   }
 
   // Function to display the lightbox with the image at a given index.
@@ -65,26 +84,42 @@
     const imgEl = images[index]; // Get the image for the current index.
     const link = imgEl.closest('a');
     // Use the link href if it points to an image, otherwise fall back to the image src.
-    const href = link && /\.(jpe?g|png|gif|webp|svg|bmp)(\?.*)?$/i.test(link.href) ? link.href : imgEl.src;
+    const href = isDirectImageLink(link) ? link.href : (imgEl.currentSrc || imgEl.src);
     img.src = href; // Set the image source.
-    caption.innerHTML = getCaption(imgEl); // Set the caption HTML.
+    img.alt = imgEl.alt || '';
+    setCaption(imgEl);
 
-    // Store the currently focused element before opening the lightbox.
-    lastFocusedElement = document.activeElement;
+    // Store focus only when opening. Next/previous navigation must not replace
+    // the page element that should regain focus after the dialog closes.
+    if (overlay.hidden) {
+      lastFocusedElement = document.activeElement;
+    }
     overlay.hidden = false; // Show the overlay.
     overlay.style.display = 'flex';
     // Focus the overlay (or a specific element within it, e.g., nextBtn) to enable keyboard navigation.
     nextBtn.focus(); // Or overlay.focus();
   }
 
-  // Add click event listeners to each image to open the lightbox.
+  // Add activation listeners only to images that participate in the lightbox.
   images.forEach((imgEl, i) => {
     const parentLink = imgEl.closest('a');
-    if(parentLink) parentLink.addEventListener('click', e => e.preventDefault());
-    imgEl.addEventListener('click', e => {
+    const trigger = parentLink || imgEl;
+
+    trigger.addEventListener('click', e => {
       e.preventDefault();
       show(i); // Show the lightbox with the clicked image.
     });
+
+    if (!parentLink) {
+      imgEl.setAttribute('role', 'button');
+      imgEl.setAttribute('tabindex', '0');
+      imgEl.addEventListener('keydown', e => {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+
+        e.preventDefault();
+        show(i);
+      });
+    }
   });
 
   // Function to show the next image.
@@ -96,7 +131,7 @@
     overlay.hidden = true; // Hide the overlay.
     overlay.style.display = 'none';
     // Restore focus to the element that was focused before the lightbox was opened.
-    if (lastFocusedElement) {
+    if (lastFocusedElement instanceof HTMLElement) {
       lastFocusedElement.focus();
     }
   }

@@ -6,7 +6,6 @@
    Custom utilities & animations
    ----------------------------------------------------------- */
 @layer utilities {
-
   /* ── Icon animations ───────────────────────────────────── */
   @keyframes ag-spin {
     to { transform: rotate(360deg); }
@@ -30,7 +29,7 @@
     75%     { transform: rotate(12deg); }
   }
 
-  .ag-interactive:hover .ag-icon:not(.ag-spin):not(.ag-spin-once) {
+  .ag-interactive:hover .ag-icon:not(.ag-spin, .ag-spin-once) {
     animation: ag-wiggle 0.6s ease-in-out infinite;
   }
 }
@@ -39,10 +38,25 @@
    Gallery card vertical pan & cross-fade
    ----------------------------------------------------------- */
 @keyframes galleryPan {
-  0%   { opacity: 1; object-position: center top; }
-  16%  { opacity: 1; object-position: center bottom; }
-  22%  { opacity: 0; object-position: center bottom; }
-  100% { opacity: 0; object-position: center top; }
+  0% {
+    opacity: 1;
+    object-position: center top;
+  }
+
+  16% {
+    opacity: 1;
+    object-position: center bottom;
+  }
+
+  22% {
+    opacity: 0;
+    object-position: center bottom;
+  }
+
+  100% {
+    opacity: 0;
+    object-position: center top;
+  }
 }
 
 .gallery-img {
@@ -60,6 +74,7 @@
   .rock-art-img {
     @apply opacity-0 transition-opacity duration-[600ms] ease-in-out;
   }
+
   .rock-art-img.active {
     @apply opacity-100;
   }
@@ -90,10 +105,26 @@
    ----------------------------------------------------------- */
 
 @keyframes diurnalisSeq {
-  0%   { opacity: 0;   transform: scale(var(--zoom-start,0.7)); }
-  5%   { opacity: 1;   transform: scale(var(--zoom-start,0.7)); }
-  25%  { opacity: 1;   transform: scale(var(--zoom-end,1.4)); }
-  30%  { opacity: 0;   transform: scale(var(--zoom-end,1.4)); }
+  0% {
+    opacity: 0;
+    transform: scale(var(--zoom-start,0.7));
+  }
+
+  5% {
+    opacity: 1;
+    transform: scale(var(--zoom-start,0.7));
+  }
+
+  25% {
+    opacity: 1;
+    transform: scale(var(--zoom-end,1.4));
+  }
+
+  30% {
+    opacity: 0;
+    transform: scale(var(--zoom-end,1.4));
+  }
+
   100% { opacity: 0; }
 }
 
@@ -106,23 +137,31 @@
 /* Image-specific zoom and delay settings */
 #diurnalis-img-1 {
   opacity: 1;
+
   --zoom-start: 1;
   --zoom-end: 1.2;
+
   animation-delay: 0s;
 }
+
 #diurnalis-img-2 {
   --zoom-start: 1.2;
   --zoom-end: 1;
+
   animation-delay: 6s;
 }
+
 #diurnalis-img-3 {
   --zoom-start: 1;
   --zoom-end: 1.2;
+
   animation-delay: 12s;
 }
+
 #diurnalis-img-4 {
   --zoom-start: 1.2;
   --zoom-end: 1;
+
   animation-delay: 18s;
 }
 
@@ -135,13 +174,14 @@ body.diurnalis-ready .diurnalis-img {
   /* Calming, legible base typography */
   :root {
     color-scheme: light;
+
     /* Light palette (fallback if inline vars are stripped) */
     --pagebg-light: #F6F2EC;
     --panelbg-light: #F6F2EC;
     --headerbg-light: #EFE5D8;
     --footerbg-light: #E5DACB;
-    --color-text-light: #222222;
-    --color-muted-light: #555555;
+    --color-text-light: #222;
+    --color-muted-light: #555;
     --border-light: #D9CEC0;
     --accent-primary-light: #2F5D46;
     --accent-hover-light: #3F7A5D;
@@ -162,10 +202,10 @@ body.diurnalis-ready .diurnalis-img {
     --focus-ring-dark: #D4A06A;
 
     /* Aged edge overlays */
-    --edge-light-1: rgba(110, 60, 30, 0.24);
-    --edge-light-2: rgba(70, 60, 35, 0.20);
-    --edge-dark-1: rgba(20, 10, 5, 0.35);
-    --edge-dark-2: rgba(30, 20, 10, 0.28);
+    --edge-light-1: rgb(110 60 30 / 24%);
+    --edge-light-2: rgb(70 60 35 / 20%);
+    --edge-dark-1: rgb(20 10 5 / 35%);
+    --edge-dark-2: rgb(30 20 10 / 28%);
 
     /* Defaults (follow light) */
     --pagebg: var(--pagebg-light);
@@ -184,13 +224,16 @@ body.diurnalis-ready .diurnalis-img {
     --page-overlay-1: radial-gradient(130% 130% at 50% 45%, transparent 45%, var(--edge-1) 70%, transparent 100%);
     --page-overlay-2: radial-gradient(150% 120% at 0% 0%, transparent 40%, var(--edge-2) 72%, transparent 100%);
     --page-overlay-3: radial-gradient(150% 140% at 100% 100%, transparent 44%, var(--edge-1) 74%, transparent 100%);
+
     /* Leave textures to inline PHP to preserve dynamic URLs; fall back to none */
     --page-texture: var(--page-texture-light, none);
     --content-surface: var(--panelbg-light);
   }
+
   .dark {
     color-scheme: dark;
   }
+
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme]) {
       --pagebg: var(--pagebg-dark);
@@ -213,6 +256,7 @@ body.diurnalis-ready .diurnalis-img {
       --content-surface: var(--panelbg-dark);
     }
   }
+
   .dark,
   [data-theme="dark"] {
     --pagebg: var(--pagebg-dark);
@@ -234,8 +278,10 @@ body.diurnalis-ready .diurnalis-img {
     --page-texture: var(--page-texture-dark, var(--page-texture-light, none));
     --content-surface: var(--panelbg-dark);
   }
+
   [data-theme="light"] {
     color-scheme: light;
+
     --pagebg: var(--pagebg-light);
     --panelbg: var(--panelbg-light);
     --headerbg: var(--headerbg-light);
@@ -255,6 +301,7 @@ body.diurnalis-ready .diurnalis-img {
     --page-texture: var(--page-texture-light, none);
     --content-surface: var(--panelbg-light);
   }
+
   html,
   body {
     background-color: var(--pagebg);
@@ -268,7 +315,8 @@ body.diurnalis-ready .diurnalis-img {
     background-position: center 45%, 0% 0%, 100% 100%, center;
     background-attachment: fixed, fixed, fixed, fixed;
   }
-  @media (max-width: 768px) {
+
+  @media (width <= 768px) {
     html,
     body {
       background-image:
@@ -281,6 +329,7 @@ body.diurnalis-ready .diurnalis-img {
       background-attachment: scroll, scroll, scroll;
     }
   }
+
   @media (prefers-reduced-data: reduce) {
     html,
     body {
@@ -294,13 +343,14 @@ body.diurnalis-ready .diurnalis-img {
       background-attachment: scroll, scroll, scroll;
     }
   }
+
   body {
     font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     font-size: 17px;
     line-height: 1.6;
     letter-spacing: 0.2px;
     color: var(--color-text);
-    text-rendering: optimizeLegibility;
+    text-rendering: optimizelegibility;
   }
 }
 
@@ -309,12 +359,13 @@ body.diurnalis-ready .diurnalis-img {
   a {
     color: var(--accent-primary);
     text-decoration-line: underline;
-    text-decoration-color: currentColor;
+    text-decoration-color: currentcolor;
     text-decoration-thickness: 0.12em;
     text-underline-offset: 0.18em;
     font-weight: 500;
     transition: color 150ms ease, text-decoration-color 150ms ease;
   }
+
   a:hover {
     color: var(--accent-hover);
   }
@@ -331,11 +382,12 @@ body.diurnalis-ready .diurnalis-img {
   .comment-content a {
     color: var(--accent-primary);
     text-decoration-line: underline;
-    text-decoration-color: currentColor;
+    text-decoration-color: currentcolor;
     text-decoration-thickness: 0.12em;
     text-underline-offset: 0.18em;
     font-weight: 500;
   }
+
   #content a:hover,
   .entry-content a:hover,
   .page-content a:hover,
@@ -344,6 +396,7 @@ body.diurnalis-ready .diurnalis-img {
   .comment-content a:hover {
     color: var(--accent-hover);
   }
+
   #content a:focus-visible,
   .entry-content a:focus-visible,
   .page-content a:focus-visible,
@@ -353,7 +406,7 @@ body.diurnalis-ready .diurnalis-img {
     outline: 2px solid var(--focus-ring);
     outline-offset: 2px;
     border-radius: 2px;
-    text-decoration-color: currentColor;
+    text-decoration-color: currentcolor;
   }
 
   /* Navigation and utility links */
@@ -365,6 +418,7 @@ body.diurnalis-ready .diurnalis-img {
     color: var(--color-text);
     text-decoration: none;
   }
+
   header a:hover,
   nav a:hover,
   .menu a:hover,
@@ -372,6 +426,7 @@ body.diurnalis-ready .diurnalis-img {
   footer a:hover {
     color: var(--accent-primary);
   }
+
   header a:focus-visible,
   nav a:focus-visible,
   .menu a:focus-visible,
@@ -387,19 +442,23 @@ body.diurnalis-ready .diurnalis-img {
     border-color: var(--border-color);
     opacity: 1;
   }
+
   blockquote {
     border-left: 4px solid var(--border-color);
     padding-left: 1em;
     color: var(--color-text);
   }
+
   table,
   th,
   td {
     border-color: var(--border-color);
   }
+
   th {
     color: var(--color-text);
   }
+
   td,
   th {
     background-color: transparent;
@@ -437,21 +496,53 @@ body.diurnalis-ready .diurnalis-img {
     transform: none !important;
   }
 }
+
 @layer base {
   /* Alegreya heading scale for a biophilic feel */
   h1, h2, h3, h4, h5, h6 {
-    font-family: "Alegreya", "Georgia", serif;
+    font-family: Alegreya, Georgia, serif;
     color: var(--color-text);
     letter-spacing: 0.2px;
     margin-top: 1.5em;
     margin-bottom: 0.65em;
   }
-  h1 { font-size: 2.4rem; line-height: 1.15; font-weight: 700; }
-  h2 { font-size: 2rem;  line-height: 1.2;  font-weight: 700; }
-  h3 { font-size: 1.6rem; line-height: 1.25; font-weight: 700; }
-  h4 { font-size: 1.3rem; line-height: 1.3;  font-weight: 700; }
-  h5 { font-size: 1.1rem; line-height: 1.4;  font-weight: 600; }
-  h6 { font-size: 1rem;   line-height: 1.4;  font-weight: 600; letter-spacing: 0.3px; }
+
+  h1 {
+    font-size: 2.4rem;
+    line-height: 1.15;
+    font-weight: 700;
+  }
+
+  h2 {
+    font-size: 2rem;
+    line-height: 1.2;
+    font-weight: 700;
+  }
+
+  h3 {
+    font-size: 1.6rem;
+    line-height: 1.25;
+    font-weight: 700;
+  }
+
+  h4 {
+    font-size: 1.3rem;
+    line-height: 1.3;
+    font-weight: 700;
+  }
+
+  h5 {
+    font-size: 1.1rem;
+    line-height: 1.4;
+    font-weight: 600;
+  }
+
+  h6 {
+    font-size: 1rem;
+    line-height: 1.4;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
   .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 { color: var(--color-text); }
 
   p {
@@ -518,9 +609,11 @@ body.diurnalis-ready .diurnalis-img {
   .related-posts__list {
     @apply grid gap-6 sm:grid-cols-3;
   }
+
   .related-posts__item {
     @apply text-center space-y-2;
   }
+
   .related-posts__title {
     @apply text-lg font-semibold block;
   }
@@ -530,6 +623,7 @@ body.diurnalis-ready .diurnalis-img {
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
+
   .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -550,15 +644,19 @@ body.diurnalis-ready .diurnalis-img {
   .theme-toggle svg {
     @apply transition-opacity duration-150;
   }
+
   .theme-toggle .sun {
     @apply opacity-100 text-gray-600;
   }
+
   .dark .theme-toggle .sun {
     @apply opacity-40 text-gray-300;
   }
+
   .theme-toggle .moon {
     @apply opacity-40 text-gray-500;
   }
+
   .dark .theme-toggle .moon {
     @apply opacity-100 text-gray-200;
   }
