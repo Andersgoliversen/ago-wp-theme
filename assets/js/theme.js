@@ -11,6 +11,8 @@ const runWhenIdle = (callback) => {
   }
 };
 
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
 // Start Diurnalis animations after full page load
 window.addEventListener('load', () => {
   document.body.classList.add('diurnalis-ready');
@@ -27,10 +29,14 @@ document.addEventListener('DOMContentLoaded', () => {
   function applyTheme(theme) {
     root.classList.toggle('dark', theme === 'dark');
     root.dataset.theme = theme;
+    document.querySelectorAll('.theme-toggle').forEach(btn => {
+      btn.setAttribute('aria-pressed', String(theme === 'dark'));
+    });
   }
 
   function currentPreference() {
-    const stored = localStorage.getItem(storageKey);
+    let stored;
+    try { stored = localStorage.getItem(storageKey); } catch (error) { /* Use the system preference. */ }
     if (stored === 'dark' || stored === 'light') {
       return stored;
     }
@@ -48,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', () => {
       const next = root.classList.contains('dark') ? 'light' : 'dark';
       applyTheme(next);
-      localStorage.setItem(storageKey, next);
+      try { localStorage.setItem(storageKey, next); } catch (error) { /* The toggle still works without storage. */ }
     });
   });
 });
@@ -66,6 +72,21 @@ document.addEventListener('DOMContentLoaded', () => {
   let page = 1;
   const perPage = 3;
   let loading = false;
+  let hasMore = true;
+  const status = document.getElementById('recent-posts-status');
+  const labels = window.agThemeL10n || {};
+  const seen = new Set(Array.from(slider.querySelectorAll('a'), link => link.href));
+  const announce = message => { if (status) status.textContent = message; };
+  const atEnd = () => slider.scrollWidth - slider.scrollLeft - slider.clientWidth < 5;
+
+  function updateControls() {
+    prevBtn.disabled = loading || slider.scrollLeft < 5;
+    nextBtn.disabled = loading || (!hasMore && atEnd());
+    slider.setAttribute('aria-busy', String(loading));
+  }
+
+  prevBtn.classList.remove('hidden');
+  nextBtn.classList.remove('hidden');
 
   function htmlToText(value) {
     const documentFragment = new DOMParser().parseFromString(String(value || ''), 'text/html');
@@ -84,43 +105,73 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   async function loadMore() {
-    if (loading) return;
+    if (loading || !hasMore) return false;
     loading = true;
+    updateControls();
+    announce(labels.loadingPosts || 'Loading posts…');
     try {
       const localizedUrl = window.agThemeL10n && window.agThemeL10n.restPostsUrl;
       const requestUrl = new URL(localizedUrl || '/wp-json/wp/v2/posts', window.location.href);
       requestUrl.searchParams.set('_embed', '1');
       requestUrl.searchParams.set('per_page', String(perPage));
       requestUrl.searchParams.set('page', String(page + 1));
+      requestUrl.searchParams.set('orderby', 'date');
+      requestUrl.searchParams.set('order', 'desc');
 
-      const res = await fetch(requestUrl.toString());
-      if (!res.ok) return;
+      const res = await fetch(requestUrl.toString(), { signal: AbortSignal.timeout(15000) });
+      if (res.status === 400) {
+        const error = await res.json();
+        if (error.code === 'rest_post_invalid_page_number') {
+          hasMore = false;
+          announce(labels.postsEnd || 'You have reached the last post.');
+          return false;
+        }
+      }
+      if (!res.ok) throw new Error('Posts request failed');
       const posts = await res.json();
-      if (!Array.isArray(posts) || posts.length === 0) return;
+      if (!Array.isArray(posts)) throw new Error('Invalid posts response');
       page += 1;
+      const totalPages = Number(res.headers.get('X-WP-TotalPages'));
+      hasMore = posts.length === perPage && (!totalPages || page < totalPages);
+      let added = 0;
       for (const post of posts) {
         const postUrl = safeHttpUrl(post.link);
-        if (!postUrl) continue;
+        if (!postUrl || seen.has(postUrl.href)) continue;
 
         const featuredMedia = post._embedded && Array.isArray(post._embedded['wp:featuredmedia'])
           ? post._embedded['wp:featuredmedia'][0]
           : null;
-        const mediaUrl = featuredMedia ? safeHttpUrl(featuredMedia.source_url) : null;
+        const sizes = featuredMedia && featuredMedia.media_details && featuredMedia.media_details.sizes;
+        const thumbnail = sizes && (sizes.medium_large || sizes.medium || sizes.large);
+        const mediaUrl = featuredMedia ? safeHttpUrl(thumbnail ? thumbnail.source_url : featuredMedia.source_url) : null;
         const titleText = htmlToText(post.title && post.title.rendered);
         const fallbackAlt = window.agThemeL10n && window.agThemeL10n.blogPostImageAlt
           ? window.agThemeL10n.blogPostImageAlt
           : 'Blog post image';
 
         const article = document.createElement('article');
-        article.className = 'flex-none snap-center flex flex-col items-center text-center w-full sm:w-1/2 lg:w-1/3 px-2';
+        article.className = 'recent-post-card flex-none snap-start flex flex-col items-center text-center min-w-0 px-2';
 
         const link = document.createElement('a');
-        link.className = 'recent-post-link block';
+        link.className = 'recent-post-link block w-full';
         link.href = postUrl.href;
 
         if (mediaUrl) {
           const image = document.createElement('img');
           image.src = mediaUrl.href;
+          if (thumbnail) {
+            image.width = thumbnail.width;
+            image.height = thumbnail.height;
+            // Use uncropped derivatives with the same aspect ratio.
+            const ratio = thumbnail.width / thumbnail.height;
+            const candidates = Object.values(sizes).filter(size =>
+              size.width > 0 && size.height > 0 &&
+              Math.abs(size.width / size.height - ratio) < 0.02 && safeHttpUrl(size.source_url)
+            );
+            const widths = new Map(candidates.map(size => [size.width, `${safeHttpUrl(size.source_url).href} ${size.width}w`]));
+            image.srcset = Array.from(widths.values()).join(', ');
+            image.sizes = '(min-width: 1024px) 300px, (min-width: 640px) 45vw, 85vw';
+          }
           const mediaAlt = typeof featuredMedia.alt_text === 'string' ? featuredMedia.alt_text : '';
           image.alt = (mediaAlt || titleText || fallbackAlt).trim();
           image.className = 'w-full h-48 object-cover rounded shadow';
@@ -138,42 +189,41 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!Number.isNaN(date.getTime())) {
           const time = document.createElement('time');
           time.dateTime = post.date;
-          time.className = 'text-sm text-neutral-500';
-          time.textContent = date.toLocaleDateString();
+          time.className = 'text-sm meta-text';
+          time.textContent = date.toLocaleDateString(document.documentElement.lang || undefined, { year: 'numeric', month: 'long', day: 'numeric' });
           link.appendChild(time);
         }
 
         article.appendChild(link);
         slider.appendChild(article);
+        seen.add(postUrl.href);
+        added += 1;
       }
+      announce(hasMore ? (labels.postsLoaded || 'More posts loaded.') : (labels.postsEnd || 'You have reached the last post.'));
+      return added > 0;
     } catch (e) {
-      console.error(e);
+      announce(labels.postsError || 'Could not load posts. Try again or use View All Posts.');
+      return false;
     } finally {
       loading = false;
+      updateControls();
     }
   }
 
-  nextBtn.addEventListener('click', () => {
-    slider.scrollBy({ left: slider.clientWidth, behavior: 'smooth' });
-    if (slider.scrollWidth - slider.scrollLeft - slider.clientWidth < 50) {
-      loadMore();
-    }
+  nextBtn.addEventListener('click', async () => {
+    if (loading) return;
+    if (atEnd() && !(await loadMore())) return;
+    slider.scrollBy({ left: slider.clientWidth, behavior: reducedMotion.matches ? 'instant' : 'smooth' });
   });
 
   prevBtn.addEventListener('click', () => {
-    slider.scrollBy({ left: -slider.clientWidth, behavior: 'smooth' });
+    slider.scrollBy({ left: -slider.clientWidth, behavior: reducedMotion.matches ? 'instant' : 'smooth' });
   });
 
-  let startX = 0;
-  slider.addEventListener('touchstart', e => {
-    startX = e.touches[0].clientX;
-  }, { passive: true });
-
-  slider.addEventListener('touchend', e => {
-    const diff = e.changedTouches[0].clientX - startX;
-    if (diff > 50) prevBtn.click();
-    if (diff < -50) nextBtn.click();
-  });
+  // Native touch scrolling avoids a second jump after a swipe.
+  slider.addEventListener('scroll', updateControls, { passive: true });
+  window.addEventListener('resize', updateControls);
+  updateControls();
 });
 
 // ---------------------------------------------------------------------------
@@ -184,23 +234,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const input = document.getElementById('search-field');
     const warning = document.getElementById('search-warning');
     const form = input ? input.form : null;
-
-    if (input) {
-      const text = input.getAttribute('placeholder') || '';
-
-      function animatePlaceholder() {
-        input.placeholder = '';
-        let i = 0;
-        const interval = setInterval(() => {
-          input.placeholder = text.slice(0, i + 1);
-          i += 1;
-          if (i >= text.length) clearInterval(interval);
-        }, 80);
-      }
-
-      animatePlaceholder();
-      setInterval(animatePlaceholder, 30000);
-    }
 
     const hideWarning = () => {
       if (warning) warning.classList.add('hidden');
@@ -254,6 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
       };
 
       const handlePress = () => {
+        if (reducedMotion.matches) return;
         hold = true;
         duration = 1.5;
         icon.classList.add('ag-spin-once');
@@ -265,63 +299,54 @@ document.addEventListener('DOMContentLoaded', () => {
       el.addEventListener('mouseup', stop);
       el.addEventListener('mouseleave', stop);
       el.addEventListener('touchend', stop);
+      el.addEventListener('touchcancel', stop);
+      reducedMotion.addEventListener('change', stop);
     });
   });
 });
 
 // ---------------------------------------------------------------------------
-// Rock Art Research card image sequence
+// Featured image motion controls
 // ---------------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
-  runWhenIdle(() => {
-    const card = document.getElementById('rock-art-card');
-    if (!card) return; // exit if the card is not on the page
+  const toggle = document.getElementById('motion-toggle');
+  if (!toggle) return;
+  let paused = false;
+  const card = document.getElementById('rock-art-card');
+  const imgs = card ? Array.from(card.querySelectorAll('.rock-art-img')) : [];
+  const sequence = [0, 1, 0, 2].filter(index => index < imgs.length);
+  let position = 0;
+  let timer;
 
-    const imgs = Array.from(card.querySelectorAll('.rock-art-img'));
-    let current = 0;      // index of the image currently shown
-    let altToggle = 0;    // toggles between the two alternative drawings
-
-    const wiggleDuration = 200;  // in milliseconds
-    const bounceDuration = 600;  // in milliseconds
-    const delay = 5000;          // wait time before each transition
-
-    // Show the first image (photograph) initially
-    imgs[current].classList.add('active');
-
-    // Determine the next image index in the 0 → 1 → 0 → 2 loop
-    function getNextIndex() {
-      if (current === 0) {
-        return altToggle === 0 ? 1 : 2;
-      }
-      altToggle = altToggle === 0 ? 1 : 0; // swap between the two drawings
-      return 0;
-    }
-
-    // Switch the visible image with a cross-fade
-    function switchImage() {
-      const next = getNextIndex();
-      imgs[current].classList.remove('active');
-      imgs[next].classList.add('active');
-      current = next;
-    }
-
-    // Handles the wiggle, bounce and image swap
-    function animate() {
+  function schedule() {
+    if (imgs.length < 2) return;
+    timer = setTimeout(() => {
       card.classList.add('rock-wiggle');
-      setTimeout(() => {
+      timer = setTimeout(() => {
         card.classList.remove('rock-wiggle');
         card.classList.add('rock-bounce');
-        switchImage();
-        setTimeout(() => {
+        position = (position + 1) % sequence.length;
+        imgs.forEach((img, index) => img.classList.toggle('active', index === sequence[position]));
+        timer = setTimeout(() => {
           card.classList.remove('rock-bounce');
-        }, bounceDuration);
-      }, wiggleDuration);
-    }
+          schedule();
+        }, 600);
+      }, 200);
+    }, 5000);
+  }
 
-    // Initial delay before the first animation, then repeat
-    setTimeout(() => {
-      animate();
-      setInterval(animate, delay + wiggleDuration + bounceDuration);
-    }, delay);
-  });
+  function syncMotion() {
+    const stopped = paused || reducedMotion.matches || document.hidden;
+    document.body.classList.toggle('animations-paused', stopped);
+    toggle.setAttribute('aria-pressed', String(paused));
+    clearTimeout(timer);
+    if (card) card.classList.remove('rock-wiggle', 'rock-bounce');
+    if (!stopped) schedule();
+  }
+
+  toggle.classList.remove('hidden');
+  toggle.addEventListener('click', () => { paused = !paused; syncMotion(); });
+  reducedMotion.addEventListener('change', syncMotion);
+  document.addEventListener('visibilitychange', syncMotion);
+  syncMotion();
 });

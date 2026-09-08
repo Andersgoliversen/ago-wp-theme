@@ -15,9 +15,10 @@
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <script>
         (function(){
-            const stored = localStorage.getItem('theme');
+            let stored;
+            try { stored = localStorage.getItem('theme'); } catch (error) { /* Storage may be unavailable. */ }
             const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            const initial = stored ? stored : (prefersDark ? 'dark' : 'light');
+            const initial = stored === 'dark' || stored === 'light' ? stored : (prefersDark ? 'dark' : 'light');
             document.documentElement.dataset.theme = initial;
             if (initial === 'dark') {
                 document.documentElement.classList.add('dark');
@@ -29,6 +30,7 @@
 
 <body <?php body_class(); ?>>
         <?php wp_body_open(); ?>
+        <a class="skip-link" href="#content"><?php esc_html_e( 'Skip to content', 'andersgoliversen' ); ?></a>
 
 <header id="masthead"
                 class="backdrop-blur supports-[backdrop-filter]:backdrop-blur">
@@ -51,7 +53,7 @@
                                         // Use 'medium' size for the logo for better performance
                                         // and add fetchpriority high as it's likely an LCP element.
                                         echo wp_get_attachment_image(
-                                                8713,
+                                                get_theme_mod( 'custom_logo' ) ?: 8713,
                                                 'medium', // Changed from 'full' to 'medium'
                                                 false,
                                                 [

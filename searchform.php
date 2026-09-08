@@ -7,7 +7,7 @@
 ?>
 <form role="search" method="get" class="w-full max-w-md mx-auto flex flex-row flex-wrap items-stretch" action="<?php echo esc_url( home_url( '/' ) ); ?>">
     <input type="search" id="search-field" name="s" class="flex-grow border border-neutral-300 dark:border-neutral-700 rounded-l px-3 py-2 bg-white dark:bg-neutral-800 dark:text-neutral-100" placeholder="<?php esc_attr_e( 'Search...', 'andersgoliversen' ); ?>" value="<?php echo esc_attr( get_search_query() ); ?>" aria-describedby="search-warning" />
-    <button type="submit" id="search-submit" class="bg-neutral-600 dark:bg-neutral-500 text-white rounded-r px-4 py-2 transition-colors transition-transform duration-150 hover:bg-neutral-400 dark:hover:bg-neutral-400 hover:scale-105 active:bg-neutral-700 dark:active:bg-neutral-600 active:scale-95 ag-interactive flex items-center justify-center"><!-- Darken and shrink when pressed -->
+    <button type="submit" id="search-submit" class="bg-neutral-600 dark:bg-neutral-500 text-white rounded-r px-4 py-2 transition-colors transition-transform duration-150 hover:bg-neutral-500 dark:hover:bg-neutral-600 hover:scale-105 active:bg-neutral-700 dark:active:bg-neutral-600 active:scale-95 ag-interactive flex items-center justify-center"><!-- Darken and shrink when pressed -->
         <!-- Magnifying glass icon starts here -->
         <svg width="20" height="20" class="w-5 h-5 stroke-current ag-icon" viewBox="0 0 24 24" fill="none" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <!-- Magnifying glass glass (circle) -->

@@ -1,5 +1,5 @@
 <?php get_header(); ?>
-<main id="content" class="max-w-3xl mx-auto px-4 py-12 space-y-12">
+<main id="content" tabindex="-1" class="max-w-3xl mx-auto px-4 py-12 space-y-12">
     <?php
     if ( have_posts() ) :
         while ( have_posts() ) :

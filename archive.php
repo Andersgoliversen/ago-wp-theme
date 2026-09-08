@@ -1,5 +1,5 @@
 <?php get_header(); ?>
-<main id="content" class="max-w-3xl mx-auto px-4 py-12 space-y-12">
+<main id="content" tabindex="-1" class="max-w-3xl mx-auto px-4 py-12 space-y-12">
     <h1 class="text-3xl font-semibold mb-4">
         <?php the_archive_title(); ?>
     </h1>

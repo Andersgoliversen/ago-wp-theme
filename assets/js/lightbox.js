@@ -20,6 +20,7 @@
       return !link || isDirectImageLink(link);
     });
   if(!images.length) return;
+  const labels = window.agThemeL10n || {};
 
   // Create the lightbox overlay div.
   const overlay = document.createElement('div');
@@ -32,6 +33,8 @@
   // role="dialog" defines the element as a dialog.
   overlay.setAttribute('aria-modal', 'true');
   overlay.setAttribute('role', 'dialog');
+  overlay.setAttribute('aria-label', labels.lightboxLabel || 'Image viewer');
+  overlay.className = 'lightbox';
   // Make the overlay focusable programmatically.
   overlay.setAttribute('tabindex', '-1');
 
@@ -54,14 +57,18 @@
   const closeBtn = overlay.querySelector('.lb-close');
 
   // Set ARIA labels for navigation buttons for screen readers.
-  prevBtn.setAttribute('aria-label', 'Previous image');
-  nextBtn.setAttribute('aria-label', 'Next image');
-  closeBtn.setAttribute('aria-label', 'Close');
+  prevBtn.setAttribute('aria-label', labels.previousImage || 'Previous image');
+  nextBtn.setAttribute('aria-label', labels.nextImage || 'Next image');
+  closeBtn.setAttribute('aria-label', labels.closeLightbox || 'Close image viewer');
+  overlay.querySelectorAll('button').forEach(button => { button.type = 'button'; });
+  prevBtn.hidden = nextBtn.hidden = images.length < 2;
 
   // Keep track of the current image index.
   let index = 0;
   // Store the element that was focused before the lightbox was opened.
   let lastFocusedElement;
+  let backgroundElements = [];
+  let previousOverflow;
 
   // Copy the existing caption nodes so caption links remain usable without
   // parsing another HTML string. Fall back to the image's alternative text.
@@ -83,8 +90,11 @@
     index = (i + images.length) % images.length;
     const imgEl = images[index]; // Get the image for the current index.
     const link = imgEl.closest('a');
-    // Use the link href if it points to an image, otherwise fall back to the image src.
-    const href = isDirectImageLink(link) ? link.href : (imgEl.currentSrc || imgEl.src);
+    // Respect an explicit image link. For unlinked attachment images, use the
+    // full-size URL supplied by WordPress attachment metadata.
+    const href = isDirectImageLink(link)
+      ? link.href
+      : (imgEl.dataset.fullSrc || imgEl.currentSrc || imgEl.src);
     img.src = href; // Set the image source.
     img.alt = imgEl.alt || '';
     setCaption(imgEl);
@@ -93,11 +103,18 @@
     // the page element that should regain focus after the dialog closes.
     if (overlay.hidden) {
       lastFocusedElement = document.activeElement;
+      previousOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      backgroundElements = Array.from(document.body.children)
+        .filter(element => element !== overlay && element instanceof HTMLElement)
+        .map(element => ({ element, inert: element.inert }));
+      backgroundElements.forEach(({ element }) => { element.inert = true; });
+      overlay.hidden = false;
+      overlay.style.display = 'flex';
+      closeBtn.focus();
     }
-    overlay.hidden = false; // Show the overlay.
-    overlay.style.display = 'flex';
-    // Focus the overlay (or a specific element within it, e.g., nextBtn) to enable keyboard navigation.
-    nextBtn.focus(); // Or overlay.focus();
+    // Changing an image can replace a caption link that held focus.
+    if (!overlay.contains(document.activeElement)) closeBtn.focus();
   }
 
   // Add activation listeners only to images that participate in the lightbox.
@@ -106,6 +123,7 @@
     const trigger = parentLink || imgEl;
 
     trigger.addEventListener('click', e => {
+      if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
       e.preventDefault();
       show(i); // Show the lightbox with the clicked image.
     });
@@ -130,6 +148,9 @@
   function close(){
     overlay.hidden = true; // Hide the overlay.
     overlay.style.display = 'none';
+    backgroundElements.forEach(({ element, inert }) => { element.inert = inert; });
+    backgroundElements = [];
+    document.body.style.overflow = previousOverflow;
     // Restore focus to the element that was focused before the lightbox was opened.
     if (lastFocusedElement instanceof HTMLElement) {
       lastFocusedElement.focus();
@@ -143,21 +164,20 @@
   // Close lightbox if the overlay background (not content within it) is clicked.
   overlay.addEventListener('click', e => { if(e.target === overlay) close(); });
 
-  // Define focusable elements within the lightbox for focus trapping.
-  // The first is the close button and the last is the next button.
-  const firstFocusableElement = closeBtn;
-  const lastFocusableElement = nextBtn;
-
   // Keyboard navigation and accessibility event listener.
   document.addEventListener('keydown', e => {
     // Do nothing if the overlay is hidden.
     if(overlay.hidden) return;
 
     // Handle specific key presses.
-    if(e.key === 'ArrowRight') next(); // Next image on Right Arrow.
-    else if(e.key === 'ArrowLeft') prev(); // Previous image on Left Arrow.
-    else if(e.key === 'Escape') close(); // Close lightbox on Escape.
+    if(e.key === 'ArrowRight') { e.preventDefault(); next(); }
+    else if(e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+    else if(e.key === 'Escape') { e.preventDefault(); close(); }
     else if (e.key === 'Tab') { // Handle Tab key for focus trapping.
+      const focusable = Array.from(overlay.querySelectorAll('button, a[href], [tabindex]'))
+        .filter(element => !element.disabled && element.tabIndex >= 0 && element.getClientRects().length);
+      const firstFocusableElement = focusable[0];
+      const lastFocusableElement = focusable[focusable.length - 1];
       if (e.shiftKey) { // If Shift + Tab is pressed (navigate backwards).
         if (document.activeElement === firstFocusableElement) {
           // If focus is on the first focusable element, move focus to the last.

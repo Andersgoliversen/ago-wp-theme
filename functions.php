@@ -165,6 +165,14 @@ function ag_enqueue_assets() {
         array(
             'blogPostImageAlt' => __( 'Blog post image', 'andersgoliversen' ),
             'restPostsUrl'     => esc_url_raw( rest_url( 'wp/v2/posts' ) ),
+            'loadingPosts'     => __( 'Loading posts…', 'andersgoliversen' ),
+            'postsLoaded'      => __( 'More posts loaded.', 'andersgoliversen' ),
+            'postsError'       => __( 'Could not load posts. Try again or use View All Posts.', 'andersgoliversen' ),
+            'postsEnd'         => __( 'You have reached the last post.', 'andersgoliversen' ),
+            'lightboxLabel'    => __( 'Image viewer', 'andersgoliversen' ),
+            'previousImage'    => __( 'Previous image', 'andersgoliversen' ),
+            'nextImage'        => __( 'Next image', 'andersgoliversen' ),
+            'closeLightbox'    => __( 'Close image viewer', 'andersgoliversen' ),
         )
     );
 }
@@ -290,104 +298,64 @@ function ag_fallback_nav() {
 }
 
 /**
- * Add loading="lazy" to attachment images.
+ * Expose an attachment's full-size URL to the lightbox without changing the
+ * responsive source WordPress selects for normal page display.
  *
- * @param array $attr Attributes.
+ * WordPress core (and optimization plugins) remain responsible for loading,
+ * fetch priority, srcset, and modern image formats.
+ *
+ * @param array   $attr       Image attributes.
+ * @param WP_Post $attachment Attachment post.
  * @return array
  */
-function ag_lazy_loading( $attr ) {
-    // Adds loading="lazy" to image attributes if not already set,
-    // and if fetchpriority="high" or loading="eager" is not set.
-    // This improves initial page load performance by deferring the loading of off-screen images
-    // until they are about to enter the viewport.
-    if ( ! isset( $attr['loading'] ) && ! isset( $attr['fetchpriority'] ) ) {
-        $attr['loading'] = 'lazy';
-    } elseif ( isset( $attr['fetchpriority'] ) && $attr['fetchpriority'] === 'high' && ! isset( $attr['loading'] ) ) {
-        // If fetchpriority is high, ensure loading is eager if not specified.
-        $attr['loading'] = 'eager';
+function ag_add_full_size_image_source( $attr, $attachment ) {
+    $full_src = wp_get_attachment_image_url( $attachment->ID, 'full' );
+
+    if ( $full_src ) {
+        $attr['data-full-src'] = $full_src;
     }
+
     return $attr;
 }
-add_filter( 'wp_get_attachment_image_attributes', 'ag_lazy_loading', 20 ); // Increased priority to run after potential WP core additions.
+add_filter( 'wp_get_attachment_image_attributes', 'ag_add_full_size_image_source', 10, 2 );
 
 /**
- * Prefer AVIF or WebP sources when available.
+ * Add the same full-size source to images generated from post content.
  *
- * @param array  $sources       Srcset sources.
- * @param array  $size_array    Image size.
- * @param string $image_src     Image src.
- * @param array  $image_meta    Image meta.
- * @param int    $attachment_id Attachment ID.
- * @return array
+ * @param string $filtered_image Image HTML.
+ * @param string $context        The context in which the image is rendered.
+ * @param int    $attachment_id  Attachment ID.
+ * @return string
  */
-function ag_modern_image_formats( $sources, $size_array, $image_src, $image_meta, $attachment_id ) {
-    // Get the WordPress upload directory information. This is trusted WordPress data.
-    // $upload_dir['baseurl'] is the base URL for uploads (e.g., https://example.com/wp-content/uploads).
-    // $upload_dir['basedir'] is the base server path for uploads (e.g., /var/www/html/wp-content/uploads).
-    $upload_dir = wp_get_upload_dir();
+function ag_add_full_size_content_image_source( $filtered_image, $context, $attachment_id ) {
+    $full_src = $attachment_id ? wp_get_attachment_image_url( $attachment_id, 'full' ) : false;
 
-    // Create a copy of the $sources array to iterate over.
-    // This is done to avoid potential issues with modifying an array while looping over it.
-    $sources_copy = $sources;
+    if ( ! $full_src || false !== strpos( $filtered_image, 'data-full-src=' ) ) {
+        return $filtered_image;
+    }
 
-    // Loop through an array of modern image format extensions ('avif', then 'webp').
-    // The goal is to find the first format for which all image source sizes exist.
-    foreach ( array( 'avif', 'webp' ) as $ext ) {
-        // Flag to track if all image sizes exist for the current format ($ext).
-        // Reset to true for each new format being checked.
-        $all_sources_for_current_format_exist = true;
-
-        // Inner loop: Iterate through each image source size (e.g., 'thumbnail', 'medium', 'large') provided in $sources_copy.
-        foreach ( $sources_copy as $size => $source ) {
-            // Construct the relative path of the original image.
-            // This removes the base URL of uploads from the full image URL.
-            // e.g., "wp-content/uploads/2023/10/my-image.jpg"
-            $relative_path = str_replace( $upload_dir['baseurl'], '', $source['url'] );
-
-            // Construct the absolute server path for the candidate modern image.
-            // preg_replace changes the file extension in $relative_path to the current $ext (e.g., '.avif' or '.webp').
-            // e.g., "/var/www/html/wp-content/uploads/2023/10/my-image.avif"
-            // This path manipulation is considered safe as it's based on trusted WordPress data ($upload_dir, $source['url']).
-            $candidate_path = $upload_dir['basedir'] . preg_replace( '/\.[^.]+$/i', '.' . $ext, $relative_path );
-
-            // Check if the candidate modern image file exists on the server.
-            if ( ! file_exists( $candidate_path ) ) {
-                // If a specific size for the current format (e.g., my-image-thumbnail.avif) doesn't exist,
-                // then this format ($ext) is not fully available.
-                $all_sources_for_current_format_exist = false;
-                // Break from this inner loop (checking sources for the current $ext).
-                // No need to check other sizes for this format if one is missing.
-                break;
-            }
-        }
-
-        // After checking all sizes for the current format ($ext):
-        // If all sources for the current format exist (e.g., .avif versions for all sizes are present),
-        if ( $all_sources_for_current_format_exist ) {
-            // Update the original $sources array to use the new image URLs with the modern format extension.
-            foreach ( $sources as $size => $source_item ) { // Iterate over original $sources to modify.
-                // preg_replace changes the file extension in the source URL to the current $ext.
-                // This is considered safe as it's modifying URLs derived from trusted WordPress data.
-                $sources[ $size ]['url'] = preg_replace( '/\.[^.]+$/i', '.' . $ext, $source_item['url'] );
-            }
-            // Once a modern format (e.g., AVIF) is successfully applied for all sizes,
-            // break from the outer loop (which checks for 'avif', 'webp').
-            // We prefer AVIF over WebP if available, so no need to check for WebP if AVIF worked.
-            break;
+    if ( class_exists( 'WP_HTML_Tag_Processor' ) ) {
+        $processor = new WP_HTML_Tag_Processor( $filtered_image );
+        if ( $processor->next_tag( 'img' ) ) {
+            $processor->set_attribute( 'data-full-src', $full_src );
+            return $processor->get_updated_html();
         }
     }
 
-    // Return the modified $sources array (if a modern format was applied)
-    // or the original $sources array if no complete set of modern image formats was found.
-    return $sources;
+    return preg_replace(
+        '/<img\b/i',
+        '<img data-full-src="' . esc_attr( $full_src ) . '"',
+        $filtered_image,
+        1
+    );
 }
-add_filter( 'wp_calculate_image_srcset', 'ag_modern_image_formats', 10, 5 );
+add_filter( 'wp_content_img_tag', 'ag_add_full_size_content_image_source', 10, 3 );
 
 /**
  * Enqueue the lightbox script on singular pages so all images can open in a lightbox.
  */
 function ag_enqueue_lightbox() {
-    if ( is_singular() ) {
+    if ( is_singular() && ! is_front_page() ) {
         $lightbox_js_path = '/assets/js/lightbox.min.js';
         $lightbox_js_full_path = get_template_directory() . $lightbox_js_path;
         $lightbox_js_uri = get_template_directory_uri() . $lightbox_js_path;
@@ -447,20 +415,26 @@ add_filter( 'script_loader_tag', 'ag_defer_scripts', 10, 2 );
  * Adds meta description to the head.
  */
 function ag_add_meta_description() {
+    if ( ag_has_seo_plugin() ) {
+        return;
+    }
+
     $description = '';
 
-    if ( is_singular() ) {
+    if ( is_front_page() ) {
+        $description = get_bloginfo( 'description' );
+    }
+
+    if ( ! $description && is_singular() ) {
         $post = get_queried_object();
         if ( $post && has_excerpt( $post ) ) {
             $description = get_the_excerpt( $post );
         } elseif ( $post ) {
             $description = wp_trim_words( strip_shortcodes( $post->post_content ), 55, '...' );
         }
-    } elseif ( is_front_page() ) {
-        $description = get_bloginfo( 'description' );
-    } elseif ( is_category() || is_tag() ) {
+    } elseif ( ! $description && ( is_category() || is_tag() ) ) {
         $description = term_description();
-    } else {
+    } elseif ( ! $description ) {
         // Generic fallback
         $description = sprintf(
             // Translators: %1$s: Site name, %2$s: Site tagline

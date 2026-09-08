@@ -374,7 +374,7 @@ body.diurnalis-ready .diurnalis-img {
 /* Navigation, forms, and UI elements stay on the Source Sans Pro system */
 @layer base {
   /* Content link styling */
-  #content a,
+  #content:not(.home-content) a,
   .entry-content a,
   .page-content a,
   .post-content a,
@@ -388,7 +388,7 @@ body.diurnalis-ready .diurnalis-img {
     font-weight: 500;
   }
 
-  #content a:hover,
+  #content:not(.home-content) a:hover,
   .entry-content a:hover,
   .page-content a:hover,
   .post-content a:hover,
@@ -397,7 +397,7 @@ body.diurnalis-ready .diurnalis-img {
     color: var(--accent-hover);
   }
 
-  #content a:focus-visible,
+  #content:not(.home-content) a:focus-visible,
   .entry-content a:focus-visible,
   .page-content a:focus-visible,
   .post-content a:focus-visible,
@@ -552,7 +552,7 @@ body.diurnalis-ready .diurnalis-img {
 
 @layer components {
   /* Comfortable reading width for long-form content */
-  #content,
+  #content:not(.home-content),
   .entry-content,
   .wp-block-post-content {
     max-width: min(72ch, 100%);
@@ -560,10 +560,10 @@ body.diurnalis-ready .diurnalis-img {
     margin-right: auto;
   }
 
-  #content p,
-  #content ul,
-  #content ol,
-  #content blockquote,
+  #content:not(.home-content) p,
+  #content:not(.home-content) ul,
+  #content:not(.home-content) ol,
+  #content:not(.home-content) blockquote,
   .entry-content p,
   .entry-content ul,
   .entry-content ol,
@@ -695,4 +695,118 @@ body.diurnalis-ready .diurnalis-img {
   .dark .theme-toggle .moon {
     @apply opacity-100 text-gray-200;
   }
+}
+
+/* Homepage layout and accessible controls. */
+.home-content {
+  width: 100%;
+}
+
+.recent-post-card {
+  width: 100%;
+}
+
+@media (width >= 640px) {
+  .recent-post-card { width: calc((100% - 0.5rem) / 2); }
+}
+
+@media (width >= 1024px) {
+  .recent-post-card { width: calc((100% - 1rem) / 3); }
+}
+
+.skip-link {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 10000;
+  padding: 0.75rem 1rem;
+  background: var(--pagebg);
+  color: var(--color-text);
+  transform: translateY(-200%);
+}
+
+.skip-link:focus { transform: none; }
+
+:where(a, button, input, [tabindex]):focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+.theme-toggle,
+.motion-toggle,
+#recent-posts-prev,
+#recent-posts-next {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.motion-toggle { text-decoration: underline; }
+
+button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+#search-field {
+  min-width: 0;
+  width: 0;
+}
+
+body.animations-paused .gallery-img,
+body.animations-paused .diurnalis-img {
+  animation-play-state: paused;
+}
+
+/* Render a useful first frame before JavaScript is available. */
+body:not(.diurnalis-ready) .diurnalis-img,
+body:not(.diurnalis-ready) .gallery-img { animation: none; }
+
+body:not(.diurnalis-ready) #gallery-img-1 { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  html.scroll-smooth { scroll-behavior: auto; }
+
+  .gallery-img,
+  .diurnalis-img,
+  .rock-art-img,
+  #rock-art-card,
+  .ag-icon {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+
+  .gallery-img,
+  .diurnalis-img,
+  .rock-art-img { opacity: 0 !important; }
+
+  #gallery-img-1,
+  #diurnalis-img-1,
+  #rock-art-img-1 { opacity: 1 !important; }
+
+  #masthead a,
+  #masthead svg,
+  #main-areas a,
+  #recent-posts a,
+  #recent-posts button,
+  #search-submit,
+  footer a {
+    transition: none !important;
+    transform: none !important;
+  }
+
+  .motion-toggle { display: none; }
+}
+
+.lightbox button {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.lightbox a { color: #a3d9bb; }
+
+.lightbox .lb-caption {
+  max-height: 15vh;
+  overflow: auto;
+  padding: 0 1rem;
 }
